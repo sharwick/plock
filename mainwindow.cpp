@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QCoreApplication>
+#include <QFont>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
@@ -30,6 +31,38 @@ MainWindow::MainWindow(QWidget *parent)
                 gameBoard[i][j]->assignDown(gameBoard[i][j+1]);
         }
     }
+
+
+
+    // SHupdate
+
+
+        scorePtr = new Score();
+
+        QGridLayout *grid = new QGridLayout(this);
+        grid->setAlignment(Qt::AlignTop);
+        grid->setContentsMargins(0,0,0,0);
+        grid->setSpacing(0);
+        ui->centralWidget->setLayout(grid);
+
+        // Score LCD Number
+
+        int screenSizeX = 200;
+        scoreLCD = new QLCDNumber(this);
+        scoreLCD->setFixedSize(screenSizeX * 0.3,screenSizeX * 0.15);
+        scoreLCD->setDigitCount(7);
+        scoreLCD->setSegmentStyle(QLCDNumber::Flat);
+        scoreLCD->display(scorePtr->getScore());
+        QFont f("Times");
+        //scoreLCD->setFrameRect();
+        scoreLCD->setFont(f);
+
+        sframe = new ScoreFrame();
+        //sframe->setParent(ui);
+        grid->addWidget(sframe->text);
+
+        grid->addWidget(scoreLCD,1,3,0,2);
+
 
    // blockSignalMapper = new QSignalMapper(this);
     //blockSignalMapper->setMapping(ui->pushButton0, gameBoard[2][0]);
@@ -242,9 +275,23 @@ void MainWindow::button8Clicked()
 
 void MainWindow::processMatch(Block* matchedBlock)
 {
+    /*
     vector<Block*> gatheredBlocks = matchedBlock->gatherBlocks(gatheredBlocks);
     gatheredBlocks = sortVector(gatheredBlocks);
     determineColor(gatheredBlocks);
+    */
+    // SHupdate
+    vector<Block*> gatheredBlocks;
+    gatheredBlocks = matchedBlock->gatherBlocks(gatheredBlocks);
+    gatheredBlocks = sortVector(gatheredBlocks);
+    determineColor(gatheredBlocks);
+
+    int multiplier;
+    multiplier = 1;
+
+    scorePtr->updateScore((int) gatheredBlocks.size(), false , multiplier);
+    scoreLCD->display(scorePtr->getScore());
+    sframe->update(scorePtr->getScore());
 }
 
 void MainWindow::quitButtonClicked()

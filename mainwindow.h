@@ -3,7 +3,22 @@
 
 #include <QMainWindow>
 #include <QSignalMapper>
-#include "C:/Users/Dan/Desktop/Block.h" //This will need to be changed for your test to compile
+#include "/Users/shannonharwick/Dropbox/CS/CS340/Project/plock_SH/plock_SH/Block.h" //This will need to be changed for your test to compile
+#include "Score.h" //SHupdate
+#include "ScoreFrame.h" //SHupdate
+
+// SHupdate
+#include <QPushButton>
+#include <QMap>
+#include <QString>
+#include <QLabel>
+#include <QGraphicsView>
+#include <QGridLayout>
+#include <QGroupBox>
+#include <QLCDNumber>
+#include <QProgressBar>
+
+
 
 namespace Ui {
     class MainWindow;
@@ -13,6 +28,9 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 public:
+
+    Score *scorePtr;  // SHupdate
+
     enum ScreenOrientation {
         ScreenOrientationLockPortrait,
         ScreenOrientationLockLandscape,
@@ -28,6 +46,11 @@ public:
     void setOrientation(ScreenOrientation orientation);
 
     void showExpanded();
+
+
+    //SHupdate
+    QLCDNumber *scoreLCD;
+    QGridLayout *grid;
 
 private slots:
     void button0Clicked();
@@ -50,6 +73,9 @@ private:
     Ui::MainWindow *ui;
     vector<Block*> bombCollector(vector<Block*>, int, int);
     vector<Block*> checkSpecials(vector<Block*>);
+
+    ScoreFrame *sframe;
+
 };
 
 #endif // MAINWINDOW_H
