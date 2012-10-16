@@ -280,11 +280,10 @@ void MainWindow::processMatch(Block* matchedBlock)
     gatheredBlocks = sortVector(gatheredBlocks);
     determineColor(gatheredBlocks);
     */
-    // SHupdate
+    // SHupdate - rearranged by Dan for order
     vector<Block*> gatheredBlocks;
     gatheredBlocks = matchedBlock->gatherBlocks(gatheredBlocks);
     gatheredBlocks = sortVector(gatheredBlocks);
-    determineColor(gatheredBlocks);
 
     int multiplier;
     multiplier = 1;
@@ -292,6 +291,7 @@ void MainWindow::processMatch(Block* matchedBlock)
     scorePtr->updateScore((int) gatheredBlocks.size(), false , multiplier);
     scoreLCD->display(scorePtr->getScore());
     sframe->update(scorePtr->getScore());
+    determineColor(gatheredBlocks);
 }
 
 void MainWindow::quitButtonClicked()

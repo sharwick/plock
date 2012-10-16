@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include <QSignalMapper>
-#include "/Users/shannonharwick/Dropbox/CS/CS340/Project/plock_SH/plock_SH/Block.h" //This will need to be changed for your test to compile
+#include "Block.h" //This will need to be changed for your test to compile
 #include "Score.h" //SHupdate
 #include "ScoreFrame.h" //SHupdate
 

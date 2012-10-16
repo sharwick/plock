@@ -33,7 +33,7 @@
  *  ADDED: graphImage = 0;
  */
 //#include "Block.h"
-#include "/Users/shannonharwick/Dropbox/CS/CS340/Project/plock_SH/plock_SH/Block.h"
+#include "Block.h"
 #include <QPixmap>
 #include <QIcon>
 
