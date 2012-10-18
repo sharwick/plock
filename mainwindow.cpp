@@ -37,6 +37,12 @@ MainWindow::MainWindow(QWidget *parent)
 
 
 
+    setUpClock();
+    timer = new QTimer(this);
+    timer->start(200);//move to start game code
+    connect(timer, SIGNAL(timeout()),this, SLOT(timeSlot()));
+
+
     // SHupdate
 
 
@@ -403,7 +409,41 @@ void MainWindow::shuffleButtonClicked() {
 
 void MainWindow::resetButtonClicked() {
     reset();
-    scorePtr->resetScore();
+    //scorePtr->resetScore();
     sframe->resetScoreBoard();
 
+}
+
+/*
+* Mike Son code
+*clock starting code
+*/
+
+void MainWindow::setUpClock(){
+QPixmap newMap(ui->Timeclock->width(), ui->Timeclock->height());
+newMap.fill(Qt::magenta);
+ui->Timeclock->setPixmap(newMap);
+newMap.fill(Qt::green);
+ui->Timefill->setPixmap(newMap);
+ui->Timefill->setMaximumWidth(ui->Timeclock->width());
+currentTime=60;
+ui->Timenum->setText(QString::number(currentTime));
+}
+
+void MainWindow::timeSlot(){
+x++;
+if(x%5==0){
+    currentTime--;
+}
+if(currentTime==-1){
+    gameOver();
+    //close();70/200
+    return;
+}
+ui->Timenum->setText(QString::number(currentTime));
+ui->Timefill->setMaximumWidth(ui->Timefill->maximumWidth()-(ui->Timeclock->width()/300));
+}
+
+void MainWindow::gameOver(){
+    timer->stop();
 }

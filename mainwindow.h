@@ -1,6 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-
+#include <QTimer>
 #include <QMainWindow>
 #include <QSignalMapper>
 #include "Block.h" //This will need to be changed for your test to compile
@@ -66,7 +66,7 @@ private slots:
     void quitButtonClicked();
     void resetButtonClicked();
     void shuffleButtonClicked();
-
+    void timeSlot();
 private:
     void processMatch(Block*);
     vector<Block*> sortVector(vector<Block*>);
@@ -81,6 +81,11 @@ private:
     void shuffle();
     void reset();
 
+    void setUpClock();
+    void gameOver();
+    int currentTime;
+    QTimer *timer;
+    int x;
 };
 
 #endif // MAINWINDOW_H

@@ -34,4 +34,6 @@ int Score::getScore() {
    return score;
 }
 
-
+void Score::resetScore(){
+    score = 0;
+}
