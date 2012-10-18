@@ -1,11 +1,13 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QTimer>
 #include <QMainWindow>
 #include <QSignalMapper>
 #include "Block.h" //This will need to be changed for your test to compile
 #include "Score.h" //SHupdate
 #include "ScoreFrame.h" //SHupdate
+#include "Colors.h" // SHupdate
 
 // SHupdate
 #include <QPushButton>
@@ -31,6 +33,7 @@ public:
 
     Score *scorePtr;  // SHupdate
     int ROWS, COLUMNS; // SHupdate
+    //Colors *colorPtr;
 
     enum ScreenOrientation {
         ScreenOrientationLockPortrait,
@@ -67,6 +70,9 @@ private slots:
     void resetButtonClicked();
     void shuffleButtonClicked();
 
+    void timeSlot();
+
+
 private:
     void processMatch(Block*);
     vector<Block*> sortVector(vector<Block*>);
@@ -80,6 +86,13 @@ private:
     ScoreFrame *sframe;
     void shuffle();
     void reset();
+
+    void setUpClock();
+    void gameOver();
+    int currentTime;
+    QTimer *timer;
+    int x;
+
 
 };
 

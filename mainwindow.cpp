@@ -3,6 +3,7 @@
 #include <QCoreApplication>
 #include <QFont>
 
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -35,10 +36,17 @@ MainWindow::MainWindow(QWidget *parent)
         }
     }
 
+    // Mike Son update
+    setUpClock();
+    timer = new QTimer(this);
+    timer->start(200);//move to start game code
+    connect(timer, SIGNAL(timeout()),this, SLOT(timeSlot()));
+
+
 
 
     // SHupdate
-
+        //colorPtr = new Colors();
 
         scorePtr = new Score();
 
@@ -393,8 +401,32 @@ void MainWindow::reset() {
 }
 
 void MainWindow::shuffle() {
-    // [[TO DO: MODIFY PRESERVE PREVIOUS BLOCKS
-    reset();
+    // reset();  // old method
+
+    // re-assign the blocks to the game board
+        // perform Nswaps swaps, passing colors/bombs/multipliers
+        int Nswaps, i;
+        Nswaps=ROWS*COLUMNS;
+
+        for (i=0; i<Nswaps; i++) {
+            int r1, c1, r2, c2, tempColor;
+            r1=rand()%ROWS;
+            r2=rand()%ROWS;
+            c1=rand()%COLUMNS;
+            c2=rand()%COLUMNS;
+
+            tempColor = gameBoard[r1][c1]->getColor();
+
+            gameBoard[r1][c1]->setColor( gameBoard[r2][c2]->getColor() );
+            gameBoard[r2][c2]->setColor(tempColor);
+
+            // TO DO: need to swap bombs/multipler -> add getBomb method to Block
+        }
+
+
+
+
+
 }
 
 void MainWindow::shuffleButtonClicked() {
@@ -405,5 +437,40 @@ void MainWindow::resetButtonClicked() {
     reset();
     scorePtr->resetScore();
     sframe->resetScoreBoard();
-
 }
+
+
+/*
+* Mike Son code
+*clock starting code
+*/
+
+void MainWindow::setUpClock(){
+QPixmap newMap(ui->Timeclock->width(), ui->Timeclock->height());
+newMap.fill(Qt::magenta);
+ui->Timeclock->setPixmap(newMap);
+newMap.fill(Qt::green);
+ui->Timefill->setPixmap(newMap);
+ui->Timefill->setMaximumWidth(ui->Timeclock->width());
+currentTime=60;
+ui->Timenum->setText(QString::number(currentTime));
+}
+
+void MainWindow::timeSlot(){
+x++;
+if(x%5==0){
+    currentTime--;
+}
+if(currentTime==-1){
+    gameOver();
+    //close();70/200
+    return;
+}
+ui->Timenum->setText(QString::number(currentTime));
+ui->Timefill->setMaximumWidth(ui->Timefill->maximumWidth()-(ui->Timeclock->width()/300));
+}
+
+void MainWindow::gameOver(){
+    timer->stop();
+}
+

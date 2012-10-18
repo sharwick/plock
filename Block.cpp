@@ -34,6 +34,7 @@
  */
 //#include "Block.h"
 #include "Block.h"
+#include "Colors.h"
 #include <QPixmap>
 #include <QIcon>
 
@@ -65,20 +66,31 @@ Block::Block(QPushButton *button, int rowSpot, int colSpot){
 void Block::setColor(int _color){
     color = _color;
     QPixmap newMap(31, 31);
+
+
+    // SH Update: TO DO: Move this outside the Block class (source= Color Brewer)
+    int transparency=255;  // Alternatively: 127
+    QColor color1; color1=QColor(215,48,39,transparency);
+    QColor color2; color2=QColor(252,141,89,transparency);
+    QColor color3; color3=QColor(254,224,144,transparency);
+    QColor color4; color4=QColor(224,243,248,transparency);
+    QColor color5; color5=QColor(145,191,219,transparency);
+    QColor color6; color6=QColor(69,117,180,transparency);
+
     switch(color){
-		case 0 : newMap.fill(Qt::black);
+                case 0 : newMap.fill(Qt::black);
 				 break;
-		case 1 : newMap.fill(Qt::red);
+                case 1 : newMap.fill(color1);
 				 break;
-        case 2 : newMap.fill(Qt::white);
+        case 2 : newMap.fill(color2);
 				 break;
-		case 3 : newMap.fill(Qt::yellow);
+                case 3 : newMap.fill(color3);
 				 break;
-		case 4 : newMap.fill(Qt::green);
+                case 4 : newMap.fill(color4);
 				 break;
-		case 5 : newMap.fill(Qt::blue);
+                case 5 : newMap.fill(color5);
 				 break;
-        case 6 : newMap.fill(Qt::gray);
+        case 6 : newMap.fill(color6);
 				 break;
 	}
 	QIcon newIcon(newMap);
