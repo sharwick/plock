@@ -8,7 +8,7 @@ using namespace std;
 
 
 ScoreFrame::ScoreFrame() {
-    text = new QLabel("TEST0",0,0);
+    text = new QLabel("0",0,0);
     //text->setText("<FONT FACE=\"courier\" COLOR=\"#FF00FF\">TEST<\\FONT>");  // play with HTML within QT
 
     //QFont* font = new QFont("Courier New");
@@ -31,15 +31,12 @@ ScoreFrame::ScoreFrame() {
 
 }
 
-
-/*
-void ScoreFrame::setParent(QWidget *parent) {
-    this->text->setParent(parent, 0);
-}
-*/
-
 void ScoreFrame::update(int n) {
     text->setText(QString::number(n));
+}
+
+void ScoreFrame::resetScoreBoard() {
+    text->setText("0");
 }
 
 

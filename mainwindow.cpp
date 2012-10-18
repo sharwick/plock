@@ -6,6 +6,9 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
+    ROWS = 3;
+    COLUMNS=3;
+
     ui->setupUi(this);
     gameBoard[0][0] = new Block(ui->pushButton6, 0, 0);
     gameBoard[1][0] = new Block(ui->pushButton7, 1, 0);
@@ -374,4 +377,33 @@ vector<Block*> MainWindow::checkSpecials(vector<Block*> blockVector)
         }
     }
     return blockVector;
+}
+
+
+/**
+  * Reset the colors of all blocks
+  */
+void MainWindow::reset() {
+    int r, c;
+    for (r=0; r<ROWS; r++) {
+        for (c=0; c<COLUMNS; c++) {
+            gameBoard[r][c]->setColor((rand() % 6) + 1);
+        }
+    }
+}
+
+void MainWindow::shuffle() {
+    // [[TO DO: MODIFY PRESERVE PREVIOUS BLOCKS
+    reset();
+}
+
+void MainWindow::shuffleButtonClicked() {
+    shuffle();
+}
+
+void MainWindow::resetButtonClicked() {
+    reset();
+    scorePtr->resetScore();
+    sframe->resetScoreBoard();
+
 }

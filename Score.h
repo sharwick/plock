@@ -21,6 +21,7 @@ public:
     Score();
     int getScore();
     void updateScore(int, bool, int);
+    void resetScore();
 };
 
 #endif // SCORE_H

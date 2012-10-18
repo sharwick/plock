@@ -17,6 +17,7 @@ public:
     QLabel *text;
     ScoreFrame();
     void update(int);
+    void resetScoreBoard();
     void paint();
     //void setParent(QWidget*);
 

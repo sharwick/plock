@@ -30,6 +30,7 @@ class MainWindow : public QMainWindow
 public:
 
     Score *scorePtr;  // SHupdate
+    int ROWS, COLUMNS; // SHupdate
 
     enum ScreenOrientation {
         ScreenOrientationLockPortrait,
@@ -63,6 +64,8 @@ private slots:
     void button7Clicked();
     void button8Clicked();
     void quitButtonClicked();
+    void resetButtonClicked();
+    void shuffleButtonClicked();
 
 private:
     void processMatch(Block*);
@@ -75,6 +78,8 @@ private:
     vector<Block*> checkSpecials(vector<Block*>);
 
     ScoreFrame *sframe;
+    void shuffle();
+    void reset();
 
 };
 
