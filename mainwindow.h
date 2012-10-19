@@ -33,7 +33,7 @@ public:
 
     Score *scorePtr;  // SHupdate
     int ROWS, COLUMNS; // SHupdate
-    //Colors *colorPtr;
+    Colors *colorPtr;
 
     enum ScreenOrientation {
         ScreenOrientationLockPortrait,

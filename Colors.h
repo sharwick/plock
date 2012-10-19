@@ -14,16 +14,12 @@ class Colors {
 
 public:
     int colorScheme;
-    QColor color1;
-    QColor color2;
-    QColor color3;
-    QColor color4;
-    QColor color5;
-    QColor color6;
 
-    Colors();
+    Colors(int); //now takes in color scheme val
+    QColor colorArray[7]; //added to take colors out of Block
     void setScheme(int);
     int getScheme();
+    QColor getQColor(int); //added with colorArray
 };
 
 

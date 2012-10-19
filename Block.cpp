@@ -2,7 +2,7 @@
  * One line added to show Mike git
  *Block.cpp
  *
- *Version 2.0
+ *Version 2.1
  *Author: Daniel Keasler
  *      Plock Team
  *
@@ -39,7 +39,7 @@
 #include <QIcon>
 
 using namespace std;
-Block::Block(QPushButton *button, int rowSpot, int colSpot){
+Block::Block(QPushButton *button, int rowSpot, int colSpot, int colorChoice, QColor firstColor){
 	pushButtonPtr = button;
 	rightBlockPtr = NULL;
 	upBlockPtr = NULL;
@@ -50,7 +50,7 @@ Block::Block(QPushButton *button, int rowSpot, int colSpot){
     RowX = rowSpot;
     ColY = colSpot;
     graphImage = 0;
-	setColor((rand() % 6) + 1);
+    setColor(colorChoice, firstColor);
 }
 
 /*
@@ -62,37 +62,18 @@ Block::Block(QPushButton *button, int rowSpot, int colSpot){
  *  purple, to do later is fully create the color scheme and
  *  I can change these values to either RGB or actual locally
  *  stored Icons.
+ *
+ *  CHANGED: No switch needed. Color int is index in colorArray,
+ *  QColor is color at that index.
  */
-void Block::setColor(int _color){
+void Block::setColor(int _color, QColor firstColor){
     color = _color;
     QPixmap newMap(31, 31);
-
+    newMap.fill(firstColor);
 
     // SH Update: TO DO: Move this outside the Block class (source= Color Brewer)
-    int transparency=255;  // Alternatively: 127
-    QColor color1; color1=QColor(215,48,39,transparency);
-    QColor color2; color2=QColor(252,141,89,transparency);
-    QColor color3; color3=QColor(254,224,144,transparency);
-    QColor color4; color4=QColor(224,243,248,transparency);
-    QColor color5; color5=QColor(145,191,219,transparency);
-    QColor color6; color6=QColor(69,117,180,transparency);
-
-    switch(color){
-                case 0 : newMap.fill(Qt::black);
-				 break;
-                case 1 : newMap.fill(color1);
-				 break;
-        case 2 : newMap.fill(color2);
-				 break;
-                case 3 : newMap.fill(color3);
-				 break;
-                case 4 : newMap.fill(color4);
-				 break;
-                case 5 : newMap.fill(color5);
-				 break;
-        case 6 : newMap.fill(color6);
-				 break;
-	}
+    //should be complete
+    //int transparency=255;  // Alternatively: 127
 	QIcon newIcon(newMap);
     pushButtonPtr->setIcon(newIcon);
 }

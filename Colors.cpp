@@ -8,33 +8,49 @@
 
 #include "Colors.h"
 
-Colors::Colors() {
-    colorScheme=0;
+Colors::Colors(int scheme) {
+    setScheme(scheme);
 }
 
+/*
+ *DKeasler:
+ *setScheme called from constructor. Same QColors but
+ *  now stored in QColor array.
+ */
 void Colors::setScheme(int n) {
+    colorScheme = n;
     if (n==0) {
-        color1=QColor(215,48,39,0);
-        color2=QColor(252,141,89,0);
-        color3=QColor(254,224,144,0);
-        color4=QColor(224,243,248,0);
-        color5=QColor(145,191,219,0);
-        color6=QColor(69,117,180,0);
+        colorArray[0] = QColor(0, 0, 0, 255);
+        colorArray[1] = QColor(215,48,39,255);
+        colorArray[2] = QColor(252,141,89,255);
+        colorArray[3] = QColor(254,224,144,255);
+        colorArray[4] = QColor(224,243,248,255);
+        colorArray[5] = QColor(145,191,219,255);
+        colorArray[6] = QColor(69,117,180,255);
 
         return;
     }
 
     // default to n=0 scheme
-    color1=QColor(215,48,39,0);
-    color2=QColor(252,141,89,0);
-    color3=QColor(254,224,144,0);
-    color4=QColor(224,243,248,0);
-    color5=QColor(145,191,219,0);
-    color6=QColor(69,117,180,0);
+    colorArray[0] = QColor(0, 0, 0, 255);
+    colorArray[1] = QColor(215,48,39,255);
+    colorArray[2] = QColor(252,141,89,255);
+    colorArray[3] = QColor(254,224,144,255);
+    colorArray[4] = QColor(224,243,248,255);
+    colorArray[5] = QColor(145,191,219,255);
+    colorArray[6] = QColor(69,117,180,255);
     return;
 }
 
 
 int Colors::getScheme() {
     return colorScheme;
+}
+/*
+ *DKeasler:
+ *getColor takes index and returns corresponding
+ *  QColor
+ */
+QColor Colors::getQColor(int index){
+    return colorArray[index];
 }
