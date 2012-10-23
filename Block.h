@@ -1,7 +1,7 @@
 /*
  *Block.h
  *
- *Version 2.0
+ *Version 2.1
  *  CHANGES: Constructor, bool member and functions, adjacent
  *  Block members and functions, RowX and ColY members and
  *  functions, gatherBlocks, removed determine color, and many
@@ -10,6 +10,10 @@
  *  CHANGES: assign'Direction' replaced set'Direction'.
  *  graphImage and mutator/accessor functions added.
  *  4 directional collectors (from special blocks) added.
+ *
+ *  CHANGES: setColor now takes in a QColor (obtained from colors).
+ *  No switch needed. Constructor changed to reflect new setColor.
+ *  Takes in int color value from caller and QColor
  *
  *Author: Daniel Keasler
  *      Plock Team
@@ -36,9 +40,9 @@ using namespace std;
 
 class Block{
 public:
-    Block(QPushButton*, int, int); //edit for QPushButton
-    void setColor(int); //edit for QPushButton inheritance
-    int getColor(); //edit for QPushButton inheritance
+    Block(QPushButton*, int, int, int, QColor); //edit for QPushButton
+    void setColor(int, QColor); //edit for QPushButton inheritance?
+    int getColor(); //edit for QPushButton inheritance?
     bool getColoredBool();
     bool getMarkedBool();
     void setMarkedBool(bool);
@@ -65,7 +69,7 @@ private:
     Block *upBlockPtr;
     Block *leftBlockPtr;
     Block *downBlockPtr;
-    int color; //edit for QPushButton inheritance
+    int color; //edit for QPushButton inheritance?
     int RowX;
     int ColY;
     int graphImage;

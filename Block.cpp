@@ -1,7 +1,13 @@
+<<<<<<< HEAD
 /*ONE LINE ADDED; NO REAL CHANGES
+=======
+/*One line added; no real changes
+ * One line added to show Mike git
+ *One line change to show Devin git
+>>>>>>> d165cd1cd67ed919b133224c03e005d80e6728b4
  *Block.cpp
  *
- *Version 2.0
+ *Version 2.1
  *Author: Daniel Keasler
  *      Plock Team
  *
@@ -31,12 +37,14 @@
  *
  *  ADDED: graphImage = 0;
  */
+//#include "Block.h"
 #include "Block.h"
+#include "Colors.h"
 #include <QPixmap>
 #include <QIcon>
 
 using namespace std;
-Block::Block(QPushButton *button, int rowSpot, int colSpot){
+Block::Block(QPushButton *button, int rowSpot, int colSpot, int colorChoice, QColor firstColor){
 	pushButtonPtr = button;
 	rightBlockPtr = NULL;
 	upBlockPtr = NULL;
@@ -47,7 +55,7 @@ Block::Block(QPushButton *button, int rowSpot, int colSpot){
     RowX = rowSpot;
     ColY = colSpot;
     graphImage = 0;
-	setColor((rand() % 6) + 1);
+    setColor(colorChoice, firstColor);
 }
 
 /*
@@ -59,26 +67,18 @@ Block::Block(QPushButton *button, int rowSpot, int colSpot){
  *  purple, to do later is fully create the color scheme and
  *  I can change these values to either RGB or actual locally
  *  stored Icons.
+ *
+ *  CHANGED: No switch needed. Color int is index in colorArray,
+ *  QColor is color at that index.
  */
-void Block::setColor(int _color){
+void Block::setColor(int _color, QColor firstColor){
     color = _color;
     QPixmap newMap(31, 31);
-    switch(color){
-		case 0 : newMap.fill(Qt::black);
-				 break;
-		case 1 : newMap.fill(Qt::red);
-				 break;
-        case 2 : newMap.fill(Qt::white);
-				 break;
-		case 3 : newMap.fill(Qt::yellow);
-				 break;
-		case 4 : newMap.fill(Qt::green);
-				 break;
-		case 5 : newMap.fill(Qt::blue);
-				 break;
-        case 6 : newMap.fill(Qt::gray);
-				 break;
-	}
+    newMap.fill(firstColor);
+
+    // SH Update: TO DO: Move this outside the Block class (source= Color Brewer)
+    //should be complete
+    //int transparency=255;  // Alternatively: 127
 	QIcon newIcon(newMap);
     pushButtonPtr->setIcon(newIcon);
 }
