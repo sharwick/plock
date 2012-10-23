@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>200</width>
-    <height>320</height>
+    <width>360</width>
+    <height>432</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -184,11 +184,14 @@
       <height>31</height>
      </size>
     </property>
+    <property name="autoRepeatDelay">
+     <number>300</number>
+    </property>
    </widget>
    <widget class="QPushButton" name="quitButton">
     <property name="geometry">
      <rect>
-      <x>54</x>
+      <x>10</x>
       <y>200</y>
       <width>91</width>
       <height>71</height>
@@ -198,13 +201,87 @@
      <string>QUIT</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="resetButton">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>200</y>
+      <width>141</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>RESET</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>270</y>
+      <width>231</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>SHUFFLE</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="Timeclock">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>170</y>
+      <width>300</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="Timefill">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>170</y>
+      <width>300</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="Timenum">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>170</y>
+      <width>300</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>200</width>
+     <width>360</width>
      <height>21</height>
     </rect>
    </property>
@@ -252,8 +329,8 @@
    <slot>button2Clicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>97</x>
-     <y>153</y>
+     <x>100</x>
+     <y>172</y>
     </hint>
     <hint type="destinationlabel">
      <x>100</x>
@@ -285,7 +362,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>103</x>
-     <y>115</y>
+     <y>112</y>
     </hint>
     <hint type="destinationlabel">
      <x>160</x>
@@ -364,12 +441,44 @@
    <slot>quitButtonClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>108</x>
-     <y>210</y>
+     <x>64</x>
+     <y>232</y>
     </hint>
     <hint type="destinationlabel">
      <x>164</x>
      <y>262</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>resetButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>resetButtonClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>154</x>
+     <y>242</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>129</x>
+     <y>191</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>shuffleButtonClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>153</x>
+     <y>310</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>171</x>
+     <y>349</y>
     </hint>
    </hints>
   </connection>
@@ -386,5 +495,7 @@
   <slot>button7Clicked()</slot>
   <slot>button8Clicked()</slot>
   <slot>quitButtonClicked()</slot>
+  <slot>resetButtonClicked()</slot>
+  <slot>shuffleButtonClicked()</slot>
  </slots>
 </ui>

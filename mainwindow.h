@@ -1,9 +1,26 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QTimer>
 #include <QMainWindow>
 #include <QSignalMapper>
-#include "C:/Users/Dan/Desktop/Block.h" //This will need to be changed for your test to compile
+#include "Block.h" //This will need to be changed for your test to compile
+#include "Score.h" //SHupdate
+#include "ScoreFrame.h" //SHupdate
+#include "Colors.h" // SHupdate
+
+// SHupdate
+#include <QPushButton>
+#include <QMap>
+#include <QString>
+#include <QLabel>
+#include <QGraphicsView>
+#include <QGridLayout>
+#include <QGroupBox>
+#include <QLCDNumber>
+#include <QProgressBar>
+
+
 
 namespace Ui {
     class MainWindow;
@@ -13,6 +30,11 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 public:
+
+    Score *scorePtr;  // SHupdate
+    int ROWS, COLUMNS; // SHupdate
+    Colors *colorPtr;
+
     enum ScreenOrientation {
         ScreenOrientationLockPortrait,
         ScreenOrientationLockLandscape,
@@ -29,6 +51,11 @@ public:
 
     void showExpanded();
 
+
+    //SHupdate
+    QLCDNumber *scoreLCD;
+    QGridLayout *grid;
+
 private slots:
     void button0Clicked();
     void button1Clicked();
@@ -40,6 +67,11 @@ private slots:
     void button7Clicked();
     void button8Clicked();
     void quitButtonClicked();
+    void resetButtonClicked();
+    void shuffleButtonClicked();
+
+    void timeSlot();
+
 
 private:
     void processMatch(Block*);
@@ -50,6 +82,18 @@ private:
     Ui::MainWindow *ui;
     vector<Block*> bombCollector(vector<Block*>, int, int);
     vector<Block*> checkSpecials(vector<Block*>);
+
+    ScoreFrame *sframe;
+    void shuffle();
+    void reset();
+
+    void setUpClock();
+    void gameOver();
+    int currentTime;
+    QTimer *timer;
+    int x;
+
+
 };
 
 #endif // MAINWINDOW_H

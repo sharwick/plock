@@ -1,20 +1,38 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QCoreApplication>
+#include <QFont>
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
+    ROWS = 3;
+    COLUMNS=3;
+    colorPtr = new Colors(0); //initialize color class, 7 color values, default color scheme
+
     ui->setupUi(this);
-    gameBoard[0][0] = new Block(ui->pushButton6, 0, 0);
-    gameBoard[1][0] = new Block(ui->pushButton7, 1, 0);
-    gameBoard[2][0] = new Block(ui->pushButton8, 2, 0);
-    gameBoard[0][1] = new Block(ui->pushButton3, 0, 1);
-    gameBoard[1][1] = new Block(ui->pushButton4, 1, 1);
-    gameBoard[2][1] = new Block(ui->pushButton5, 2, 1);
-    gameBoard[0][2] = new Block(ui->pushButton0, 0, 2);
-    gameBoard[1][2] = new Block(ui->pushButton1, 1, 2);
-    gameBoard[2][2] = new Block(ui->pushButton2, 2, 2);
+    //random color value generated for each new Block
+    //value used as color int and as index in colorArray
+    int temp;
+    temp = (rand() % 6) + 1;
+    gameBoard[0][0] = new Block(ui->pushButton6, 0, 0, temp, colorPtr->getQColor(temp));
+    temp = (rand() % 6) + 1;
+    gameBoard[1][0] = new Block(ui->pushButton7, 1, 0, temp, colorPtr->getQColor(temp));
+    temp = (rand() % 6) + 1;
+    gameBoard[2][0] = new Block(ui->pushButton8, 2, 0, temp, colorPtr->getQColor(temp));
+    temp = (rand() % 6) + 1;
+    gameBoard[0][1] = new Block(ui->pushButton3, 0, 1, temp, colorPtr->getQColor(temp));
+    temp = (rand() % 6) + 1;
+    gameBoard[1][1] = new Block(ui->pushButton4, 1, 1, temp, colorPtr->getQColor(temp));
+    temp = (rand() % 6) + 1;
+    gameBoard[2][1] = new Block(ui->pushButton5, 2, 1, temp, colorPtr->getQColor(temp));
+    temp = (rand() % 6) + 1;
+    gameBoard[0][2] = new Block(ui->pushButton0, 0, 2, temp, colorPtr->getQColor(temp));
+    temp = (rand() % 6) + 1;
+    gameBoard[1][2] = new Block(ui->pushButton1, 1, 2, temp, colorPtr->getQColor(temp));
+    temp = (rand() % 6) + 1;
+    gameBoard[2][2] = new Block(ui->pushButton2, 2, 2, temp, colorPtr->getQColor(temp));
 
     for(int i = 0; i < 3; i++)
     {
@@ -30,6 +48,44 @@ MainWindow::MainWindow(QWidget *parent)
                 gameBoard[i][j]->assignDown(gameBoard[i][j+1]);
         }
     }
+
+    // Mike Son update
+    setUpClock();
+    timer = new QTimer(this);
+    timer->start(200);//move to start game code
+    connect(timer, SIGNAL(timeout()),this, SLOT(timeSlot()));
+
+
+
+
+    // SHupdate
+
+        scorePtr = new Score();
+
+        QGridLayout *grid = new QGridLayout(this);
+        grid->setAlignment(Qt::AlignTop);
+        grid->setContentsMargins(0,0,0,0);
+        grid->setSpacing(0);
+        ui->centralWidget->setLayout(grid);
+
+        // Score LCD Number
+
+        int screenSizeX = 200;
+        scoreLCD = new QLCDNumber(this);
+        scoreLCD->setFixedSize(screenSizeX * 0.3,screenSizeX * 0.15);
+        scoreLCD->setDigitCount(7);
+        scoreLCD->setSegmentStyle(QLCDNumber::Flat);
+        scoreLCD->display(scorePtr->getScore());
+        QFont f("Times");
+        //scoreLCD->setFrameRect();
+        scoreLCD->setFont(f);
+
+        sframe = new ScoreFrame();
+        //sframe->setParent(ui);
+        grid->addWidget(sframe->text);
+
+        grid->addWidget(scoreLCD,1,3,0,2);
+
 
    // blockSignalMapper = new QSignalMapper(this);
     //blockSignalMapper->setMapping(ui->pushButton0, gameBoard[2][0]);
@@ -97,6 +153,8 @@ void MainWindow::showExpanded()
  *  Late add: markedBool and setColor(black or 0) are called here as a logical place to process these
  *  intermediate changes in the blocks.
  *
+ *  CHANGED: setColor now includes QColor parameter
+ *
  *  NOTE: May be unnecessary. determineColor can be extended extra overlaps, and only consideration
  *  overlapping is transitions.
  */
@@ -117,7 +175,7 @@ vector<Block*> MainWindow::sortVector(vector<Block*> blockVector)
             blockVector[i] = blockVector[t];
             blockVector[t] = tempPtr;
         }
-        blockVector[i]->setColor(0);
+        blockVector[i]->setColor(0, colorPtr->getQColor(0));
         blockVector[i]->setMarkedBool(false);
     }
     return blockVector;
@@ -144,6 +202,8 @@ vector<Block*> MainWindow::sortVector(vector<Block*> blockVector)
  *  be taken, and it is added to the end of the blockVector. In the case
  *  of no matches in a column with the ith block, a new random color will
  *  be assigned and the appropriate coloredBool flag is set to false.
+ *
+ *  CHANGED: setColor now includes QColor
  */
 
 void MainWindow::determineColor(vector<Block*> blockVector)
@@ -155,18 +215,22 @@ void MainWindow::determineColor(vector<Block*> blockVector)
         {
             if(!gameBoard[blockVector[i]->getRowX()][checkY]->getColoredBool())
             {
-                blockVector[i]->setColor(gameBoard[blockVector[i]->getRowX()][checkY]->getColor());
+                int tempX;
+                tempX = blockVector[i]->getRowX();
+                blockVector[i]->setColor(gameBoard[tempX][checkY]->getColor(), colorPtr->getQColor(gameBoard[tempX][checkY]->getColor()));
                 blockVector[i]->setColoredBool(false);
-                gameBoard[blockVector[i]->getRowX()][checkY]->setColor(0);
-                gameBoard[blockVector[i]->getRowX()][checkY]->setColoredBool(true);
-                blockVector.push_back(gameBoard[blockVector[i]->getRowX()][checkY]);
+                gameBoard[tempX][checkY]->setColor(0, colorPtr->getQColor(0));
+                gameBoard[tempX][checkY]->setColoredBool(true);
+                blockVector.push_back(gameBoard[tempX][checkY]);
                 break;
             }
             checkY--;
         }
         if(checkY < 0)
         {
-            blockVector[i]->setColor((rand() % 6) + 1);
+            int tempColor;
+            tempColor = (rand() % 6) + 1;
+            blockVector[i]->setColor(tempColor, colorPtr->getQColor(tempColor));
             blockVector[i]->setColoredBool(false);
         }
     }
@@ -242,8 +306,22 @@ void MainWindow::button8Clicked()
 
 void MainWindow::processMatch(Block* matchedBlock)
 {
+    /*
     vector<Block*> gatheredBlocks = matchedBlock->gatherBlocks(gatheredBlocks);
     gatheredBlocks = sortVector(gatheredBlocks);
+    determineColor(gatheredBlocks);
+    */
+    // SHupdate - rearranged by Dan for order
+    vector<Block*> gatheredBlocks;
+    gatheredBlocks = matchedBlock->gatherBlocks(gatheredBlocks);
+    gatheredBlocks = sortVector(gatheredBlocks);
+
+    int multiplier;
+    multiplier = 1;
+
+    scorePtr->updateScore((int) gatheredBlocks.size(), false , multiplier);
+    scoreLCD->display(scorePtr->getScore());
+    sframe->update(scorePtr->getScore());
     determineColor(gatheredBlocks);
 }
 
@@ -328,3 +406,96 @@ vector<Block*> MainWindow::checkSpecials(vector<Block*> blockVector)
     }
     return blockVector;
 }
+
+
+/**
+  * Reset the colors of all blocks
+  *
+  *DKeasler:
+  *tempColor to get random number first, then uses QColor with setColor
+  */
+void MainWindow::reset() {
+    int r, c;
+    for (r=0; r<ROWS; r++) {
+        for (c=0; c<COLUMNS; c++) {
+            int tempColor;
+            tempColor = (rand() % 6) + 1;
+            gameBoard[r][c]->setColor(tempColor, colorPtr->getQColor(tempColor));
+        }
+    }
+}
+
+void MainWindow::shuffle() {
+    // reset();  // old method
+
+    // re-assign the blocks to the game board
+        // perform Nswaps swaps, passing colors/bombs/multipliers
+        int Nswaps, i;
+        Nswaps=ROWS*COLUMNS;
+
+        for (i=0; i<Nswaps; i++) {
+            int r1, c1, r2, c2, tempColor;
+            r1=rand()%ROWS;
+            r2=rand()%ROWS;
+            c1=rand()%COLUMNS;
+            c2=rand()%COLUMNS;
+
+            tempColor = gameBoard[r1][c1]->getColor();
+            //now uses QColor with setColor function
+            gameBoard[r1][c1]->setColor( gameBoard[r2][c2]->getColor(), colorPtr->getQColor(gameBoard[r2][c2]->getColor()) );
+            gameBoard[r2][c2]->setColor(tempColor, colorPtr->getQColor(tempColor));
+
+            // TO DO: need to swap bombs/multipler -> add getBomb method to Block
+        }
+
+
+
+
+
+}
+
+void MainWindow::shuffleButtonClicked() {
+    shuffle();
+}
+
+void MainWindow::resetButtonClicked() {
+    reset();
+    scorePtr->resetScore();
+    sframe->resetScoreBoard();
+}
+
+
+/*
+* Mike Son code
+*clock starting code
+*/
+
+void MainWindow::setUpClock(){
+QPixmap newMap(ui->Timeclock->width(), ui->Timeclock->height());
+newMap.fill(Qt::magenta);
+ui->Timeclock->setPixmap(newMap);
+newMap.fill(Qt::green);
+ui->Timefill->setPixmap(newMap);
+ui->Timefill->setMaximumWidth(ui->Timeclock->width());
+currentTime=60;
+ui->Timenum->setText(QString::number(currentTime));
+}
+
+void MainWindow::timeSlot(){
+x++;
+if(x%5==0){
+    currentTime--;
+}
+if(currentTime==-1){
+    gameOver();
+    //close();70/200
+    return;
+}
+ui->Timenum->setText(QString::number(currentTime));
+ui->Timefill->setMaximumWidth(ui->Timefill->maximumWidth()-(ui->Timeclock->width()/300));
+}
+
+void MainWindow::gameOver(){
+    timer->stop();
+}
+
