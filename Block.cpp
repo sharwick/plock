@@ -40,8 +40,8 @@
 #include <QIcon>
 
 using namespace std;
-Block::Block(QPushButton *button, int rowSpot, int colSpot, int colorChoice, QColor firstColor){
-	pushButtonPtr = button;
+Block::Block(int rowSpot, int colSpot, int colorChoice){
+	//pushButtonPtr = button;
 	rightBlockPtr = NULL;
 	upBlockPtr = NULL;
 	leftBlockPtr = NULL;
@@ -51,7 +51,7 @@ Block::Block(QPushButton *button, int rowSpot, int colSpot, int colorChoice, QCo
     RowX = rowSpot;
     ColY = colSpot;
     graphImage = 0;
-    setColor(colorChoice, firstColor);
+    setColor(colorChoice);
 }
 
 /*
@@ -67,16 +67,16 @@ Block::Block(QPushButton *button, int rowSpot, int colSpot, int colorChoice, QCo
  *  CHANGED: No switch needed. Color int is index in colorArray,
  *  QColor is color at that index.
  */
-void Block::setColor(int _color, QColor firstColor){
+void Block::setColor(int _color){
     color = _color;
-    QPixmap newMap(31, 31);
-    newMap.fill(firstColor);
+    //QPixmap newMap(31, 31);
+    //newMap.fill(firstColor);
 
     // SH Update: TO DO: Move this outside the Block class (source= Color Brewer)
     //should be complete
     //int transparency=255;  // Alternatively: 127
-	QIcon newIcon(newMap);
-    pushButtonPtr->setIcon(newIcon);
+	//QIcon newIcon(newMap);
+    //pushButtonPtr->setIcon(newIcon);
 }
 
 /*

@@ -33,15 +33,14 @@
 #ifndef BLOCK
 #define BLOCK
 
-#include <QPushButton>
 #include <vector>
 
 using namespace std;
 
 class Block{
 public:
-    Block(QPushButton*, int, int, int, QColor); //edit for QPushButton
-    void setColor(int, QColor); //edit for QPushButton inheritance?
+    Block(int, int, int); //edit for QPushButton
+    void setColor(int); //edit for QPushButton inheritance?
     int getColor(); //edit for QPushButton inheritance?
     bool getColoredBool();
     bool getMarkedBool();
@@ -62,7 +61,6 @@ public:
     vector<Block*> leftCollector(vector<Block*>);
 
 private:
-    QPushButton *pushButtonPtr; //removal for QPushButton inheritance
     bool markedBool;
     bool coloredBool;
     Block *rightBlockPtr;
