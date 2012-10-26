@@ -207,6 +207,29 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
     xPos = event->x() / blockSize;
     yPos = (event->y() - offset) / blockSize;
 
+/*
+*Just to outline how my function would be called:
+*
+*So ideally at this point, selecting another match is illegal. Or even before here once the event is clicked.
+*
+*Block* tempCheck = gameBoard[xPos][yPos];
+*if(xPos > 0 && gameBoard[xPos - 1][yPos]->getColor() == tempCheck->getColor())
+*	processMatch(tempCheck); //found a match
+*else if(yPos > 0 && gameBoard[xPos][yPos - 1]->getColor() == tempCheck->getColor())
+*	processMatch(tempCheck); //found a match
+*else if(xPos < boardSizeX && gameBoard[xPos + 1][yPos]->getColor() == tempCheck->getColor())
+*	processMatch(tempCheck);
+*else if(yPos < boardSizeY && gameBoard[xPos][yPos + 1]->getColor() == tempCheck->getColor())
+*	processMatch(tempCheck);
+*else{
+*	//No matches found
+*	//may not even need an else here
+*}
+*
+*Now in any 4 cases of a match or no match, this would be where block selection can be allowable again
+*Or at least maybe the last thing in the call.
+*/
+
     // Color it
     theBrush = QBrush(Qt::red, Qt::SolidPattern);
     rectArray[xPos][yPos]->setBrush(theBrush);
