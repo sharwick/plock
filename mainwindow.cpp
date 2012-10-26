@@ -1,94 +1,31 @@
+/**********************************
+ * Plock - An android game
+ * MainWindow.cpp
+ *
+ * @author Devin Rusnak
+ * @version Qt:4.8.3
+ * UIC CS 340 Fall 2012
+ *
+ * Updates:
+ *  10/25 - Got QBrush working, added some comments.
+ *
+ *
+ *
+ **********************************/
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QDesktopWidget>
 #include <QCoreApplication>
-#include <QFont>
-
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
-    ROWS = 3;
-    COLUMNS=3;
-    colorPtr = new Colors(0); //initialize color class, 7 color values, default color scheme
-
     ui->setupUi(this);
-    //random color value generated for each new Block
-    //value used as color int and as index in colorArray
-    int temp;
-    temp = (rand() % 6) + 1;
-    gameBoard[0][0] = new Block(ui->pushButton6, 0, 0, temp, colorPtr->getQColor(temp));
-    temp = (rand() % 6) + 1;
-    gameBoard[1][0] = new Block(ui->pushButton7, 1, 0, temp, colorPtr->getQColor(temp));
-    temp = (rand() % 6) + 1;
-    gameBoard[2][0] = new Block(ui->pushButton8, 2, 0, temp, colorPtr->getQColor(temp));
-    temp = (rand() % 6) + 1;
-    gameBoard[0][1] = new Block(ui->pushButton3, 0, 1, temp, colorPtr->getQColor(temp));
-    temp = (rand() % 6) + 1;
-    gameBoard[1][1] = new Block(ui->pushButton4, 1, 1, temp, colorPtr->getQColor(temp));
-    temp = (rand() % 6) + 1;
-    gameBoard[2][1] = new Block(ui->pushButton5, 2, 1, temp, colorPtr->getQColor(temp));
-    temp = (rand() % 6) + 1;
-    gameBoard[0][2] = new Block(ui->pushButton0, 0, 2, temp, colorPtr->getQColor(temp));
-    temp = (rand() % 6) + 1;
-    gameBoard[1][2] = new Block(ui->pushButton1, 1, 2, temp, colorPtr->getQColor(temp));
-    temp = (rand() % 6) + 1;
-    gameBoard[2][2] = new Block(ui->pushButton2, 2, 2, temp, colorPtr->getQColor(temp));
-
-    for(int i = 0; i < 3; i++)
-    {
-        for(int j = 0; j < 3; j++)
-        {
-            if(i != 0)
-                gameBoard[i][j]->assignLeft(gameBoard[i-1][j]);
-            if(j != 0)
-                gameBoard[i][j]->assignUp(gameBoard[i][j-1]);
-            if(i != 2)
-                gameBoard[i][j]->assignRight(gameBoard[i+1][j]);
-            if(j != 2)
-                gameBoard[i][j]->assignDown(gameBoard[i][j+1]);
-        }
-    }
-
-    // Mike Son update
-    setUpClock();
-    timer = new QTimer(this);
-    timer->start(200);//move to start game code
-    connect(timer, SIGNAL(timeout()),this, SLOT(timeSlot()));
 
 
-
-
-    // SHupdate
-
-        scorePtr = new Score();
-
-        QGridLayout *grid = new QGridLayout(this);
-        grid->setAlignment(Qt::AlignTop);
-        grid->setContentsMargins(0,0,0,0);
-        grid->setSpacing(0);
-        ui->centralWidget->setLayout(grid);
-
-        // Score LCD Number
-
-        int screenSizeX = 200;
-        scoreLCD = new QLCDNumber(this);
-        scoreLCD->setFixedSize(screenSizeX * 0.3,screenSizeX * 0.15);
-        scoreLCD->setDigitCount(7);
-        scoreLCD->setSegmentStyle(QLCDNumber::Flat);
-        scoreLCD->display(scorePtr->getScore());
-        QFont f("Times");
-        //scoreLCD->setFrameRect();
-        scoreLCD->setFont(f);
-
-        sframe = new ScoreFrame();
-        //sframe->setParent(ui);
-        grid->addWidget(sframe->text);
-
-        grid->addWidget(scoreLCD,1,3,0,2);
-
-
-   // blockSignalMapper = new QSignalMapper(this);
-    //blockSignalMapper->setMapping(ui->pushButton0, gameBoard[2][0]);
+    setupWindow();
+    setupInterface();
+    setupBlocks();
 }
 
 MainWindow::~MainWindow()
@@ -96,6 +33,9 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+/**********************
+ * Necessitas Methods *
+ **********************/
 void MainWindow::setOrientation(ScreenOrientation orientation)
 {
     Qt::WidgetAttribute attribute;
@@ -114,9 +54,11 @@ void MainWindow::setOrientation(ScreenOrientation orientation)
         break;
 #else // QT_VERSION < 0x040702
     case ScreenOrientationLockPortrait:
+        // INSERT CODE HERE
         attribute = Qt::WA_LockPortraitOrientation;
         break;
     case ScreenOrientationLockLandscape:
+        // INSET CODE HERE
         attribute = Qt::WA_LockLandscapeOrientation;
         break;
     default:
@@ -139,363 +81,147 @@ void MainWindow::showExpanded()
 #endif
 }
 
-/*
- *Author: Daniel Keasler
- *      Plock Team
- *
- *Outer loop eventually checks every element in the vector. T, initialized to i, is used to keep track
- *  of the maximum (max index, lowest push button on widget) so that if no block is a max over t, then
- *  there won't be a switch. Because j goes to the end of the vector in each inner loop, any Block
- *  swapping will be the max and the next nested iteration can skip that Block for order assuring. For
- *  a swap, both blocks must be in the same row and the ColY must be higher, meaning further down in
- *  the widget representation as well as the the array structure.
- *
- *  Late add: markedBool and setColor(black or 0) are called here as a logical place to process these
- *  intermediate changes in the blocks.
- *
- *  CHANGED: setColor now includes QColor parameter
- *
- *  NOTE: May be unnecessary. determineColor can be extended extra overlaps, and only consideration
- *  overlapping is transitions.
- */
+/*********************************************************************
+  void setupWindow():
 
-vector<Block*> MainWindow::sortVector(vector<Block*> blockVector)
-{
-    for(int i = 0; (unsigned)i < blockVector.size(); i++)
-    {
-        int t = i;
-        for(int j = i + 1; (unsigned)j < blockVector.size(); j++)
-        {
-            if(blockVector[j]->getRowX() == blockVector[t]->getRowX() && blockVector[j]->getColY() > blockVector[t]->getColY())
-                t = j;
-        }
-        if(t != i)
-        {
-            Block *tempPtr = blockVector[i];
-            blockVector[i] = blockVector[t];
-            blockVector[t] = tempPtr;
-        }
-        blockVector[i]->setColor(0, colorPtr->getQColor(0));
-        blockVector[i]->setMarkedBool(false);
-    }
-    return blockVector;
-}
+    This method sets the size of the mainWindow based on the size of
+    the phone screen. It also uses these parameters to determine the
+    size the game blocks should be to fit evenly on the board. Also
+    the gridLayout that organizes the items on screen is instantiated.
 
-/*
- *Author: Daniel Keasler
- *      Plock Team
- *
- *Gives each Block in the vector the proper color. Because color drops
- *  from top to bottom (high indices to low indices), the first proper
- *  color is chosen from the adjacent Block up from the current ith
- *  Block. CheckY, along with the ith Block's RowX, is used to find the
- *  next appropriate color above in the correct column. The only other
- *  factor for the same color in the 2D array is that the color it could
- *  be inheriting is not already scheduled for a color change, which is
- *  what the coloredBool value is for. If the condition for "inheriting"
- *  another color is met, then the Block inheriting the color is sent
- *  the new color and the coloredBool value is set to false (no longer
- *  needs a color change) and the Block that lost the color now also
- *  needs a color change. The color of this available block is set to
- *  Black for a noticeable transition, the coloredBool value is set to
- *  true because the Block needs a color change and its color should not
- *  be taken, and it is added to the end of the blockVector. In the case
- *  of no matches in a column with the ith block, a new random color will
- *  be assigned and the appropriate coloredBool flag is set to false.
- *
- *  CHANGED: setColor now includes QColor
- */
+ *********************************************************************/
+void MainWindow::setupWindow(){
 
-void MainWindow::determineColor(vector<Block*> blockVector)
-{
-    for(int i = 0; (unsigned)i < blockVector.size(); i++)
-    {
-        int checkY = blockVector[i]->getColY() - 1;
-        while(checkY >= 0)
-        {
-            if(!gameBoard[blockVector[i]->getRowX()][checkY]->getColoredBool())
-            {
-                int tempX;
-                tempX = blockVector[i]->getRowX();
-                blockVector[i]->setColor(gameBoard[tempX][checkY]->getColor(), colorPtr->getQColor(gameBoard[tempX][checkY]->getColor()));
-                blockVector[i]->setColoredBool(false);
-                gameBoard[tempX][checkY]->setColor(0, colorPtr->getQColor(0));
-                gameBoard[tempX][checkY]->setColoredBool(true);
-                blockVector.push_back(gameBoard[tempX][checkY]);
-                break;
-            }
-            checkY--;
-        }
-        if(checkY < 0)
-        {
-            int tempColor;
-            tempColor = (rand() % 6) + 1;
-            blockVector[i]->setColor(tempColor, colorPtr->getQColor(tempColor));
-            blockVector[i]->setColoredBool(false);
-        }
-    }
-}
+    // Get the size of the phone screen and set centralWidget to that size
+    ui->centralWidget->maximumSize();
+    screenSizeX = QApplication::desktop()->screenGeometry(-1).width();
+    screenSizeY = QApplication::desktop()->screenGeometry(-1).height();
+    ui->centralWidget->setBaseSize(screenSizeX, screenSizeY);
 
-void MainWindow::button0Clicked()
-{
-    int colorCheck = gameBoard[0][2]->getColor();
-    if(colorCheck == gameBoard[1][2]->getColor() || colorCheck == gameBoard[0][1]->getColor())
-        processMatch(gameBoard[0][2]);
-}
+    // Set Size of Blocks based on Window Size and Board Size
+    int tempSizeY = screenSizeY/.7;
+    boardSizeX = 7;
+    boardSizeY = 9;
 
-void MainWindow::button1Clicked()
-{
-    int colorCheck = gameBoard[1][2]->getColor();
-    if(colorCheck == gameBoard[0][2]->getColor() || colorCheck == gameBoard[2][2]->getColor()
-            || colorCheck == gameBoard[1][1]->getColor())
-        processMatch(gameBoard[1][2]);
-}
+    if( (screenSizeX / boardSizeX) < (tempSizeY / boardSizeY) )
+        blockSize = screenSizeX / boardSizeX;
+    else
+        blockSize = tempSizeY / boardSizeY;
 
-void MainWindow::button2Clicked()
-{
-    int colorCheck = gameBoard[2][2]->getColor();
-    if(colorCheck == gameBoard[2][1]->getColor() || colorCheck == gameBoard[1][2]->getColor())
-        processMatch(gameBoard[2][2]);
-}
+    grid = new QGridLayout(this);
+    grid->setAlignment(Qt::AlignTop);
+    grid->setContentsMargins(0,0,0,0);
+    grid->setHorizontalSpacing(3);
+    grid->setVerticalSpacing(0);
+    ui->centralWidget->setLayout(grid);
 
-void MainWindow::button3Clicked()
-{
-    int colorCheck = gameBoard[0][1]->getColor();
-    if(colorCheck == gameBoard[0][0]->getColor() || colorCheck == gameBoard[1][1]->getColor()
-            || colorCheck == gameBoard[0][2]->getColor())
-        processMatch(gameBoard[0][1]);
-}
+} // End setupWindow()
 
-void MainWindow::button4Clicked()
-{
-    int colorCheck = gameBoard[1][1]->getColor();
-    if(colorCheck == gameBoard[0][1]->getColor() || colorCheck == gameBoard[1][0]->getColor()
-            || colorCheck == gameBoard[1][2]->getColor() || colorCheck == gameBoard[2][1]->getColor())
-        processMatch(gameBoard[1][1]);
-}
+/*********************************************************************
+  void setupInterface():
 
-void MainWindow::button5Clicked()
-{
-    int colorCheck = gameBoard[2][1]->getColor();
-    if(colorCheck == gameBoard[2][0]->getColor() || colorCheck == gameBoard[1][1]->getColor()
-            || colorCheck == gameBoard[2][2]->getColor())
-        processMatch(gameBoard[2][1]);
-}
+    This method initalizes and places all of the widgets used in the
+    game. The main game board is a QGraphicsView with a QGraphicsScene
+    with custom QGraphicsRectItems.
 
-void MainWindow::button6Clicked()
-{
-    int colorCheck = gameBoard[0][0]->getColor();
-    if(colorCheck == gameBoard[0][1]->getColor() || colorCheck == gameBoard[1][0]->getColor())
-        processMatch(gameBoard[0][0]);
-}
+ *********************************************************************/
+void MainWindow::setupInterface(){
 
-void MainWindow::button7Clicked()
-{
-    int colorCheck = gameBoard[1][0]->getColor();
-    if(colorCheck == gameBoard[0][0]->getColor() || colorCheck == gameBoard[1][1]->getColor()
-            || colorCheck == gameBoard[2][0]->getColor())
-        processMatch(gameBoard[1][0]);
-}
+    // Set Labels
+    grid->addWidget(new QLabel("Bombs:"),0,1);
+    grid->addWidget(new QLabel("Score:"),0,0);
+    grid->addWidget(new QLabel("Time:"),7,0);
 
-void MainWindow::button8Clicked()
-{
-    int colorCheck = gameBoard[2][0]->getColor();
-    if(colorCheck == gameBoard[1][0]->getColor() || colorCheck == gameBoard[2][1]->getColor())
-        processMatch(gameBoard[2][0]);
-}
+    // Score LCD Number
+    scoreLCD = new QLCDNumber(this);
+    scoreLCD->setFixedSize(blockSize*2,blockSize);
+    scoreLCD->setDigitCount(7);
+    scoreLCD->setSegmentStyle(QLCDNumber::Flat);
+    scoreLCD->display(1337);
+    grid->addWidget(scoreLCD,1,0,Qt::AlignLeft);
 
-void MainWindow::processMatch(Block* matchedBlock)
-{
-    /*
-    vector<Block*> gatheredBlocks = matchedBlock->gatherBlocks(gatheredBlocks);
-    gatheredBlocks = sortVector(gatheredBlocks);
-    determineColor(gatheredBlocks);
-    */
-    // SHupdate - rearranged by Dan for order
-    vector<Block*> gatheredBlocks;
-    gatheredBlocks = matchedBlock->gatherBlocks(gatheredBlocks);
-    gatheredBlocks = sortVector(gatheredBlocks);
+    // Bomb Progress Bar
+    bombBar = new QProgressBar(this);
+    bombBar->setFixedSize(blockSize * 2, blockSize);
+    grid->addWidget(bombBar,1,1);
 
-    int multiplier;
-    multiplier = 1;
+    // Menu Button
+    menuButton = new QPushButton("Menu",this);
+    menuButton->setFixedSize(blockSize * 1.2 ,blockSize * 1.2);
+    connect(menuButton, SIGNAL(clicked()),this, SLOT(menuPressed()));
+    grid->addWidget(menuButton,1,2);
 
-    scorePtr->updateScore((int) gatheredBlocks.size(), false , multiplier);
-    scoreLCD->display(scorePtr->getScore());
-    sframe->update(scorePtr->getScore());
-    determineColor(gatheredBlocks);
-}
+    // Block Viewing Area
+    theScene = new QGraphicsScene();
+    theScene->setSceneRect(0, 0, screenSizeX-4, (blockSize * boardSizeY)-4);
+    blockView = new QGraphicsView(theScene);
+    blockView->setFixedSize(screenSizeX, blockSize * boardSizeY);
+    grid->addWidget(blockView,2,0,5,5);
+    blockView->show();
 
-void MainWindow::quitButtonClicked()
-{
-    close();
-}
+    // Time Progress Bar
+    timeBar = new QProgressBar(this);
+    timeBar->setFixedSize(screenSizeX - (screenSizeX/4), 20);
+    grid->addWidget(timeBar,7,1);
 
-/*
- *Author: Daniel Keasler
- *      Plock Team
- *
- *Outer for loop goes from x - 1 to x + 1, bounds checking prevents errors.
- *  Inner loop goes from y - 1 to y + 1, bounds checking prevents errors.
- *  if block hasn't been marked yet, same process to add block and change
- *  boolean values. Return block back to checkSpecials.
- */
-vector<Block*> MainWindow::bombCollector(vector<Block*> blockVector, int x, int y)
-{
-    for(int i = (x - 1); i < (x + 2); i++)
-    {
-        if(i > 3) //needs to be changed for 7x9
-            break;
-        if(i < 0)
-            continue;
-        for(int j = (y - 1); j < (y + 2); j++)
-        {
-            if(j > 3 || j < 0) //needs to be changed for 7x9
-                continue;
-            if(!gameBoard[i][j]->getMarkedBool())
-            {
-                gameBoard[i][j]->setColoredBool(true);
-                gameBoard[i][j]->setMarkedBool(true);
-                blockVector.push_back(gameBoard[i][j]);
-            }
+    // Setup Paused Menu
+
+} // End setupInterface()
+
+/*********************************************************************
+  void setupBlocks():
+
+    This method instantiates a two dimentional array of the custom
+    QGraphicsRectItem class myRectItems. They are set to selectable
+    so that they will emit mouse events. Then they are added to the
+    QGraphicsScene theScene.
+
+ *********************************************************************/
+void MainWindow::setupBlocks(){
+
+    for(int y = 0; y < boardSizeY; y++){
+        for(int x = 0; x < boardSizeX; x++){
+
+            rectArray[x][y] = new myRectItem();
+            rectArray[x][y]->setRect(blockSize * x, blockSize * y, blockSize, blockSize);
+            rectArray[x][y]->setFlags(QGraphicsItem::ItemIsSelectable);
+            theScene->addItem(rectArray[x][y]);
         }
     }
-    return blockVector;
-}
 
-/*
- *Author: Daniel Keasler
- *      Plock Team
- *
- *Outer for loop scans every block in blockVector. If statement checks
- *  for 0 first to avoid redundancy of case 0 : break; and overwriting 0
- *  with 0. Relavant cases call for mapped collector methods, assignment
- *  back to blockVector. One statement for all 5 cases to setGraphImage
- *  (and the graphical image itself) to 0 at end. Return blockVector to
- *  processMatches.
- */
-vector<Block*> MainWindow::checkSpecials(vector<Block*> blockVector)
-{
-    for(int i = 0; (unsigned)i < blockVector.size(); i++)
-    {
-        if(blockVector[i]->getGraphImage() != 0)
-        {
-            switch(blockVector[i]->getGraphImage()){
+} // End setupBlocks()
 
-            case 1 : //score case
-                break;
-            case 2 : //bomb case
-                blockVector = bombCollector(blockVector, blockVector[i]->getRowX(), blockVector[i]->getColY());
-                break;
-            case 3 : //vertical case
-                blockVector = blockVector[i]->upCollector(blockVector);
-                blockVector = blockVector[i]->downCollector(blockVector);
-                break;
-            case 4 : //horizontal case
-                blockVector = blockVector[i]->rightCollector(blockVector);
-                blockVector = blockVector[i]->leftCollector(blockVector);
-                break;
-            case 5 : //4 arrows case
-                blockVector = blockVector[i]->upCollector(blockVector);
-                blockVector = blockVector[i]->downCollector(blockVector);
-                blockVector = blockVector[i]->rightCollector(blockVector);
-                blockVector = blockVector[i]->leftCollector(blockVector);
-                break;
-            }
-            blockVector[i]->setGraphImage(0);
-        }
-    }
-    return blockVector;
-}
+/*********************************************************************
+  void mousePressEvent(QMouseEvent):
 
+    This method accepts the mouse event that the QGraphicsScene
+    emit and calculates the cords of the selected rectItem in
+    the rectArray. Then other things will be done.
 
-/**
-  * Reset the colors of all blocks
-  *
-  *DKeasler:
-  *tempColor to get random number first, then uses QColor with setColor
-  */
-void MainWindow::reset() {
-    int r, c;
-    for (r=0; r<ROWS; r++) {
-        for (c=0; c<COLUMNS; c++) {
-            int tempColor;
-            tempColor = (rand() % 6) + 1;
-            gameBoard[r][c]->setColor(tempColor, colorPtr->getQColor(tempColor));
-        }
-    }
-}
+ *********************************************************************/
+void MainWindow::mousePressEvent(QMouseEvent *event){
+    // Accont for the size of the GraphicsScene
+    int offset = screenSizeY * 0.15;
 
-void MainWindow::shuffle() {
-    // reset();  // old method
+    // Calculate the array cords
+    xPos = event->x() / blockSize;
+    yPos = (event->y() - offset) / blockSize;
 
-    // re-assign the blocks to the game board
-        // perform Nswaps swaps, passing colors/bombs/multipliers
-        int Nswaps, i;
-        Nswaps=ROWS*COLUMNS;
+    // Color it
+    theBrush = QBrush(Qt::red, Qt::SolidPattern);
+    rectArray[xPos][yPos]->setBrush(theBrush);
 
-        for (i=0; i<Nswaps; i++) {
-            int r1, c1, r2, c2, tempColor;
-            r1=rand()%ROWS;
-            r2=rand()%ROWS;
-            c1=rand()%COLUMNS;
-            c2=rand()%COLUMNS;
+    // Ungrab the mouse
+    rectArray[xPos][yPos]->ungrabMouse();
 
-            tempColor = gameBoard[r1][c1]->getColor();
-            //now uses QColor with setColor function
-            gameBoard[r1][c1]->setColor( gameBoard[r2][c2]->getColor(), colorPtr->getQColor(gameBoard[r2][c2]->getColor()) );
-            gameBoard[r2][c2]->setColor(tempColor, colorPtr->getQColor(tempColor));
+    // Unselect it so others can be
+    rectArray[xPos][yPos]->setSelected(false);
 
-            // TO DO: need to swap bombs/multipler -> add getBomb method to Block
-        }
+    // Emit cords
+    emit blockPressed(xPos, yPos);
 
+} // End mousePressEvent
 
-
-
+void MainWindow::menuPressed(){
 
 }
-
-void MainWindow::shuffleButtonClicked() {
-    shuffle();
-}
-
-void MainWindow::resetButtonClicked() {
-    reset();
-    scorePtr->resetScore();
-    sframe->resetScoreBoard();
-}
-
-
-/*
-* Mike Son code
-*clock starting code
-*/
-
-void MainWindow::setUpClock(){
-QPixmap newMap(ui->Timeclock->width(), ui->Timeclock->height());
-newMap.fill(Qt::magenta);
-ui->Timeclock->setPixmap(newMap);
-newMap.fill(Qt::green);
-ui->Timefill->setPixmap(newMap);
-ui->Timefill->setMaximumWidth(ui->Timeclock->width());
-currentTime=60;
-ui->Timenum->setText(QString::number(currentTime));
-}
-
-void MainWindow::timeSlot(){
-x++;
-if(x%5==0){
-    currentTime--;
-}
-if(currentTime==-1){
-    gameOver();
-    //close();70/200
-    return;
-}
-ui->Timenum->setText(QString::number(currentTime));
-ui->Timefill->setMaximumWidth(ui->Timefill->maximumWidth()-(ui->Timeclock->width()/300));
-}
-
-void MainWindow::gameOver(){
-    timer->stop();
-}
-
