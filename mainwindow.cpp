@@ -1,3 +1,5 @@
+//NOTE: NO LONGER CURRENT; use mainwindow_UI.cpp
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QCoreApplication>
