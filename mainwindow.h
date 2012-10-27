@@ -1,3 +1,5 @@
+//NOTE: NO LONGER CURRENT; use mainwindow_UI
+
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
