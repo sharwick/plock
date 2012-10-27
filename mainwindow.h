@@ -51,9 +51,6 @@ public:
 
     void showExpanded();
 
-
-    //SHupdate
-    QLCDNumber *scoreLCD;
     QGridLayout *grid;
 
 private slots:

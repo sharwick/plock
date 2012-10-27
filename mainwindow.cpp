@@ -68,23 +68,9 @@ MainWindow::MainWindow(QWidget *parent)
         grid->setSpacing(0);
         ui->centralWidget->setLayout(grid);
 
-        // Score LCD Number
-
-        int screenSizeX = 200;
-        scoreLCD = new QLCDNumber(this);
-        scoreLCD->setFixedSize(screenSizeX * 0.3,screenSizeX * 0.15);
-        scoreLCD->setDigitCount(7);
-        scoreLCD->setSegmentStyle(QLCDNumber::Flat);
-        scoreLCD->display(scorePtr->getScore());
-        QFont f("Times");
-        //scoreLCD->setFrameRect();
-        scoreLCD->setFont(f);
 
         sframe = new ScoreFrame();
-        //sframe->setParent(ui);
         grid->addWidget(sframe->text);
-
-        grid->addWidget(scoreLCD,1,3,0,2);
 
 
    // blockSignalMapper = new QSignalMapper(this);
@@ -174,9 +160,8 @@ vector<Block*> MainWindow::sortVector(vector<Block*> blockVector)
             Block *tempPtr = blockVector[i];
             blockVector[i] = blockVector[t];
             blockVector[t] = tempPtr;
-        } 
-		//This line may not be needed in general transntions
-        blockVector[i]->setColor(0);
+        }
+        blockVector[i]->setColor(0, colorPtr->getQColor(0));
         blockVector[i]->setMarkedBool(false);
     }
     return blockVector;
@@ -218,9 +203,9 @@ void MainWindow::determineColor(vector<Block*> blockVector)
             {
                 int tempX;
                 tempX = blockVector[i]->getRowX();
-                blockVector[i]->setColor(gameBoard[tempX][checkY]->getColor());
+                blockVector[i]->setColor(gameBoard[tempX][checkY]->getColor(), colorPtr->getQColor(gameBoard[tempX][checkY]->getColor()));
                 blockVector[i]->setColoredBool(false);
-                gameBoard[tempX][checkY]->setColor(0);
+                gameBoard[tempX][checkY]->setColor(0, colorPtr->getQColor(0));
                 gameBoard[tempX][checkY]->setColoredBool(true);
                 blockVector.push_back(gameBoard[tempX][checkY]);
                 break;
@@ -231,7 +216,7 @@ void MainWindow::determineColor(vector<Block*> blockVector)
         {
             int tempColor;
             tempColor = (rand() % 6) + 1;
-            blockVector[i]->setColor(tempColor);
+            blockVector[i]->setColor(tempColor, colorPtr->getQColor(tempColor));
             blockVector[i]->setColoredBool(false);
         }
     }
@@ -307,6 +292,11 @@ void MainWindow::button8Clicked()
 
 void MainWindow::processMatch(Block* matchedBlock)
 {
+    /*
+    vector<Block*> gatheredBlocks = matchedBlock->gatherBlocks(gatheredBlocks);
+    gatheredBlocks = sortVector(gatheredBlocks);
+    determineColor(gatheredBlocks);
+    */
     // SHupdate - rearranged by Dan for order
     vector<Block*> gatheredBlocks;
     gatheredBlocks = matchedBlock->gatherBlocks(gatheredBlocks);
@@ -316,7 +306,6 @@ void MainWindow::processMatch(Block* matchedBlock)
     multiplier = 1;
 
     scorePtr->updateScore((int) gatheredBlocks.size(), false , multiplier);
-    scoreLCD->display(scorePtr->getScore());
     sframe->update(scorePtr->getScore());
     determineColor(gatheredBlocks);
 }
@@ -458,6 +447,12 @@ void MainWindow::resetButtonClicked() {
     reset();
     scorePtr->resetScore();
     sframe->resetScoreBoard();
+    //setUpClock();
+    currentTime=60;
+    x=0;
+    ui->Timefill->setMaximumWidth(ui->Timeclock->width());
+    timer->start();
+
 }
 
 
@@ -468,9 +463,9 @@ void MainWindow::resetButtonClicked() {
 
 void MainWindow::setUpClock(){
 QPixmap newMap(ui->Timeclock->width(), ui->Timeclock->height());
-newMap.fill(Qt::magenta);
+newMap.fill(colorPtr->colorArray[1]);
 ui->Timeclock->setPixmap(newMap);
-newMap.fill(Qt::green);
+newMap.fill(colorPtr->colorArray[6]);
 ui->Timefill->setPixmap(newMap);
 ui->Timefill->setMaximumWidth(ui->Timeclock->width());
 currentTime=60;
