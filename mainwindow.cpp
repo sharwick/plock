@@ -174,9 +174,8 @@ vector<Block*> MainWindow::sortVector(vector<Block*> blockVector)
             Block *tempPtr = blockVector[i];
             blockVector[i] = blockVector[t];
             blockVector[t] = tempPtr;
-        } 
-		//This line may not be needed in general transntions
-        blockVector[i]->setColor(0);
+        }
+        blockVector[i]->setColor(0, colorPtr->getQColor(0));
         blockVector[i]->setMarkedBool(false);
     }
     return blockVector;
@@ -218,9 +217,9 @@ void MainWindow::determineColor(vector<Block*> blockVector)
             {
                 int tempX;
                 tempX = blockVector[i]->getRowX();
-                blockVector[i]->setColor(gameBoard[tempX][checkY]->getColor());
+                blockVector[i]->setColor(gameBoard[tempX][checkY]->getColor(), colorPtr->getQColor(gameBoard[tempX][checkY]->getColor()));
                 blockVector[i]->setColoredBool(false);
-                gameBoard[tempX][checkY]->setColor(0);
+                gameBoard[tempX][checkY]->setColor(0, colorPtr->getQColor(0));
                 gameBoard[tempX][checkY]->setColoredBool(true);
                 blockVector.push_back(gameBoard[tempX][checkY]);
                 break;
@@ -231,7 +230,7 @@ void MainWindow::determineColor(vector<Block*> blockVector)
         {
             int tempColor;
             tempColor = (rand() % 6) + 1;
-            blockVector[i]->setColor(tempColor);
+            blockVector[i]->setColor(tempColor, colorPtr->getQColor(tempColor));
             blockVector[i]->setColoredBool(false);
         }
     }
@@ -307,6 +306,11 @@ void MainWindow::button8Clicked()
 
 void MainWindow::processMatch(Block* matchedBlock)
 {
+    /*
+    vector<Block*> gatheredBlocks = matchedBlock->gatherBlocks(gatheredBlocks);
+    gatheredBlocks = sortVector(gatheredBlocks);
+    determineColor(gatheredBlocks);
+    */
     // SHupdate - rearranged by Dan for order
     vector<Block*> gatheredBlocks;
     gatheredBlocks = matchedBlock->gatherBlocks(gatheredBlocks);

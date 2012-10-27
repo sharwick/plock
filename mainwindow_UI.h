@@ -17,11 +17,6 @@
 #include <QMouseEvent>
 #include <myRectItem.h>
 
-
-//Dan Updates:
-
-#include "Block.h"
-
 namespace Ui {
     class MainWindow;
 }
@@ -57,23 +52,13 @@ private:
     int boardSizeX, boardSizeY;
     int blockSize;
     int xPos, yPos;
-	
-	//Dan Block Variables
-	Block *gameBoard[7][9];
 
     // Methods
     Ui::MainWindow *ui;
     void setupBlocks();
     void setupInterface();
     void setupWindow();
-	
-	//Dan Block Functions
-	void processMatches(Block*);
-	vector<Block*> sortVector(vector<Block*>);
-	void determineColor(vector<Block*>);
-	vector<Block*> checkSpecials(vector<Block*>);
-	vector<Block*> bombCollector(vector<Block*>);
-	
+
 protected:
     void mousePressEvent(QMouseEvent *event);
 
