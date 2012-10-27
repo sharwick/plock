@@ -1,3 +1,7 @@
+/** @author     Shannon Harwick/Plock Team
+  * @purpose    Create a frame to display the score object
+  */
+
 #ifndef SCOREFRAME_H
 #define SCOREFRAME_H
 
@@ -9,18 +13,11 @@ using namespace std;
 
 class ScoreFrame {
 
-private:
-
-
 public:
-    //QPaintEvent paintEvent;
     QLabel *text;
     ScoreFrame();
     void update(int);
     void resetScoreBoard();
-    void paint();
-    //void setParent(QWidget*);
-
 };
 
 #endif // SCOREFRAME_H
