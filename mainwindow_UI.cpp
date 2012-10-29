@@ -417,7 +417,7 @@ if(x%5==0){
 }
 if(currentTime==-1){
     gameOver();
-    //close();70/200
+    close();
     return;
 }
 ui->Timenum->setText(QString::number(currentTime));
