@@ -98,7 +98,7 @@ void MainWindow::setupWindow(){
     ui->centralWidget->setBaseSize(screenSizeX, screenSizeY);
 
     // Set Size of Blocks based on Window Size and Board Size
-    int tempSizeY = screenSizeY/.7;
+    int tempSizeY = screenSizeY*.7;
     boardSizeX = 7;
     boardSizeY = 9;
 
@@ -114,6 +114,7 @@ void MainWindow::setupWindow(){
     grid->setVerticalSpacing(0);
     ui->centralWidget->setLayout(grid);
 
+
 } // End setupWindow()
 
 /*********************************************************************
@@ -124,36 +125,47 @@ void MainWindow::setupWindow(){
  *********************************************************************/
 void MainWindow::setupInterface(){
 
+    // Color scheme
+    colorPtr = new Colors(0);
+
     // Set Labels
     grid->addWidget(new QLabel("Bombs:"),0,1);
     grid->addWidget(new QLabel("Score:"),0,0);
     grid->addWidget(new QLabel("Time:"),7,0);
 
-    // Score LCD Number
-    scoreLCD = new QLCDNumber(this);
-    scoreLCD->setFixedSize(blockSize*2,blockSize);
-    scoreLCD->setDigitCount(7);
-    scoreLCD->setSegmentStyle(QLCDNumber::Flat);
-    scoreLCD->display(1337);
-    grid->addWidget(scoreLCD,1,0,Qt::AlignLeft);
+    // Add score board
+    scorePtr = new Score();
+    sframe = new ScoreFrame();
+    sframe->text->setFixedWidth(blockSize*2);
+    sframe->text->setFixedHeight(blockSize );
+    grid->addWidget(sframe->text,1,0,1,1,Qt::AlignLeft);
+
+
 
     // Bomb Progress Bar
     bombBar = new QProgressBar(this);
     bombBar->setFixedSize(blockSize * 2, blockSize);
-    grid->addWidget(bombBar,1,1);
+    grid->addWidget(bombBar,1, 1, Qt::AlignLeft);
+
+
+    // Shuffle Button
+    shuffleButton = new QPushButton("Shuffle",this);
+    shuffleButton->setFixedSize(blockSize ,blockSize);
+    connect(shuffleButton, SIGNAL(clicked()),this, SLOT(shufflePressed()));
+    grid->addWidget(shuffleButton,1,2);
 
     // Menu Button
     menuButton = new QPushButton("Menu",this);
-    menuButton->setFixedSize(blockSize * 1.2 ,blockSize * 1.2);
+    menuButton->setFixedSize(blockSize ,blockSize);
     connect(menuButton, SIGNAL(clicked()),this, SLOT(menuPressed()));
-    grid->addWidget(menuButton,1,2);
+    grid->addWidget(menuButton,1,3);
 
     // Block Viewing Area
     theScene = new QGraphicsScene();
     theScene->setSceneRect(0, 0, screenSizeX-4, (blockSize * boardSizeY)-4);
     blockView = new QGraphicsView(theScene);
     blockView->setFixedSize(screenSizeX, blockSize * boardSizeY);
-    grid->addWidget(blockView,2,0,5,5);
+    grid->addWidget(blockView,2,0,5,-1, Qt::AlignLeft);
     blockView->show();
 
     // Time Progress Bar
@@ -209,8 +221,30 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
 }
 
 void MainWindow::menuPressed(){
-
+    reset();
+    scorePtr->resetScore();
+    sframe->resetScoreBoard();
 }
+
+/**
+  * Reset the colors of all blocks
+  *
+  *DKeasler:
+  *tempColor to get random number first, then uses QColor with setColor
+  */
+void MainWindow::reset() {
+    int r, c;
+    for (r=0; r<boardSizeX; r++) {
+        for (c=0; c<boardSizeY; c++) {
+            int tempColor;
+            tempColor = (rand() % 6) + 1;
+            gameBoard[r][c]->setColor(tempColor);
+        }
+    }
+}
+
+
+
 
 /*
 Start of Block game algorithm functions:
@@ -426,4 +460,29 @@ ui->Timefill->setMaximumWidth(ui->Timefill->maximumWidth()-(ui->Timeclock->width
 
 void MainWindow::gameOver(){
     timer->stop();
+}
+
+void MainWindow::shufflePressed() {
+    // perform Nswaps swaps, passing colors/bombs/multipliers
+    int Nswaps, i;
+    Nswaps=boardSizeX*boardSizeY;
+
+    for (i=0; i<Nswaps; i++) {
+        int r1, c1, r2, c2, tempColor;
+        r1=rand()%boardSizeX;
+        r2=rand()%boardSizeX;
+        c1=rand()%boardSizeY;
+        c2=rand()%boardSizeY;
+
+        tempColor = gameBoard[r1][c1]->getColor();
+        //now uses QColor with setColor function
+        gameBoard[r1][c1]->setColor( gameBoard[r2][c2]->getColor() );
+        gameBoard[r2][c2]->setColor(tempColor);
+
+        // TO DO: need to swap bombs/multipler -> add getBomb method to Block
+    }
+
+
+
+
 }

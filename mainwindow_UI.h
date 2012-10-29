@@ -17,6 +17,9 @@
 #include <QMouseEvent>
 #include <myRectItem.h>
 #include <QTimer>
+#include <Colors.h>
+#include <Score.h>
+#include <ScoreFrame.h>
 
 
 //Dan Updates:
@@ -50,9 +53,10 @@ private:
     QGraphicsScene *theScene;
     QGraphicsView *blockView;
     QGraphicsRectItem *tempBlock;
-    QLCDNumber *scoreLCD;
+    //QLCDNumber *scoreLCD;
     QProgressBar *bombBar, *timeBar;
     QPushButton *menuButton;
+    QPushButton *shuffleButton;
     myRectItem* rectArray[7][9];
     int screenSizeX, screenSizeY;
     int boardSizeX, boardSizeY;
@@ -63,6 +67,10 @@ private:
     int x;
     void setUpClock();
     void gameOver();
+    void reset();
+    Colors *colorPtr;
+    Score *scorePtr;
+    ScoreFrame *sframe;
 	
 	//Dan Block Variables
 	Block *gameBoard[7][9];
@@ -86,6 +94,7 @@ protected:
 private slots:
    void menuPressed();
    void timeSlot();
+   void shufflePressed();
 
 signals:
    void blockPressed(int, int);
