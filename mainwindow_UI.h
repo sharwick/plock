@@ -16,6 +16,7 @@
 #include <QProgressBar>
 #include <QMouseEvent>
 #include <myRectItem.h>
+#include <QTimer>
 
 
 //Dan Updates:
@@ -57,6 +58,11 @@ private:
     int boardSizeX, boardSizeY;
     int blockSize;
     int xPos, yPos;
+    int currentTime;
+    QTimer *timer;
+    int x;
+    void setUpClock();
+    void gameOver();
 	
 	//Dan Block Variables
 	Block *gameBoard[7][9];
@@ -79,6 +85,7 @@ protected:
 
 private slots:
    void menuPressed();
+   void timeSlot();
 
 signals:
    void blockPressed(int, int);

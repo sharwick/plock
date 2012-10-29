@@ -21,6 +21,12 @@ MainWindow::MainWindow(QWidget *parent)
     setupWindow();
     setupInterface();
     setupBlocks();
+
+    // Mike Son update
+        timer = new QTimer(this);
+        timer->start(200);//move to start game code
+        connect(timer, SIGNAL(timeout()),this, SLOT(timeSlot()));
+
 }
 
 MainWindow::~MainWindow()
@@ -151,9 +157,20 @@ void MainWindow::setupInterface(){
     blockView->show();
 
     // Time Progress Bar
-    timeBar = new QProgressBar(this);
-    timeBar->setFixedSize(screenSizeX - (screenSizeX/4), 20);
-    grid->addWidget(timeBar,7,1);
+
+    currentTime=60;
+//    timeBar = new QProgressBar(this);
+//    timeBar->setFixedSize(screenSizeX - (screenSizeX/3), 20);
+    QPixmap newMap(ui->Timeclock->width(), ui->Timeclock->height());
+    newMap.fill(Qt::magenta);
+    ui->Timeclock->setPixmap(newMap);
+    newMap.fill(Qt::green);
+    ui->Timefill->setPixmap(newMap);
+    ui->Timefill->setMaximumWidth(ui->Timeclock->width());
+
+    grid->addWidget(ui->Timeclock,7,1);
+    grid->addWidget(ui->Timefill,7,1);
+    //grid->addWidget(timeBar,7,1);
 
     // Setup Paused Menu
 
@@ -390,4 +407,23 @@ vector<Block*> MainWindow::bombCollector(vector<Block*> blockVector, int x, int 
         }
     }
     return blockVector;
+}
+
+
+void MainWindow::timeSlot(){
+x++;
+if(x%5==0){
+    currentTime--;
+}
+if(currentTime==-1){
+    gameOver();
+    //close();70/200
+    return;
+}
+ui->Timenum->setText(QString::number(currentTime));
+ui->Timefill->setMaximumWidth(ui->Timefill->maximumWidth()-(ui->Timeclock->width()/300));
+}
+
+void MainWindow::gameOver(){
+    timer->stop();
 }
