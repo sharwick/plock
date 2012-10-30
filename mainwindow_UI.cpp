@@ -98,7 +98,7 @@ void MainWindow::setupWindow(){
     ui->centralWidget->setBaseSize(screenSizeX, screenSizeY);
 
     // Set Size of Blocks based on Window Size and Board Size
-    int tempSizeY = screenSizeY*.7;
+    int tempSizeY = screenSizeY * .8;
     boardSizeX = 7;
     boardSizeY = 9;
 
