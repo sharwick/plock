@@ -57,7 +57,7 @@ private:
     QProgressBar *bombBar, *timeBar;
     QPushButton *menuButton;
     QPushButton *shuffleButton;
-    myRectItem* rectArray[7][9];
+    myRectItem* rectArray[8][9];
     int screenSizeX, screenSizeY;
     int boardSizeX, boardSizeY;
     int blockSize;
@@ -73,7 +73,7 @@ private:
     ScoreFrame *sframe;
 	
 	//Dan Block Variables
-	Block *gameBoard[7][9];
+    Block *gameBoard[8][9];
 
     // Methods
     Ui::MainWindow *ui;

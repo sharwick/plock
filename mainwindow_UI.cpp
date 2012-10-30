@@ -98,8 +98,8 @@ void MainWindow::setupWindow(){
     ui->centralWidget->setBaseSize(screenSizeX, screenSizeY);
 
     // Set Size of Blocks based on Window Size and Board Size
-    int tempSizeY = screenSizeY * .8;
-    boardSizeX = 7;
+    int tempSizeY = screenSizeY*.7;
+    boardSizeX = 8;
     boardSizeY = 9;
 
     if( (screenSizeX / boardSizeX) < (tempSizeY / boardSizeY) )
@@ -205,6 +205,7 @@ void MainWindow::setupBlocks(){
             rectArray[x][y] = new myRectItem();
             rectArray[x][y]->setRect(blockSize * x, blockSize * y, blockSize, blockSize);
             rectArray[x][y]->setFlags(QGraphicsItem::ItemIsSelectable);
+            rectArray[x][y]->setBrush(QBrush(colorPtr->getQColor(temp), Qt::SolidPattern));
             theScene->addItem(rectArray[x][y]);
         }
     }
@@ -216,9 +217,9 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
 
     xPos = event->x() / blockSize;
     yPos = (event->y() - offset) / blockSize;
-/*
- *Tried to put following code in blockPressed, but it was already included somewhere else.
- *Code can be moved as needed as long as it is in mainwindow_UI.cpp
+
+// *Tried to put following code in blockPressed, but it was already included somewhere else.
+ //*Code can be moved as needed as long as it is in mainwindow_UI.cpp
     Block* tempCheck = gameBoard[xPos][yPos];
     if(tempCheck->getRowX() != 0 && tempCheck->getColor() == gameBoard[xPos - 1][yPos]->getColor())
         processMatch(tempCheck);
@@ -228,7 +229,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
         processMatch(tempCheck);
     else if(tempCheck->getColY() != boardSizeY && tempCheck->getColor() == gameBoard[xPos][yPos + 1]->getColor())
         processMatch(tempCheck);
-*/
+
     emit blockPressed(xPos, yPos);
 }
 
@@ -319,6 +320,10 @@ vector<Block*> MainWindow::sortVector(vector<Block*> blockVector)
 		//This line may not be needed in general transntions
         blockVector[i]->setColor(0);
         blockVector[i]->setMarkedBool(false);
+        int tempX, tempY;
+        tempX = blockVector[i]->getRowX();
+        tempY = blockVector[i]->getColY();
+        rectArray[tempX][tempY]->setBrush(QBrush(colorPtr->getQColor(0), Qt::SolidPattern));
     }
     return blockVector;
 }
@@ -357,11 +362,14 @@ void MainWindow::determineColor(vector<Block*> blockVector)
         {
             if(!gameBoard[blockVector[i]->getRowX()][checkY]->getColoredBool())
             {
-                int tempX;
+                int tempX, tempY;
+                tempY = blockVector[i]->getColY();
                 tempX = blockVector[i]->getRowX();
                 blockVector[i]->setColor(gameBoard[tempX][checkY]->getColor());
                 blockVector[i]->setColoredBool(false);
+                rectArray[tempX][tempY]->setBrush(QBrush(gameBoard[tempX][checkY]->getColor(), Qt::SolidPattern));
                 gameBoard[tempX][checkY]->setColor(0);
+                rectArray[tempX][checkY]->setBrush(QBrush(colorPtr->getQColor(0), Qt::SolidPattern));
                 gameBoard[tempX][checkY]->setColoredBool(true);
                 blockVector.push_back(gameBoard[tempX][checkY]);
                 break;
@@ -374,6 +382,7 @@ void MainWindow::determineColor(vector<Block*> blockVector)
             tempColor = (rand() % 6) + 1;
             blockVector[i]->setColor(tempColor);
             blockVector[i]->setColoredBool(false);
+            rectArray[blockVector[i]->getRowX()][blockVector[i]->getColY()]->setBrush(QBrush(colorPtr->getQColor(tempColor), Qt::SolidPattern));
         }
     }
 }
@@ -469,7 +478,7 @@ if(currentTime==-1){
     close();
     return;
 }
-ui->Timenum->setText(QString::number(currentTime));
+//ui->Timenum->setText(QString::number(currentTime));
 ui->Timefill->setMaximumWidth(ui->Timefill->maximumWidth()-(ui->Timeclock->width()/300));
 }
 

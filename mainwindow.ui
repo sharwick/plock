@@ -14,45 +14,6 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QPushButton" name="quitButton">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>200</y>
-      <width>91</width>
-      <height>71</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>QUIT</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="resetButton">
-    <property name="geometry">
-     <rect>
-      <x>100</x>
-      <y>200</y>
-      <width>141</width>
-      <height>71</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>RESET</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>270</y>
-      <width>231</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>SHUFFLE</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="Timeclock">
     <property name="geometry">
      <rect>
@@ -85,22 +46,6 @@
      <string/>
     </property>
    </widget>
-   <widget class="QLabel" name="Timenum">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>170</y>
-      <width>300</width>
-      <height>25</height>
-     </rect>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::Box</enum>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -115,56 +60,7 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
- <connections>
-  <connection>
-   <sender>quitButton</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>quitButtonClicked()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>64</x>
-     <y>232</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>164</x>
-     <y>262</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>resetButton</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>resetButtonClicked()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>154</x>
-     <y>242</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>129</x>
-     <y>191</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButton</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>shuffleButtonClicked()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>153</x>
-     <y>310</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>171</x>
-     <y>349</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
  <slots>
   <slot>myButtonClicked()</slot>
   <slot>button0Clicked()</slot>
