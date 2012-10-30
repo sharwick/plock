@@ -216,7 +216,19 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
 
     xPos = event->x() / blockSize;
     yPos = (event->y() - offset) / blockSize;
-
+/*
+ *Tried to put following code in blockPressed, but it was already included somewhere else.
+ *Code can be moved as needed as long as it is in mainwindow_UI.cpp
+    Block* tempCheck = gameBoard[xPos][yPos];
+    if(tempCheck->getRowX() != 0 && tempCheck->getColor() == gameBoard[xPos - 1][yPos]->getColor())
+        processMatch(tempCheck);
+    else if(tempCheck->getRowX() != boardSizeX && tempCheck->getColor() == gameBoard[xPos + 1][yPos]->getColor())
+        processMatch(tempCheck);
+    else if(tempCheck->getColY() != 0 && tempCheck->getColor() == gameBoard[xPos][yPos - 1]->getColor())
+        processMatch(tempCheck);
+    else if(tempCheck->getColY() != boardSizeY && tempCheck->getColor() == gameBoard[xPos][yPos + 1]->getColor())
+        processMatch(tempCheck);
+*/
     emit blockPressed(xPos, yPos);
 }
 
@@ -249,6 +261,7 @@ void MainWindow::reset() {
 /*
 Start of Block game algorithm functions:
 */
+
 void MainWindow::processMatch(Block* matchedBlock)
 {
     // SHupdate - rearranged by Dan for order
@@ -424,13 +437,13 @@ vector<Block*> MainWindow::bombCollector(vector<Block*> blockVector, int x, int 
 {
     for(int i = (x - 1); i < (x + 2); i++)
     {
-        if(i > 3) //needs to be changed for 7x9
+        if(i > boardSizeX) //needs to be changed for 7x9
             break;
         if(i < 0)
             continue;
         for(int j = (y - 1); j < (y + 2); j++)
         {
-            if(j > 3 || j < 0) //needs to be changed for 7x9
+            if(j > boardSizeY || j < 0) //needs to be changed for 7x9
                 continue;
             if(!gameBoard[i][j]->getMarkedBool())
             {
@@ -442,6 +455,8 @@ vector<Block*> MainWindow::bombCollector(vector<Block*> blockVector, int x, int 
     }
     return blockVector;
 }
+
+//END Dan Block Functions
 
 
 void MainWindow::timeSlot(){
