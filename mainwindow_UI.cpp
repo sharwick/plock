@@ -210,6 +210,21 @@ void MainWindow::setupBlocks(){
         }
     }
 
+    for(int i = 0; i < boardSizeY; i++)
+    {
+        for(int j = 0; j < boardSizeX; j++)
+        {
+            if(i != 0)
+                gameBoard[j][i]->assignUp(gameBoard[j][i - 1]);
+            if(i != (boardSizeY - 1))
+                gameBoard[j][i]->assignDown(gameBoard[j][i + 1]);
+            if(j != 0)
+                gameBoard[j][i]->assignLeft(gameBoard[j - 1][i]);
+            if(j != (boardSizeX - 1))
+                gameBoard[j][i]->assignRight(gameBoard[j + 1][i]);
+        }
+    }
+
 } // End setupBlocks()
 
 void MainWindow::mousePressEvent(QMouseEvent *event){
@@ -275,9 +290,9 @@ void MainWindow::processMatch(Block* matchedBlock)
    // int multiplier;
    // multiplier = 1;
 
-   // scorePtr->updateScore((int) gatheredBlocks.size(), false , multiplier);
-   // scoreLCD->display(scorePtr->getScore());
-   // sframe->update(scorePtr->getScore());
+    //scorePtr->updateScore((int) gatheredBlocks.size(), false , multiplier);
+    //scoreLCD->display(scorePtr->getScore());
+    //sframe->update(scorePtr->getScore());
     determineColor(gatheredBlocks);
 }
 
@@ -318,9 +333,9 @@ vector<Block*> MainWindow::sortVector(vector<Block*> blockVector)
             blockVector[t] = tempPtr;
         } 
 		//This line may not be needed in general transntions
-        //blockVector[i]->setColor(0);
+        blockVector[i]->setColor(0);
         blockVector[i]->setMarkedBool(false);
-        //rectArray[blockVector[i]->getRowX()][blockVector[i]->getColY()]->setBrush(QBrush(colorPtr->getQColor(0), Qt::SolidPattern));
+        rectArray[blockVector[i]->getRowX()][blockVector[i]->getColY()]->setBrush(QBrush(colorPtr->getQColor(0), Qt::SolidPattern));
     }
     return blockVector;
 }
@@ -354,7 +369,7 @@ void MainWindow::determineColor(vector<Block*> blockVector)
 {
     for(int i = 0; (unsigned)i < blockVector.size(); i++)
     {
-        int checkY = blockVector[i]->getColY() - 1;
+        int checkY = blockVector[i]->getColY();
         while(checkY >= 0)
         {
             if(!gameBoard[blockVector[i]->getRowX()][checkY]->getColoredBool())
@@ -365,8 +380,8 @@ void MainWindow::determineColor(vector<Block*> blockVector)
                 rectArray[blockVector[i]->getRowX()][blockVector[i]->getColY()]->setBrush(QBrush(colorPtr->getQColor(blockVector[i]->getColor()), Qt::SolidPattern));
 				//..and set the other block for a color change (including transition)
                 gameBoard[blockVector[i]->getRowX()][checkY]->setColoredBool(true); //block needs to be changed later
-                //gameBoard[blockVector[i]->getRowX()][checkY]->setColor(0);
-                //rectArray[blockVector[i]->getRowX()][checkY]->setBrush(QBrush(colorPtr->getQColor(0),Qt::SolidPattern);
+                gameBoard[blockVector[i]->getRowX()][checkY]->setColor(0);
+                rectArray[blockVector[i]->getRowX()][checkY]->setBrush(QBrush(colorPtr->getQColor(0),Qt::SolidPattern));
                 blockVector.push_back(gameBoard[blockVector[i]->getRowX()][checkY]); //add block to end of vector
                 break;
             }

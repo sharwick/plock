@@ -35,17 +35,17 @@
  */
 //#include "Block.h"
 #include "Block.h"
-#include "Colors.h"
-#include <QPixmap>
-#include <QIcon>
+//#include "Colors.h"
+//#include <QPixmap>
+//#include <QIcon>
 
 using namespace std;
 Block::Block(int rowSpot, int colSpot, int colorChoice){
 	//pushButtonPtr = button;
-	rightBlockPtr = NULL;
-	upBlockPtr = NULL;
-	leftBlockPtr = NULL;
-	downBlockPtr = NULL;
+    rightBlockPtr = 0;
+    upBlockPtr = 0;
+    leftBlockPtr = 0;
+    downBlockPtr = 0;
 	coloredBool = false;
     markedBool = false;
     RowX = rowSpot;
@@ -165,13 +165,13 @@ vector<Block*> Block::gatherBlocks(vector<Block*> blockVector){
     setMarkedBool(true);
     setColoredBool(true);
     blockVector.push_back(this);
-    if(upBlockPtr != NULL && upBlockPtr->getColor() == color && !upBlockPtr->getMarkedBool())
+    if(upBlockPtr != 0 && upBlockPtr->getColor() == color && !upBlockPtr->getMarkedBool())
 		blockVector = upBlockPtr->gatherBlocks(blockVector);
-    if(rightBlockPtr != NULL && rightBlockPtr->getColor() == color && !rightBlockPtr->getMarkedBool())
+    if(rightBlockPtr != 0 && rightBlockPtr->getColor() == color && !rightBlockPtr->getMarkedBool())
 		blockVector = rightBlockPtr->gatherBlocks(blockVector);
-    if(downBlockPtr != NULL && downBlockPtr->getColor() == color && !downBlockPtr->getMarkedBool())
+    if(downBlockPtr != 0 && downBlockPtr->getColor() == color && !downBlockPtr->getMarkedBool())
         blockVector = downBlockPtr->gatherBlocks(blockVector);
-    if(leftBlockPtr != NULL && leftBlockPtr->getColor() == color && !leftBlockPtr->getMarkedBool())
+    if(leftBlockPtr != 0 && leftBlockPtr->getColor() == color && !leftBlockPtr->getMarkedBool())
         blockVector = leftBlockPtr->gatherBlocks(blockVector);
 	return blockVector;
 }
@@ -201,7 +201,7 @@ vector<Block*> Block::downCollector(vector<Block*> blockVector){
         setColoredBool(true);
         blockVector.push_back(this);
     }
-    if(downBlockPtr != NULL)
+    if(downBlockPtr != 0)
         blockVector = downBlockPtr->downCollector(blockVector);
     return blockVector;
 }
@@ -213,7 +213,7 @@ vector<Block*> Block::rightCollector(vector<Block*> blockVector){
         setColoredBool(true);
         blockVector.push_back(this);
     }
-    if(rightBlockPtr != NULL)
+    if(rightBlockPtr != 0)
         blockVector = rightBlockPtr->rightCollector(blockVector);
     return blockVector;
 }
@@ -225,7 +225,7 @@ vector<Block*> Block::upCollector(vector<Block*> blockVector){
         setColoredBool(true);
         blockVector.push_back(this);
     }
-    if(upBlockPtr != NULL)
+    if(upBlockPtr != 0)
         blockVector = upBlockPtr->upCollector(blockVector);
     return blockVector;
 }
@@ -237,7 +237,7 @@ vector<Block*> Block::leftCollector(vector<Block*> blockVector){
         setColoredBool(true);
         blockVector.push_back(this);
     }
-    if(leftBlockPtr != NULL)
+    if(leftBlockPtr != 0)
         blockVector = leftBlockPtr->leftCollector(blockVector);
     return blockVector;
 }
