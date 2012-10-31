@@ -287,12 +287,11 @@ void MainWindow::processMatch(Block* matchedBlock)
 	//gatheredBlocks = checkSpecials(gatheredBlocks); 
     gatheredBlocks = sortVector(gatheredBlocks);
 
-   // int multiplier;
-   // multiplier = 1;
 
-    //scorePtr->updateScore((int) gatheredBlocks.size(), false , multiplier);
-    //scoreLCD->display(scorePtr->getScore());
-    //sframe->update(scorePtr->getScore());
+   multiplier = 1;
+
+    scorePtr->updateScore((int) gatheredBlocks.size(), false , multiplier);
+    sframe->update(scorePtr->getScore());
     determineColor(gatheredBlocks);
 }
 

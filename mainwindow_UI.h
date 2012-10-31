@@ -71,6 +71,7 @@ private:
     Colors *colorPtr;
     Score *scorePtr;
     ScoreFrame *sframe;
+    int multiplier;
 	
 	//Dan Block Variables
     Block *gameBoard[8][9];
