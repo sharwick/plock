@@ -98,7 +98,7 @@ void MainWindow::setupWindow(){
     ui->centralWidget->setBaseSize(screenSizeX, screenSizeY);
 
     // Set Size of Blocks based on Window Size and Board Size
-    int tempSizeY = screenSizeY*.7;
+    int tempSizeY = screenSizeY * .8;
     boardSizeX = 8;
     boardSizeY = 9;
 
@@ -228,24 +228,27 @@ void MainWindow::setupBlocks(){
 } // End setupBlocks()
 
 void MainWindow::mousePressEvent(QMouseEvent *event){
-    int offset = screenSizeY * 0.15;
+    QPoint point = blockView->pos();
 
-    xPos = event->x() / blockSize;
-    yPos = (event->y() - offset) / blockSize;
+    if( event->y() > point.y() &&
+            event->y() <= point.y()+blockView->height() )
+    {
+        xPos = event->x() / blockSize;
+        yPos = (event->y() - point.y()) / blockSize;
 
-// *Tried to put following code in blockPressed, but it was already included somewhere else.
- //*Code can be moved as needed as long as it is in mainwindow_UI.cpp
-    Block* tempCheck = gameBoard[xPos][yPos];
-    if(tempCheck->getRowX() != 0 && tempCheck->getColor() == gameBoard[xPos - 1][yPos]->getColor())
-        processMatch(tempCheck);
-    else if(tempCheck->getRowX() != boardSizeX && tempCheck->getColor() == gameBoard[xPos + 1][yPos]->getColor())
-        processMatch(tempCheck);
-    else if(tempCheck->getColY() != 0 && tempCheck->getColor() == gameBoard[xPos][yPos - 1]->getColor())
-        processMatch(tempCheck);
-    else if(tempCheck->getColY() != boardSizeY && tempCheck->getColor() == gameBoard[xPos][yPos + 1]->getColor())
-        processMatch(tempCheck);
+        // *Tried to put following code in blockPressed, but it was already included somewhere else.
+        //*Code can be moved as needed as long as it is in mainwindow_UI.cpp
+        Block* tempCheck = gameBoard[xPos][yPos];
+        if(tempCheck->getRowX() != 0 && tempCheck->getColor() == gameBoard[xPos - 1][yPos]->getColor())
+            processMatch(tempCheck);
+        else if(tempCheck->getRowX() != boardSizeX && tempCheck->getColor() == gameBoard[xPos + 1][yPos]->getColor())
+            processMatch(tempCheck);
+        else if(tempCheck->getColY() != 0 && tempCheck->getColor() == gameBoard[xPos][yPos - 1]->getColor())
+            processMatch(tempCheck);
+        else if(tempCheck->getColY() != boardSizeY && tempCheck->getColor() == gameBoard[xPos][yPos + 1]->getColor())
+            processMatch(tempCheck);
 
-    emit blockPressed(xPos, yPos);
+    }
 }
 
 void MainWindow::menuPressed(){
