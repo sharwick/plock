@@ -502,7 +502,7 @@ void MainWindow::gameOver(){
 void MainWindow::shufflePressed() {
     // perform Nswaps swaps, passing colors/bombs/multipliers
     int Nswaps, i;
-    Nswaps=boardSizeX*boardSizeY;
+    Nswaps=(boardSizeX*boardSizeY)*(boardSizeX*boardSizeY);
 
     for (i=0; i<Nswaps; i++) {
         int r1, c1, r2, c2, tempColor;
@@ -516,6 +516,8 @@ void MainWindow::shufflePressed() {
         gameBoard[r1][c1]->setColor( gameBoard[r2][c2]->getColor() );
         gameBoard[r2][c2]->setColor(tempColor);
 
+        rectArray[gameBoard[r1][c1]->getRowX()][gameBoard[r1][c1]->getColY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[r1][c1]->getColor()), Qt::SolidPattern));
+        rectArray[gameBoard[r2][c2]->getRowX()][gameBoard[r2][c2]->getColY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[r2][c2]->getColor()), Qt::SolidPattern));
         // TO DO: need to swap bombs/multipler -> add getBomb method to Block
     }
 
