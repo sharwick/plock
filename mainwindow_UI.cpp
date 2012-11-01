@@ -18,7 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
 
-    setupWindow();
+    setupWindows();
     setupInterface();
     setupBlocks();
 
@@ -88,8 +88,12 @@ void MainWindow::showExpanded()
     the phone screen. It also uses these parameters to determine the
     size the game blocks should be to fit evenly on the board. Also
     the gridLayout that organizes the items on screen is instantiated.
+    ADDED:
+    This is also where the menus are instantiated. They are simple
+    group box widgets that take up the whole screen and are .show/.hide
+    depending on when we need them.
  *********************************************************************/
-void MainWindow::setupWindow(){
+void MainWindow::setupWindows(){
 
     // Get the size of the phone screen and set centralWidget to that size
     ui->centralWidget->maximumSize();
@@ -113,6 +117,52 @@ void MainWindow::setupWindow(){
     grid->setHorizontalSpacing(3);
     grid->setVerticalSpacing(0);
     ui->centralWidget->setLayout(grid);
+
+    // Setup Main Menu
+    mainMenu = new QGroupBox(this);
+    mainMenu->setFixedSize(screenSizeX, screenSizeY);
+    mainMenu->setAutoFillBackground(true);
+    mainMenu->hide();
+
+    mainMenuGrid = new QGridLayout(this);
+    mainMenuGrid->setAlignment(Qt::AlignHCenter);
+    mainMenuGrid->setVerticalSpacing(0);
+    mainMenuGrid->setHorizontalSpacing(0);
+    mainMenu->setLayout(mainMenuGrid);
+
+    titleLabel = new QLabel("BLOCKSTAR");
+    titleLabel->setFixedSize(blockSize*5, blockSize*2);
+    mainMenuGrid->addWidget(titleLabel, 0, 4, Qt::AlignTop);
+
+    newGameButton = new QPushButton(this);
+    newGameButton->setText("New Game");
+    newGameButton->setFixedSize(blockSize*3, blockSize);
+    connect( newGameButton, SIGNAL(clicked()), this, SLOT(newGamePressed()) );
+    mainMenuGrid->addWidget(newGameButton, 1, 4, Qt::AlignTop);
+
+    settingsButton = new QPushButton(this);
+    settingsButton->setText("Settings");
+    settingsButton->setFixedSize(blockSize*3, blockSize);
+    connect( settingsButton, SIGNAL(clicked()), this, SLOT(settingsPressed()) );
+    mainMenuGrid->addWidget(settingsButton, 2, 4, Qt::AlignTop);
+
+    helpButton = new QPushButton(this);
+    helpButton->setText("About");
+    helpButton->setFixedSize(blockSize*3, blockSize);
+    connect( helpButton, SIGNAL(clicked()), this, SLOT(helpPressed()) );
+    mainMenuGrid->addWidget(helpButton, 3, 4, Qt::AlignTop);
+
+    // Setup Game Mode Menu
+    gameModeMenu = new QGroupBox(this);
+    gameModeMenu->setFixedSize(screenSizeX, screenSizeY);
+    gameModeMenu->setAutoFillBackground(true);
+    gameModeMenu->hide();
+
+    // Setup Settings Menu
+    settingsMenu = new QGroupBox(this);
+    settingsMenu->setFixedSize(screenSizeX, screenSizeY);
+    settingsMenu->setAutoFillBackground(true);
+    settingsMenu->hide();
 
 
 } // End setupWindow()
@@ -157,6 +207,7 @@ void MainWindow::setupInterface(){
     shuffleButton = new QPushButton("Shuffle",this);
     shuffleButton->setGeometry((bombBar->x() + (blockSize*6) ), bombBar->y() + (blockSize / 2), blockSize, blockSize);
     connect(shuffleButton, SIGNAL(clicked()),this, SLOT(shufflePressed()));
+    //shuffleButton->hide();
 
     // Block Viewing Area
     theScene = new QGraphicsScene();
@@ -249,10 +300,28 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
     }
 }
 
+/*
+ *  The Slots that the buttons use
+ */
 void MainWindow::menuPressed(){
-    reset();
-    scorePtr->resetScore();
-    sframe->resetScoreBoard();
+    //reset();
+    //scorePtr->resetScore();
+    //sframe->resetScoreBoard();
+}
+
+void MainWindow::newGamePressed(){
+    mainMenu->hide();
+    gameModeMenu->show();
+}
+
+void MainWindow::settingsPressed(){
+    mainMenu->hide();
+    settingsMenu->show();
+}
+
+void MainWindow::helpPressed(){
+    mainMenu->hide();
+    helpMenu->show();
 }
 
 /**

@@ -49,14 +49,15 @@ public:
 
 private:
     // Variables
-    QGridLayout *grid;
+    QGridLayout *grid, *mainMenuGrid, *settingMenuGrid, *modeSelectionGrid;
     QGraphicsScene *theScene;
     QGraphicsView *blockView;
     QGraphicsRectItem *tempBlock;
-    //QLCDNumber *scoreLCD;
     QProgressBar *bombBar, *timeBar;
-    QPushButton *menuButton;
+    QPushButton *menuButton, *newGameButton, *settingsButton, *helpButton;
     QPushButton *shuffleButton;
+    QGroupBox *mainMenu, *settingsMenu, *helpMenu, *gameModeMenu;
+    QLabel *titleLabel;
     myRectItem* rectArray[8][9];
     int screenSizeX, screenSizeY;
     int boardSizeX, boardSizeY;
@@ -80,7 +81,7 @@ private:
     Ui::MainWindow *ui;
     void setupBlocks();
     void setupInterface();
-    void setupWindow();
+    void setupWindows();
 	
 	//Dan Block Functions
     void processMatch(Block*);
@@ -96,6 +97,9 @@ private slots:
    void menuPressed();
    void timeSlot();
    void shufflePressed();
+   void newGamePressed();
+   void settingsPressed();
+   void helpPressed();
 
 signals:
    void blockPressed(int, int);
