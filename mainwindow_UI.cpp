@@ -147,18 +147,16 @@ void MainWindow::setupInterface(){
     bombBar->setFixedSize(blockSize * 2, blockSize);
     grid->addWidget(bombBar,1, 1, Qt::AlignLeft);
 
-
-    // Shuffle Button
-    shuffleButton = new QPushButton("Shuffle",this);
-    shuffleButton->setFixedSize(blockSize ,blockSize);
-    connect(shuffleButton, SIGNAL(clicked()),this, SLOT(shufflePressed()));
-    grid->addWidget(shuffleButton,1,2);
-
     // Menu Button
     menuButton = new QPushButton("Menu",this);
     menuButton->setFixedSize(blockSize ,blockSize);
     connect(menuButton, SIGNAL(clicked()),this, SLOT(menuPressed()));
     grid->addWidget(menuButton,1,3);
+
+    // Shuffle Button
+    shuffleButton = new QPushButton("Shuffle",this);
+    shuffleButton->setGeometry((bombBar->x() + (blockSize*6) ), bombBar->y() + (blockSize / 2), blockSize, blockSize);
+    connect(shuffleButton, SIGNAL(clicked()),this, SLOT(shufflePressed()));
 
     // Block Viewing Area
     theScene = new QGraphicsScene();
@@ -371,7 +369,7 @@ void MainWindow::determineColor(vector<Block*> blockVector)
 {
     for(int i = 0; (unsigned)i < blockVector.size(); i++)
     {
-        int checkY = blockVector[i]->getColY();
+        int checkY = blockVector[i]->getColY() - 1;
         while(checkY >= 0)
         {
             if(!gameBoard[blockVector[i]->getRowX()][checkY]->getColoredBool())
@@ -387,7 +385,8 @@ void MainWindow::determineColor(vector<Block*> blockVector)
                 blockVector.push_back(gameBoard[blockVector[i]->getRowX()][checkY]); //add block to end of vector
                 break;
             }
-            checkY--;
+            else
+                checkY--;
         }
         if(checkY < 0)
         {
