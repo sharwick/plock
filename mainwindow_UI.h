@@ -5,16 +5,20 @@
 #include <QPushButton>
 #include <QString>
 #include <QLabel>
-#include <QSignalMapper>
 #include <QGraphicsView>
 #include <QGraphicsScene>
 #include <QGraphicsRectItem>
 #include <QGridLayout>
+#include <QVBoxLayout>
+#include <QFormLayout>
 #include <QGroupBox>
-#include <QLCDNumber>
+#include <QCheckBox>
 #include <QGraphicsRectItem>
 #include <QProgressBar>
+#include <QSlider>
+#include <QDialogButtonBox>
 #include <QMouseEvent>
+#include <QTextBrowser>
 #include <myRectItem.h>
 #include <QTimer>
 #include <Colors.h>
@@ -48,29 +52,37 @@ public:
     void showExpanded();
 
 private:
-    // Variables
-    QGridLayout *grid;
+    // Objects
+    QGridLayout *grid, *settingsLayout;
+    QVBoxLayout *mainMenuLayout, *modeMenuLayout, *helpMenuLayout, *pauseMenuLayout;
     QGraphicsScene *theScene;
     QGraphicsView *blockView;
     QGraphicsRectItem *tempBlock;
-    //QLCDNumber *scoreLCD;
     QProgressBar *bombBar, *timeBar;
-    QPushButton *menuButton;
-    QPushButton *shuffleButton;
+    QPushButton *menuButton,*shuffleButton, *newGameButton, *settingsButton,
+    *helpButton, *backToMenu, *backToMenu2, *backToMenu3, *standardModeButton,
+    *pauseAccept, *pauseRejected;
+    QGroupBox *mainMenu, *settingsMenu, *helpMenu, *gameModeMenu, *pauseMenu;
+    QCheckBox *soundCheck, *screenLockCheck;
+    QLabel *titleLabel, *gameModeTitle, *settingsTitle;
+    QTextBrowser *helpText;
+    QSlider *colorSlider;
     myRectItem* rectArray[8][9];
+    QTimer *timer;
+    Colors *colorPtr;
+    Score *scorePtr;
+    ScoreFrame *sframe;
+
+    // Variables
     int screenSizeX, screenSizeY;
     int boardSizeX, boardSizeY;
     int blockSize;
     int xPos, yPos;
     int currentTime;
-    QTimer *timer;
     int x;
     void setUpClock();
     void gameOver();
-    void reset();
-    Colors *colorPtr;
-    Score *scorePtr;
-    ScoreFrame *sframe;
+    void reset();   
     int multiplier;
 	
 	//Dan Block Variables
@@ -80,7 +92,7 @@ private:
     Ui::MainWindow *ui;
     void setupBlocks();
     void setupInterface();
-    void setupWindow();
+    void setupWindows();
 	
 	//Dan Block Functions
     void processMatch(Block*);
@@ -96,6 +108,16 @@ private slots:
    void menuPressed();
    void timeSlot();
    void shufflePressed();
+   void newGamePressed();
+   void settingsPressed();
+   void helpPressed();
+   void backToMain();
+   void pausedPressed();
+   void pauseBack();
+   void standardMode();
+   void screenLock();
+   void noSound();
+   void changeColorScheme();
 
 signals:
    void blockPressed(int, int);
