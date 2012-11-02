@@ -377,13 +377,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
         // *Tried to put following code in blockPressed, but it was already included somewhere else.
         //*Code can be moved as needed as long as it is in mainwindow_UI.cpp
         Block* tempCheck = gameBoard[xPos][yPos];
-        if(tempCheck->getRowX() != 0 && tempCheck->getColor() == gameBoard[xPos - 1][yPos]->getColor())
-            processMatch(tempCheck);
-        else if(tempCheck->getRowX() != boardSizeX && tempCheck->getColor() == gameBoard[xPos + 1][yPos]->getColor())
-            processMatch(tempCheck);
-        else if(tempCheck->getColY() != 0 && tempCheck->getColor() == gameBoard[xPos][yPos - 1]->getColor())
-            processMatch(tempCheck);
-        else if(tempCheck->getColY() != boardSizeY && tempCheck->getColor() == gameBoard[xPos][yPos + 1]->getColor())
+        if(tempCheck->foundMatch())
             processMatch(tempCheck);
 
     }
