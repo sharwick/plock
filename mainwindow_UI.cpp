@@ -285,10 +285,13 @@ void MainWindow::setupInterface(){
 
     pauseMenuLayout->addWidget(new QLabel("   Paused"), Qt::AlignHCenter | Qt::AlignTop);
     pauseRejected = new QPushButton("Resume", this);
+    pauseSettings = new QPushButton("Settings", this);
     pauseAccept = new QPushButton("Main", this);
     pauseMenuLayout->addWidget(pauseRejected, Qt::AlignTop);
+    pauseMenuLayout->addWidget(pauseSettings, Qt::AlignVCenter);
     pauseMenuLayout->addWidget(pauseAccept, Qt::AlignBottom);
     connect(pauseRejected, SIGNAL(clicked()), this, SLOT(pauseBack()) );
+    connect(pauseSettings, SIGNAL(clicked()), this, SLOT(pauseSettingsPressed()) );
     connect(pauseAccept, SIGNAL(clicked()), this, SLOT(menuPressed()) );
 
 
@@ -366,20 +369,22 @@ void MainWindow::setupBlocks(){
 } // End setupBlocks()
 
 void MainWindow::mousePressEvent(QMouseEvent *event){
-    QPoint point = blockView->pos();
+    if(!pauseMenu->isVisible()){    // Only allow clicks when not paused
 
-    if( event->y() > point.y() &&
-            event->y() <= point.y()+blockView->height() )
-    {
-        xPos = event->x() / blockSize;
-        yPos = (event->y() - point.y()) / blockSize;
+        QPoint point = blockView->pos();
 
-        // *Tried to put following code in blockPressed, but it was already included somewhere else.
-        //*Code can be moved as needed as long as it is in mainwindow_UI.cpp
-        Block* tempCheck = gameBoard[xPos][yPos];
-        if(tempCheck->foundMatch())
-            processMatch(tempCheck);
+        if( event->y() > point.y() &&
+                event->y() <= point.y()+blockView->height() )
+        {
+            xPos = event->x() / blockSize;
+            yPos = (event->y() - point.y()) / blockSize;
 
+            // *Tried to put following code in blockPressed, but it was already included somewhere else.
+            //*Code can be moved as needed as long as it is in mainwindow_UI.cpp
+            Block* tempCheck = gameBoard[xPos][yPos];
+            if(tempCheck->foundMatch())
+                processMatch(tempCheck);
+        }
     }
 }
 
@@ -404,6 +409,21 @@ void MainWindow::pauseBack(){
 void MainWindow::pausedPressed(){
     pauseMenu->show();
     timer->stop();
+}
+
+void MainWindow::pauseSettingsPressed(){
+    pauseMenu->hide();
+    shuffleButton->hide();
+    settingsMenu->show();
+    connect(backToMenu2, SIGNAL(clicked()), this, SLOT(backToPause()) );
+}
+
+void MainWindow::backToPause(){
+    settingsMenu->hide();
+    mainMenu->hide();
+    shuffleButton->show();
+    pauseMenu->show();
+    connect(backToMenu2, SIGNAL(clicked()), this, SLOT(backToMain()) );
 }
 
 void MainWindow::newGamePressed(){
