@@ -1,5 +1,5 @@
 #include "myRectItem.h"
-#include "mainwindow.h"
+#include "mainwindow_UI.h"
 
 myRectItem::myRectItem()
 {
