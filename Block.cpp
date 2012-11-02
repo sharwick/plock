@@ -3,25 +3,16 @@
  *One line change to show Devin git
  *Block.cpp
  *
- *Version 2.1
+ *Version 2.3
  *Author: Daniel Keasler
  *      Plock Team
- *
- *  CHANGES: Constructor, bool member and functions, adjacent
- *  Block members and functions, RowX and ColY members and
- *  functions, gatherBlocks, removed determine color, and many
- *  mutator functions(see NOTE below).
- *
- *  CHANGES: minor mutator function changes to directional
- *  blocks, setGraphImage / getGraphImage, 4 directional
- *  block collectors from special blocks
  *
  *Constructor only needs push button, and push button should
  *  be instantiated at this point. 4 adjacent Blocks set to
  *  null to be assigned later. (rand() % 6) + 1 should return
  *  1 to 6 for color. Bool values are used to quickly check
- *	in the game algorithms for blocks already set for a color
- *	change and for blocks already marked in scoring count.
+ *  in the game algorithms for blocks already set for a color
+ *  change and for blocks already marked in scoring count.
  *
  *  ADDED: Adjacent Blocks were changed to represent the changed
  *  simpler names. Also, coloredBool and markedBool were added
@@ -31,22 +22,30 @@
  *  check for matches in a particular column from the actual
  *  block.
  *
+ *  CHANGED: minor mutator function changes to directional
+ *  blocks, setGraphImage / getGraphImage, 4 directional
+ *  block collectors from special blocks
+ *
  *  ADDED: graphImage = 0;
+ *
+ *  CHANGED: setColor only contains int value for comparisons
+ *
+ *  CHANGED: push butons have been removed from Blocks 
+ *  (constructor, algorithms don't have push button)
+ *
+ *  ADDED: foundMatch to process initial matching. 
  */
-//#include "Block.h"
+
 #include "Block.h"
 //#include "Colors.h"
-//#include <QPixmap>
-//#include <QIcon>
 
 using namespace std;
 Block::Block(int rowSpot, int colSpot, int colorChoice){
-	//pushButtonPtr = button;
     rightBlockPtr = 0;
     upBlockPtr = 0;
     leftBlockPtr = 0;
     downBlockPtr = 0;
-	coloredBool = false;
+    coloredBool = false;
     markedBool = false;
     RowX = rowSpot;
     ColY = colSpot;
@@ -66,6 +65,9 @@ Block::Block(int rowSpot, int colSpot, int colorChoice){
  *
  *  CHANGED: No switch needed. Color int is index in colorArray,
  *  QColor is color at that index.
+ *
+ *  CHANGED: setColor only sets integer value for color 
+ *  comparisons
  */
 void Block::setColor(int _color){
     color = _color;
@@ -86,10 +88,10 @@ void Block::setColor(int _color){
  *  array has been initialized to ensure these pointers
  *  are not accidentally set to a NULL Block Pointer.
  *
- *  ADDED: Names were changed to a simpler format.
+ *  CHANGED: Pointer names were changed to a simpler format.
  *
- *  ADDED: Changed names to assign because setDown was
- *  QPushButton function
+ *  CHANGED: function names were changed to assign (from set)
+ *  because setDown was a QPushButton function
  */
 void Block::assignRight(Block *tempBlock){
 	rightBlockPtr = tempBlock;
@@ -146,6 +148,23 @@ int Block::getRowX(){
 
 int Block::getColY(){
     return ColY;
+}
+/*
+ *This function (in all 4 directions) checks if the neighbor is not 0,
+ *  and then if their color value matches the calling Block's color 
+ *  value. If so, it returns true. Otherwise false is returned at the
+ *  end. 
+ */
+bool Block::foundMatch(){
+    if(upBlockPtr != 0 && upBlockPtr->getColor() == getColor())
+        return true;
+    if(downBlockPtr != 0 && downBlockPtr->getColor() == getColor())
+        return true;
+    if(rightBlockPtr != 0 && rightBlockPtr->getColor() == getColor())
+        return true;
+    if(leftBlockPtr != 0 && leftBlockPtr->getColor() == getColor())
+        return true;
+    return false;
 }
 
 /*

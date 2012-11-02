@@ -1,29 +1,34 @@
 /*
  *Block.h
  *
- *Version 2.1
- *  CHANGES: Constructor, bool member and functions, adjacent
- *  Block members and functions, RowX and ColY members and
- *  functions, gatherBlocks, removed determine color, and many
- *  mutator functions(see NOTE below).
- *
- *  CHANGES: assign'Direction' replaced set'Direction'.
- *  graphImage and mutator/accessor functions added.
- *  4 directional collectors (from special blocks) added.
- *
- *  CHANGES: setColor now takes in a QColor (obtained from colors).
- *  No switch needed. Constructor changed to reflect new setColor.
- *  Takes in int color value from caller and QColor
- *
  *Author: Daniel Keasler
  *      Plock Team
- *
+ *Version 2.3
+ * 
  *Constructor only needs to take in corresponding PushButton,
  *  color is randomly determined at start and adjacent Blocks
  *  are unknown.
  *
+ *  CHANGED: Constructor, bool member and functions, adjacent
+ *  Block members and functions, RowX and ColY members and
+ *  functions, gatherBlocks, removed determine color, and many
+ *  mutator functions(see NOTE below).
+ *
+ *  CHANGED: assign'Direction' replaced set'Direction'.
+ *  graphImage and mutator/accessor functions added.
+ *  4 directional collectors (from special blocks) added.
+ *  
  *  ADDED: Constructor now takes in the 2D array indices from
  *  the 2D location of the Block.
+ *
+ *  CHANGED: setColor now takes in a QColor (obtained from colors).
+ *  No switch needed. Constructor changed to reflect new setColor.
+ *  Takes in int color value from caller and QColor
+ *
+ *  CHANGED: push buttons removed. 
+ *
+ *  CHANGED: added foundMatch function, setColor only assigns
+ *  integer value for comparisons. 
  *
  *  NOTE: All of the mutator functions are public at the moment
  *  When we begin putting all of the pieces together and finalize
@@ -39,9 +44,9 @@ using namespace std;
 
 class Block{
 public:
-    Block(int, int, int); //edit for QPushButton
-    void setColor(int); //edit for QPushButton inheritance?
-    int getColor(); //edit for QPushButton inheritance?
+    Block(int, int, int); 
+    void setColor(int); 
+    int getColor(); 
     bool getColoredBool();
     bool getMarkedBool();
     void setMarkedBool(bool);
@@ -54,6 +59,7 @@ public:
     int getColY();
     void setGraphImage(int);
     int getGraphImage();
+    bool foundMatch();
     vector<Block*> gatherBlocks(vector<Block*>);
     vector<Block*> upCollector(vector<Block*>);
     vector<Block*> rightCollector(vector<Block*>);
@@ -67,10 +73,10 @@ private:
     Block *upBlockPtr;
     Block *leftBlockPtr;
     Block *downBlockPtr;
-    int color; //edit for QPushButton inheritance?
+    int color; 
     int RowX;
     int ColY;
-    int graphImage;
+    int graphImage; //may change based on implementation of graph Image
 };
 	
 #endif
