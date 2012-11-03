@@ -415,6 +415,7 @@ void MainWindow::pauseSettingsPressed(){
     pauseMenu->hide();
     shuffleButton->hide();
     settingsMenu->show();
+    disconnect(backToMenu2, SIGNAL(clicked()), this, SLOT(backToMain()) );
     connect(backToMenu2, SIGNAL(clicked()), this, SLOT(backToPause()) );
 }
 
@@ -423,6 +424,7 @@ void MainWindow::backToPause(){
     mainMenu->hide();
     shuffleButton->show();
     pauseMenu->show();
+    disconnect(backToMenu2, SIGNAL(clicked()), this, SLOT(backToPause()) );
     connect(backToMenu2, SIGNAL(clicked()), this, SLOT(backToMain()) );
 }
 
