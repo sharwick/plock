@@ -61,7 +61,7 @@ private:
     QProgressBar *bombBar, *timeBar;
     QPushButton *menuButton,*shuffleButton, *verticalFlipButton, *horizontalFlipButton,  *newGameButton, *settingsButton,
     *helpButton, *backToMenu, *backToMenu2, *backToMenu3, *standardModeButton,
-    *pauseAccept, *pauseRejected;
+    *pauseAccept, *pauseRejected, *pauseSettings;
     QGroupBox *mainMenu, *settingsMenu, *helpMenu, *gameModeMenu, *pauseMenu;
     QCheckBox *soundCheck, *screenLockCheck;
     QLabel *titleLabel, *gameModeTitle, *settingsTitle;
@@ -113,7 +113,9 @@ private slots:
    void settingsPressed();
    void helpPressed();
    void backToMain();
+   void backToPause();
    void pausedPressed();
+   void pauseSettingsPressed();
    void pauseBack();
    void standardMode();
    void screenLock();
