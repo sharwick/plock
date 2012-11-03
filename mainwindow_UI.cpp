@@ -270,6 +270,7 @@ void MainWindow::setupInterface(){
     menuButton = new QPushButton("||",this);
     menuButton->setFixedSize(blockSize ,blockSize);
     connect(menuButton, SIGNAL(clicked()),this, SLOT(pausedPressed()));
+    //menuButton->setGeometry((bombBar->x() + (blockSize*7) ), 0, blockSize, blockSize);
     grid->addWidget(menuButton,1,3);
 
     // Pause Menu
@@ -293,10 +294,23 @@ void MainWindow::setupInterface(){
 
 
     // Shuffle Button
-    shuffleButton = new QPushButton("Shuffle",this);
-    shuffleButton->setGeometry((bombBar->x() + (blockSize*6) ), bombBar->y() + (blockSize / 2), blockSize, blockSize);
+    shuffleButton = new QPushButton("S",this);
+    shuffleButton->setGeometry((0 + (blockSize)*4 ), screenSizeY - (blockSize * 1.6), blockSize*2, blockSize);
     connect(shuffleButton, SIGNAL(clicked()),this, SLOT(shufflePressed()));
     shuffleButton->hide();
+
+    // Geometry Buttons
+
+    verticalFlipButton = new QPushButton("Vflip",this);
+    verticalFlipButton->setGeometry((0 + (blockSize)*0 ), screenSizeY - (blockSize * 1.6), blockSize*2, blockSize);
+    connect(verticalFlipButton, SIGNAL(clicked()),this, SLOT(verticalFlip()));
+    verticalFlipButton->hide();
+
+    horizontalFlipButton = new QPushButton("Hflip",this);
+    horizontalFlipButton->setGeometry((0 + (blockSize)*2 ), screenSizeY - (blockSize * 1.6), blockSize*2, blockSize);
+    connect(horizontalFlipButton, SIGNAL(clicked()),this, SLOT(horizontalFlip()));
+    horizontalFlipButton->hide();
+
 
     // Block Viewing Area
     theScene = new QGraphicsScene();
@@ -391,6 +405,8 @@ void MainWindow::menuPressed(){
     scorePtr->resetScore();
     sframe->resetScoreBoard();
     shuffleButton->hide();
+    verticalFlipButton->hide();
+    horizontalFlipButton->hide();
     pauseMenu->hide();
     mainMenu->show();
 
@@ -462,6 +478,8 @@ void MainWindow::changeColorScheme(){
 void MainWindow::standardMode(){
     gameModeMenu->hide();
     shuffleButton->show();
+    verticalFlipButton->show();
+    horizontalFlipButton->show();
 
     // Mike Son update
     timer = new QTimer(this);
@@ -738,6 +756,60 @@ void MainWindow::shufflePressed() {
         }
 
     }
+}
 
 
+
+void MainWindow::horizontalFlip() {
+    // Only flips if not paused
+    if(!pauseMenu->isVisible()){
+
+        int x, y;
+
+        for (x=0; x<boardSizeX; x++) {
+            for (y=0; y<boardSizeY/2; y++) {
+                int x1, y1, x2, y2, tempColor;
+                x1=x;
+                x2=x;
+                y1=y;
+                y2=boardSizeY-1-y;
+
+                tempColor = gameBoard[x1][y1]->getColor();
+                gameBoard[x1][y1]->setColor( gameBoard[x2][y2]->getColor() );
+                gameBoard[x2][y2]->setColor(tempColor);
+
+                rectArray[gameBoard[x1][y1]->getRowX()][gameBoard[x1][y1]->getColY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x1][y1]->getColor()), Qt::SolidPattern));
+                rectArray[gameBoard[x2][y2]->getRowX()][gameBoard[x2][y2]->getColY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x2][y2]->getColor()), Qt::SolidPattern));
+                // TO DO: need to swap bombs/multipler -> add getBomb method to Block
+            }
+        }
+
+    }
+}
+
+void MainWindow::verticalFlip() {
+
+    // Only flips if not paused
+    if(!pauseMenu->isVisible()){
+
+        int x, y;
+
+        for (x=0; x<boardSizeX/2; x++) {
+            for (y=0; y<boardSizeY; y++) {
+                int x1, y1, x2, y2, tempColor;
+                x1=x;
+                x2=boardSizeX-1-x;
+                y1=y;
+                y2=y;
+
+                tempColor = gameBoard[x1][y1]->getColor();
+                gameBoard[x1][y1]->setColor( gameBoard[x2][y2]->getColor() );
+                gameBoard[x2][y2]->setColor(tempColor);
+
+                rectArray[gameBoard[x1][y1]->getRowX()][gameBoard[x1][y1]->getColY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x1][y1]->getColor()), Qt::SolidPattern));
+                rectArray[gameBoard[x2][y2]->getRowX()][gameBoard[x2][y2]->getColY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x2][y2]->getColor()), Qt::SolidPattern));
+                // TO DO: need to swap bombs/multipler -> add getBomb method to Block
+            }
+        }
+    }
 }

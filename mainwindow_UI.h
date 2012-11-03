@@ -59,7 +59,7 @@ private:
     QGraphicsView *blockView;
     QGraphicsRectItem *tempBlock;
     QProgressBar *bombBar, *timeBar;
-    QPushButton *menuButton,*shuffleButton, *newGameButton, *settingsButton,
+    QPushButton *menuButton,*shuffleButton, *verticalFlipButton, *horizontalFlipButton,  *newGameButton, *settingsButton,
     *helpButton, *backToMenu, *backToMenu2, *backToMenu3, *standardModeButton,
     *pauseAccept, *pauseRejected;
     QGroupBox *mainMenu, *settingsMenu, *helpMenu, *gameModeMenu, *pauseMenu;
@@ -93,6 +93,7 @@ private:
     void setupBlocks();
     void setupInterface();
     void setupWindows();
+
 	
 	//Dan Block Functions
     void processMatch(Block*);
@@ -118,6 +119,8 @@ private slots:
    void screenLock();
    void noSound();
    void changeColorScheme();
+   void verticalFlip();
+   void horizontalFlip();
 
 signals:
    void blockPressed(int, int);
