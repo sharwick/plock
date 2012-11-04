@@ -261,11 +261,6 @@ void MainWindow::setupInterface(){
     sframe->text->setFixedHeight(blockSize );
     grid->addWidget(sframe->text,1,0,1,1,Qt::AlignLeft);
 
-    // Bomb Progress Bar
-    bombBar = new QProgressBar(this);
-    bombBar->setFixedSize(blockSize * 2, blockSize);
-    grid->addWidget(bombBar,1, 1, Qt::AlignLeft);
-
     // Menu Button
     menuButton = new QPushButton("||",this);
     menuButton->setFixedSize(blockSize ,blockSize);
@@ -325,6 +320,8 @@ void MainWindow::setupInterface(){
 
     // Time Progress Bar
 
+    restart = false;
+    bcurrentTime=0;
     currentTime=60;
 //    timeBar = new QProgressBar(this);
 //    timeBar->setFixedSize(screenSizeX - (screenSizeX/3), 20);
@@ -338,6 +335,27 @@ void MainWindow::setupInterface(){
     grid->addWidget(ui->Timeclock,7,1);
     grid->addWidget(ui->Timefill,7,1);
     //grid->addWidget(timeBar,7,1);
+
+
+    // Bomb Progress Bar
+    //    QLabel *bombLayer = new QLabel(ui->Timeclock);
+    //    QLabel *bombFill = new QLabel(ui->Timeclock);
+    //    bombLayer->setMaximumWidth(2*(ui->Timeclock->maximumWidth()/5));
+        ui->bombLayer->setGeometry(0,0,120,25);
+    //    bombLayer->setFrameShape(Box);
+    //    bombFill->setMaximumWidth(2*(ui->Timeclock->maximumWidth()/5));
+    //    bombFill->setFrameShape(Box);
+        ui->bombFill->setGeometry(0,0,120,25);
+        QPixmap bombColor(ui->bombLayer->width(), ui->bombLayer->height());
+        bombColor.fill(Qt::white);
+        ui->bombLayer->setPixmap(bombColor);
+        bombColor.fill(Qt::gray);
+        ui->bombFill->setPixmap(bombColor);
+        grid->addWidget(ui->bombLayer,1,1);
+        grid->addWidget(ui->bombFill,1,1);
+        ui->bombLayer->setMaximumWidth(ui->bombLayer->width());
+        ui->bombFill->setMaximumWidth(0);
+
 
     // Setup Paused Menu
 
@@ -402,6 +420,30 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
     }
 }
 
+
+
+void MainWindow::updateBomb(int nBlocks){
+
+    int updateVal;
+//    updateVal = (nBlocks-1)*(nBlocks-1);
+    updateVal = nBlocks * 6;
+
+    if ((ui->bombFill->maximumWidth()+updateVal) < ui->bombLayer->maximumWidth()){
+        ui->bombFill->setMaximumWidth(ui->bombFill->maximumWidth()+updateVal);
+        if (ui->bombFill->maximumWidth() > 0){
+            bcurrentTime += (updateVal/2);
+            btimeBegin();
+        }
+    }
+    else if ((ui->bombFill->maximumWidth()+updateVal) >= ui->bombLayer->maximumWidth()){
+             ui->bombFill->setMaximumWidth(0);
+             btimeOver();
+             bcurrentTime=0;
+    }
+
+}
+
+
 /*
  *  The Slots that the buttons use
  */
@@ -415,16 +457,25 @@ void MainWindow::menuPressed(){
     pauseMenu->hide();
     mainMenu->show();
 
+    //timer, bombbar reset
+    restart=true;
+    ui->bombFill->setMaximumWidth(0);
+    bcurrentTime=0;
+    ui->Timefill->setMaximumWidth(ui->Timeclock->width());
+    currentTime=60;
 }
 
 void MainWindow::pauseBack(){
     pauseMenu->hide();
-    timer->start();
+    timeBegin();
+    if(bcurrentTime!=0)
+        btimeBegin();
 }
 
 void MainWindow::pausedPressed(){
     pauseMenu->show();
-    timer->stop();
+    timeOver();
+    btimeOver();
 }
 
 void MainWindow::pauseSettingsPressed(){
@@ -504,9 +555,17 @@ void MainWindow::standardMode(){
     horizontalFlipButton->show();
 
     // Mike Son update
+    if(restart!=true){
     timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()),this, SLOT(timeSlot()));
+    btimer = new QTimer(this);
+    btimer->start(500);
+    connect(btimer, SIGNAL(timeout()),this, SLOT(bombtimeSlot()));
     timer->start(200);//move to start game code
+    connect(timer, SIGNAL(timeout()),this, SLOT(timeSlot()));
+    }
+    else{
+        timeBegin();
+    }
 }
 
 /**
@@ -548,6 +607,7 @@ void MainWindow::processMatch(Block* matchedBlock)
     scorePtr->updateScore((int) gatheredBlocks.size(), false , multiplier);
     sframe->update(scorePtr->getScore());
     determineColor(gatheredBlocks);
+    updateBomb((int) gatheredBlocks.size());
 }
 
 /*
@@ -739,22 +799,50 @@ vector<Block*> MainWindow::bombCollector(vector<Block*> blockVector, int x, int 
 //END Dan Block Functions
 
 
+void MainWindow::bombtimeSlot(){
+y++;
+if(y%2==0){
+    bcurrentTime--;
+}
+if(bcurrentTime==-1){
+    btimeOver();
+//    close();
+    return;
+}
+//ui->Timenum->setText(QString::number(currentTime));
+ui->bombFill->setMaximumWidth(ui->bombFill->maximumWidth()-(ui->bombLayer->width()/120));
+}
+
+
+
 void MainWindow::timeSlot(){
 x++;
 if(x%5==0){
     currentTime--;
 }
 if(currentTime==-1){
-    gameOver();
-    close();
+    timeOver();
+//    close();
     return;
 }
 //ui->Timenum->setText(QString::number(currentTime));
 ui->Timefill->setMaximumWidth(ui->Timefill->maximumWidth()-(ui->Timeclock->width()/300));
 }
 
-void MainWindow::gameOver(){
+
+void MainWindow::btimeOver(){
+    btimer->stop();
+}
+
+void MainWindow::btimeBegin(){
+    btimer->start();
+}
+
+void MainWindow::timeOver(){
     timer->stop();
+}
+void MainWindow::timeBegin(){
+    timer->start();
 }
 
 void MainWindow::shufflePressed() {

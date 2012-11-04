@@ -58,7 +58,7 @@ private:
     QGraphicsScene *theScene;
     QGraphicsView *blockView;
     QGraphicsRectItem *tempBlock;
-    QProgressBar *bombBar, *timeBar;
+//    QProgressBar *bombBar, *timeBar;
     QPushButton *menuButton,*shuffleButton, *verticalFlipButton, *horizontalFlipButton,  *newGameButton, *settingsButton,
     *helpButton, *backToMenu, *backToMenu2, *backToMenu3, *standardModeButton,
     *pauseAccept, *pauseRejected, *pauseSettings;
@@ -69,6 +69,7 @@ private:
     QSlider *colorSlider;
     myRectItem* rectArray[8][9];
     QTimer *timer;
+    QTimer *btimer;
     Colors *colorPtr;
     Score *scorePtr;
     ScoreFrame *sframe;
@@ -79,10 +80,16 @@ private:
     int blockSize;
     int xPos, yPos;
     int currentTime;
-    int x;
+    int bcurrentTime;
+    int x, y;
+    bool restart;
     void setUpClock();
-    void gameOver();
+    void timeOver();
+    void btimeOver();
+    void btimeBegin();
+    void timeBegin();
     void reset();   
+    void updateBomb(int nBlocks);
     int multiplier;
 	
 	//Dan Block Variables
@@ -109,6 +116,7 @@ protected:
 private slots:
    void menuPressed();
    void timeSlot();
+   void bombtimeSlot();
    void shufflePressed();
    void newGamePressed();
    void settingsPressed();
