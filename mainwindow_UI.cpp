@@ -577,7 +577,7 @@ vector<Block*> MainWindow::sortVector(vector<Block*> blockVector)
         int t = i;
         for(int j = i + 1; (unsigned)j < blockVector.size(); j++)
         {
-            if(blockVector[j]->getRowX() == blockVector[t]->getRowX() && blockVector[j]->getColY() > blockVector[t]->getColY())
+            if(blockVector[j]->getCoordX() == blockVector[t]->getCoordX() && blockVector[j]->getCoordY() > blockVector[t]->getCoordY())
                 t = j;
         }
         if(t != i)
@@ -589,7 +589,7 @@ vector<Block*> MainWindow::sortVector(vector<Block*> blockVector)
 		//This line may not be needed in general transntions
         blockVector[i]->setColor(0);
         blockVector[i]->setMarkedBool(false);
-        rectArray[blockVector[i]->getRowX()][blockVector[i]->getColY()]->setBrush(QBrush(colorPtr->getQColor(0), Qt::SolidPattern));
+        rectArray[blockVector[i]->getCoordX()][blockVector[i]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(0), Qt::SolidPattern));
     }
     return blockVector;
 }
@@ -623,20 +623,20 @@ void MainWindow::determineColor(vector<Block*> blockVector)
 {
     for(int i = 0; (unsigned)i < blockVector.size(); i++)
     {
-        int checkY = blockVector[i]->getColY() - 1;
+        int checkY = blockVector[i]->getCoordY() - 1;
         while(checkY >= 0)
         {
-            if(!gameBoard[blockVector[i]->getRowX()][checkY]->getColoredBool())
+            if(!gameBoard[blockVector[i]->getCoordX()][checkY]->getColoredBool())
             {
 				//steal the color from other block onto ith block...
-                blockVector[i]->setColor(gameBoard[blockVector[i]->getRowX()][checkY]->getColor());
+                blockVector[i]->setColor(gameBoard[blockVector[i]->getCoordX()][checkY]->getColor());
                 blockVector[i]->setColoredBool(false);
-                rectArray[blockVector[i]->getRowX()][blockVector[i]->getColY()]->setBrush(QBrush(colorPtr->getQColor(blockVector[i]->getColor()), Qt::SolidPattern));
+                rectArray[blockVector[i]->getCoordX()][blockVector[i]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(blockVector[i]->getColor()), Qt::SolidPattern));
 				//..and set the other block for a color change (including transition)
-                gameBoard[blockVector[i]->getRowX()][checkY]->setColoredBool(true); //block needs to be changed later
-                gameBoard[blockVector[i]->getRowX()][checkY]->setColor(0);
-                rectArray[blockVector[i]->getRowX()][checkY]->setBrush(QBrush(colorPtr->getQColor(0),Qt::SolidPattern));
-                blockVector.push_back(gameBoard[blockVector[i]->getRowX()][checkY]); //add block to end of vector
+                gameBoard[blockVector[i]->getCoordX()][checkY]->setColoredBool(true); //block needs to be changed later
+                gameBoard[blockVector[i]->getCoordX()][checkY]->setColor(0);
+                rectArray[blockVector[i]->getCoordX()][checkY]->setBrush(QBrush(colorPtr->getQColor(0),Qt::SolidPattern));
+                blockVector.push_back(gameBoard[blockVector[i]->getCoordX()][checkY]); //add block to end of vector
                 break;
             }
             else
@@ -648,7 +648,7 @@ void MainWindow::determineColor(vector<Block*> blockVector)
             tempColor = (rand() % 6) + 1;
             blockVector[i]->setColor(tempColor); 
             blockVector[i]->setColoredBool(false);
-            rectArray[blockVector[i]->getRowX()][blockVector[i]->getColY()]->setBrush(QBrush(colorPtr->getQColor(tempColor), Qt::SolidPattern));
+            rectArray[blockVector[i]->getCoordX()][blockVector[i]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(tempColor), Qt::SolidPattern));
         }
     }
 }
@@ -674,9 +674,12 @@ vector<Block*> MainWindow::checkSpecials(vector<Block*> blockVector)
             switch(blockVector[i]->getGraphImage()){
 
             case 1 : //score case
+                //score mult is updated first
+                //vector swap and erase of this scoring object
+                //changeIndex called for swapped graph objects
                 break;
             case 2 : //bomb case
-                blockVector = bombCollector(blockVector, blockVector[i]->getRowX(), blockVector[i]->getColY());
+                blockVector = bombCollector(blockVector, blockVector[i]->getCoordX(), blockVector[i]->getCoordY());
                 break;
             case 3 : //vertical case
                 blockVector = blockVector[i]->upCollector(blockVector);
@@ -694,6 +697,8 @@ vector<Block*> MainWindow::checkSpecials(vector<Block*> blockVector)
                 break;
             }
             blockVector[i]->setGraphImage(0);
+            //zero pointer in myRectItem->myGraphObject
+            //clear image from myRectItem
         }
     }
     return blockVector;
@@ -772,9 +777,21 @@ void MainWindow::shufflePressed() {
             gameBoard[r1][c1]->setColor( gameBoard[r2][c2]->getColor() );
             gameBoard[r2][c2]->setColor(tempColor);
 
-            rectArray[gameBoard[r1][c1]->getRowX()][gameBoard[r1][c1]->getColY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[r1][c1]->getColor()), Qt::SolidPattern));
-            rectArray[gameBoard[r2][c2]->getRowX()][gameBoard[r2][c2]->getColY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[r2][c2]->getColor()), Qt::SolidPattern));
+            rectArray[gameBoard[r1][c1]->getCoordX()][gameBoard[r1][c1]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[r1][c1]->getColor()), Qt::SolidPattern));
+            rectArray[gameBoard[r2][c2]->getCoordX()][gameBoard[r2][c2]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[r2][c2]->getColor()), Qt::SolidPattern));
             // TO DO: need to swap bombs/multipler -> add getBomb method to Block
+            /*
+             *At this point, graph objects need to be swapped between rect items
+             *tempGraphObject = rectArray[gameBoard[r1][c1]->getCoordX()][gameBoard[r1][c1]->getCoordY()]->myGraphObject;
+             *rectArray[gameBoard[r1][c1]->getCoordX()][gameBoard[r1][c1]->getCoordY()]->myGraphObject = rectArray[gameBoard[r2][c2]->getCoordX()][gameBoard[r2][c2]->getCoordY()]->myGraphObject;
+             *rectArray[gameBoard[r2][c2]->getCoordX()][gameBoard[r2][c2]->getCoordY()->myGraphObject = tempGraphObject;
+             *
+             *The graph objects were just swapped but they still contain the previous coordinates
+             *rectArray[gameBoard[r1][c1]->getCoordX()][gameBoard[r1][c1]->getCoordY()]->myGraphObject->moved(gameBoard[r2][c2]->getCoordX(), gameBoard[r2][c2]->getCoordY());
+             *rectArray[gameBoard[r2][c2]->getCoordX()][gameBoard[r2][c2]->getCoordY()]->myGraphObject->moved(gameBoard[r1][c1]->getCoordX(), gameBoard[r1][c1]->getCoordY());
+             *
+             *May need to force another painting of these graph objects, but data structure continuity is maintained at this point
+             */
         }
 
     }
@@ -800,9 +817,10 @@ void MainWindow::horizontalFlip() {
                 gameBoard[x1][y1]->setColor( gameBoard[x2][y2]->getColor() );
                 gameBoard[x2][y2]->setColor(tempColor);
 
-                rectArray[gameBoard[x1][y1]->getRowX()][gameBoard[x1][y1]->getColY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x1][y1]->getColor()), Qt::SolidPattern));
-                rectArray[gameBoard[x2][y2]->getRowX()][gameBoard[x2][y2]->getColY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x2][y2]->getColor()), Qt::SolidPattern));
+                rectArray[gameBoard[x1][y1]->getCoordX()][gameBoard[x1][y1]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x1][y1]->getColor()), Qt::SolidPattern));
+                rectArray[gameBoard[x2][y2]->getCoordX()][gameBoard[x2][y2]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x2][y2]->getColor()), Qt::SolidPattern));
                 // TO DO: need to swap bombs/multipler -> add getBomb method to Block
+                //Swapping follows similar process commented in shuffle
             }
         }
 
@@ -828,9 +846,10 @@ void MainWindow::verticalFlip() {
                 gameBoard[x1][y1]->setColor( gameBoard[x2][y2]->getColor() );
                 gameBoard[x2][y2]->setColor(tempColor);
 
-                rectArray[gameBoard[x1][y1]->getRowX()][gameBoard[x1][y1]->getColY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x1][y1]->getColor()), Qt::SolidPattern));
-                rectArray[gameBoard[x2][y2]->getRowX()][gameBoard[x2][y2]->getColY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x2][y2]->getColor()), Qt::SolidPattern));
+                rectArray[gameBoard[x1][y1]->getCoordX()][gameBoard[x1][y1]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x1][y1]->getColor()), Qt::SolidPattern));
+                rectArray[gameBoard[x2][y2]->getCoordX()][gameBoard[x2][y2]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x2][y2]->getColor()), Qt::SolidPattern));
                 // TO DO: need to swap bombs/multipler -> add getBomb method to Block
+                //Swapping follows similar process commented in shuffle
             }
         }
     }

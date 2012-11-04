@@ -40,15 +40,15 @@
 //#include "Colors.h"
 
 using namespace std;
-Block::Block(int rowSpot, int colSpot, int colorChoice){
+Block::Block(int xSpot, int ySpot, int colorChoice){
     rightBlockPtr = 0;
     upBlockPtr = 0;
     leftBlockPtr = 0;
     downBlockPtr = 0;
     coloredBool = false;
     markedBool = false;
-    RowX = rowSpot;
-    ColY = colSpot;
+    CoordX = xSpot;
+    CoordY = ySpot;
     graphImage = 0;
     setColor(colorChoice);
 }
@@ -142,12 +142,12 @@ void Block::setColoredBool(bool val){
  *Both of the following are simple accessor functions used to have array index
  *  through Block access.
  */
-int Block::getRowX(){
-    return RowX;
+int Block::getCoordX(){
+    return CoordX;
 }
 
-int Block::getColY(){
-    return ColY;
+int Block::getCoordY(){
+    return CoordY;
 }
 /*
  *This function (in all 4 directions) checks if the neighbor is not 0,

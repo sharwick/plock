@@ -55,8 +55,8 @@ public:
     void assignUp(Block*);
     void assignLeft(Block*);
     void assignDown(Block*);
-    int getRowX();
-    int getColY();
+    int getCoordX();
+    int getCoordY();
     void setGraphImage(int);
     int getGraphImage();
     bool foundMatch();
@@ -74,8 +74,8 @@ private:
     Block *leftBlockPtr;
     Block *downBlockPtr;
     int color; 
-    int RowX;
-    int ColY;
+    int CoordX;
+    int CoordY;
     int graphImage; //may change based on implementation of graph Image
 };
 	

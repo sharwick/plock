@@ -93,7 +93,6 @@ private:
     void setupBlocks();
     void setupInterface();
     void setupWindows();
-
 	
 	//Dan Block Functions
     void processMatch(Block*);
@@ -101,6 +100,8 @@ private:
 	void determineColor(vector<Block*>);
 	vector<Block*> checkSpecials(vector<Block*>);
     vector<Block*> bombCollector(vector<Block*>, int, int);
+
+    //vector<GraphObject> scoringObjects; //NYI
 	
 protected:
     void mousePressEvent(QMouseEvent *event);

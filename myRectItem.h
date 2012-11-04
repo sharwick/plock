@@ -1,6 +1,6 @@
 #ifndef MYRECTITEM_H
 #define MYRECTITEM_H
-
+//soon to potentially include graphobject.h
 #include <QGraphicsRectItem>
 
 class myRectItem : public QGraphicsRectItem
