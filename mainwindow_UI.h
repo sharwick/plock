@@ -38,6 +38,7 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 public:
+    // Necessitas Stuff
     enum ScreenOrientation {
         ScreenOrientationLockPortrait,
         ScreenOrientationLockLandscape,
@@ -98,7 +99,7 @@ private:
     // Methods
     Ui::MainWindow *ui;
     void setupBlocks();
-    void setupInterface();
+    void setupGameScreen();
     void setupWindows();
 	
 	//Dan Block Functions
@@ -133,8 +134,6 @@ private slots:
    void verticalFlip();
    void horizontalFlip();
 
-signals:
-   void blockPressed(int, int);
 };
 
 #endif // MAINWINDOW_H

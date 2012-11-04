@@ -1,12 +1,12 @@
-/**********************************
+/***********************************************************
  * Plock - An android game
  * MainWindow.cpp
  *
- * @author Devin Rusnak
+ * @authors Devin Rusnak, Daniel K, Shannon H, Mike Son
  * @version Qt:4.8.3
  * UIC CS 340 Fall 2012
  *
- **********************************/
+ ***********************************************************/
 #include "mainwindow_UI.h"
 #include "ui_mainwindow.h"
 #include <QDesktopWidget>
@@ -17,11 +17,10 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-
+    // Call our setup methods
     setupWindows();
-    setupInterface();
+    setupGameScreen();
     setupBlocks();
-
 }
 
 MainWindow::~MainWindow()
@@ -50,11 +49,11 @@ void MainWindow::setOrientation(ScreenOrientation orientation)
         break;
 #else // QT_VERSION < 0x040702
     case ScreenOrientationLockPortrait:
-        // INSERT CODE HERE
+        // INSERT CODE HERE FOR SCREEN FLIP IF WE DARE
         attribute = Qt::WA_LockPortraitOrientation;
         break;
     case ScreenOrientationLockLandscape:
-        // INSET CODE HERE
+        // INSERT CODE HERE FOR SCREEN FLIP IF WE DARE
         attribute = Qt::WA_LockLandscapeOrientation;
         break;
     default:
@@ -75,7 +74,7 @@ void MainWindow::showExpanded()
 #else
     show();
 #endif
-}
+} // End Necessitas Stuff
 
 /*********************************************************************
   void setupWindow():
@@ -83,13 +82,21 @@ void MainWindow::showExpanded()
     the phone screen. It also uses these parameters to determine the
     size the game blocks should be to fit evenly on the board. Also
     the gridLayout that organizes the items on screen is instantiated.
+    The central widget acts as the base widget. The game board is
+    placed onto this widget and all accompaning items. The centralWidget
+    is also the parent of the menu Widgets so they simply appear over
+    the game board which is always there but not always visable or
+    interactable.
     ADDED:
-    This is also where the menus are instantiated. They are simple
-    group box widgets that take up the whole screen and are .show/.hide
-    depending on when we need them.
+    This is also where the menus and their items are instantiated. They
+    are simple group box widgets that take up the whole screen and are
+    .show/.hide depending on when we need them.
  *********************************************************************/
 void MainWindow::setupWindows(){
 
+    /* * * * * * * * * * * * * *
+     * Setup the CentralWidget *
+     * * * * * * * * * * * * * */
     // Get the size of the phone screen and set centralWidget to that size
     ui->centralWidget->maximumSize();
     screenSizeX = QApplication::desktop()->screenGeometry(-1).width();
@@ -100,7 +107,6 @@ void MainWindow::setupWindows(){
     int tempSizeY = screenSizeY * 0.8;
     boardSizeX = 8;
     boardSizeY = 9;
-
     if( (screenSizeX / boardSizeX) < (tempSizeY / boardSizeY) )
         blockSize = screenSizeX / boardSizeX;
     else
@@ -116,16 +122,21 @@ void MainWindow::setupWindows(){
 
 
 
-    // Setup Main Menu
+    /* * * * * * * * * * * * * * * * *
+     * Setup Main Menu and its items *
+     * * * * * * * * * * * * * * * * */
+    // Initalize Widget
     mainMenu = new QGroupBox(this);
     mainMenu->setFixedSize(screenSizeX, screenSizeY);
     mainMenu->setAutoFillBackground(true);
 
+    // Create Main Menu's layout
     mainMenuLayout = new QVBoxLayout(this);
     mainMenuLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
     mainMenuLayout->setSpacing(0);
     mainMenu->setLayout(mainMenuLayout);
 
+    // Initialize and add items to layout
     titleLabel = new QLabel("   B L O C K S T A R");
     titleLabel->setFixedSize(blockSize*5, blockSize*2);
     mainMenuLayout->addWidget(titleLabel, Qt::AlignHCenter);
@@ -148,17 +159,22 @@ void MainWindow::setupWindows(){
 
 
 
-    // Setup Game Mode Menu
+    /* * * * * * * * * * * * * * * * * * *
+     * Setup GameMode Menu and its items *
+     * * * * * * * * * * * * * * * * * * */
+    // Initalize Widget
     gameModeMenu = new QGroupBox(this);
     gameModeMenu->setFixedSize(screenSizeX, screenSizeY);
     gameModeMenu->setAutoFillBackground(true);
     gameModeMenu->hide();
 
+    // Create the Menu's layout
     modeMenuLayout = new QVBoxLayout(this);
     modeMenuLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
     modeMenuLayout->setSpacing(0);
     gameModeMenu->setLayout(modeMenuLayout);
 
+    // Initalize and add Items to layout
     gameModeTitle = new QLabel("Choose A Game Mode");
     modeMenuLayout->addWidget(gameModeTitle, Qt::AlignTop);
 
@@ -172,17 +188,22 @@ void MainWindow::setupWindows(){
 
 
 
-    // Setup Settings Menu
+    /* * * * * * * * * * * * * * * * * * *
+     * Setup Settings Menu and its items *
+     * * * * * * * * * * * * * * * * * * */
+    // Initalize Widget
     settingsMenu = new QGroupBox(this);
     settingsMenu->setFixedSize(screenSizeX, screenSizeY);
     settingsMenu->setAutoFillBackground(true);
     settingsMenu->hide();
 
+    // Create the Menu's layout
     settingsLayout = new QGridLayout(this);
     settingsLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
     settingsLayout->setSpacing(0);
     settingsMenu->setLayout(settingsLayout);
 
+    // Initalize and add Items to the layout
     settingsTitle = new QLabel("S e t t i n g s");
     settingsLayout->addWidget(settingsTitle, 0, 0, Qt::AlignTop);
 
@@ -208,17 +229,23 @@ void MainWindow::setupWindows(){
     settingsLayout->addWidget(colorSlider, 3, 1);
 
 
-    // Setup Help Menu
+
+    /* * * * * * * * * * * * * * * * *
+     * Setup Help Menu and its items *
+     * * * * * * * * * * * * * * * * */
+    // Initalize Widget
     helpMenu = new QGroupBox(this);
     helpMenu->setFixedSize(screenSizeX, screenSizeY);
     helpMenu->setAutoFillBackground(true);
     helpMenu->hide();
 
+    // Create the Menu's layout
     helpMenuLayout = new QVBoxLayout(this);
     helpMenuLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
     helpMenuLayout->setSpacing(0);
     helpMenu->setLayout(helpMenuLayout);
 
+    // Initialize and add Items to the layout
     helpMenuLayout->addWidget(new QLabel("About"), Qt::AlignTop | Qt::AlignHCenter);
     helpMenuLayout->addWidget(new QLabel("B L O C K S T A R"), Qt::AlignTop);
 
@@ -236,15 +263,42 @@ void MainWindow::setupWindows(){
 
 
 
+    /* * * * * * * * * * * * * * * * * *
+     * Setup Pause Menu and its Items  *
+     * * * * * * * * * * * * * * * * * */
+    // Initalize Widget
+    pauseMenu = new QGroupBox(this);
+    pauseMenu->setAutoFillBackground(true);
+    pauseMenu->setGeometry( (screenSizeX/2) - ((screenSizeX * 0.8) / 2), (screenSizeY/2) - ((screenSizeY * 0.4) / 2),
+                           screenSizeX * 0.8 , screenSizeY * 0.4 );
+    // Create Menu's layout
+    pauseMenuLayout = new QVBoxLayout(this);
+    pauseMenuLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
+    pauseMenuLayout->setSpacing(25);
+    pauseMenu->setLayout(pauseMenuLayout);
+    pauseMenu->hide();
+
+    // Initialize and add Items to the layout
+    pauseMenuLayout->addWidget(new QLabel("   Paused"), Qt::AlignHCenter | Qt::AlignTop);
+    pauseRejected = new QPushButton("Resume", this);
+    pauseSettings = new QPushButton("Settings", this);
+    pauseAccept = new QPushButton("Main", this);
+    pauseMenuLayout->addWidget(pauseRejected, Qt::AlignTop);
+    pauseMenuLayout->addWidget(pauseSettings, Qt::AlignVCenter);
+    pauseMenuLayout->addWidget(pauseAccept, Qt::AlignBottom);
+    connect(pauseRejected, SIGNAL(clicked()), this, SLOT(pauseBack()) );
+    connect(pauseSettings, SIGNAL(clicked()), this, SLOT(pauseSettingsPressed()) );
+    connect(pauseAccept, SIGNAL(clicked()), this, SLOT(menuPressed()) );
+
 } // End setupWindow()
 
 /*********************************************************************
-  void setupInterface():
+  void setupGameScreen():
     This method initalizes and places all of the widgets used in the
     game. The main game board is a QGraphicsView with a QGraphicsScene
     with custom QGraphicsRectItems.
  *********************************************************************/
-void MainWindow::setupInterface(){
+void MainWindow::setupGameScreen(){
 
     // Color scheme
     colorPtr = new Colors(0);
@@ -267,28 +321,6 @@ void MainWindow::setupInterface(){
     connect(menuButton, SIGNAL(clicked()),this, SLOT(pausedPressed()));
     //menuButton->setGeometry((bombBar->x() + (blockSize*7) ), 0, blockSize, blockSize);
     grid->addWidget(menuButton,1,3);
-
-    // Pause Menu
-    pauseMenu = new QGroupBox(this);
-    pauseMenu->setAutoFillBackground(true);
-    pauseMenu->setGeometry( (screenSizeX/2) - ((screenSizeX * 0.8) / 2), (screenSizeY/2) - ((screenSizeY * 0.4) / 2),
-                           screenSizeX * 0.8 , screenSizeY * 0.4 );
-    pauseMenuLayout = new QVBoxLayout(this);
-    pauseMenuLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
-    pauseMenuLayout->setSpacing(25);
-    pauseMenu->setLayout(pauseMenuLayout);
-    pauseMenu->hide();
-
-    pauseMenuLayout->addWidget(new QLabel("   Paused"), Qt::AlignHCenter | Qt::AlignTop);
-    pauseRejected = new QPushButton("Resume", this);
-    pauseSettings = new QPushButton("Settings", this);
-    pauseAccept = new QPushButton("Main", this);
-    pauseMenuLayout->addWidget(pauseRejected, Qt::AlignTop);
-    pauseMenuLayout->addWidget(pauseSettings, Qt::AlignVCenter);
-    pauseMenuLayout->addWidget(pauseAccept, Qt::AlignBottom);
-    connect(pauseRejected, SIGNAL(clicked()), this, SLOT(pauseBack()) );
-    connect(pauseSettings, SIGNAL(clicked()), this, SLOT(pauseSettingsPressed()) );
-    connect(pauseAccept, SIGNAL(clicked()), this, SLOT(menuPressed()) );
 
 
     // Shuffle Button
@@ -400,6 +432,16 @@ void MainWindow::setupBlocks(){
 
 } // End setupBlocks()
 
+/************************************************************
+ * mousePressEvent(QMouseEvent):
+ *  This method handles the mouse event that is generated
+ *  when the player selects a block. The mouseEvent is
+ *  generated by the RectItems and is accepted by this
+ *  method. It gets the (x,y) cords of the click in relation
+ *  to the screen as a whole and we compute which block was
+ *  clicked based on this information. Then the necessary
+ *  functions to collect and process the matches takes place.
+ *************************************************************/
 void MainWindow::mousePressEvent(QMouseEvent *event){
     if(!pauseMenu->isVisible()){    // Only allow clicks when not paused
 
@@ -418,7 +460,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
                 processMatch(tempCheck);
         }
     }
-}
+} // End MousePressEvent
 
 
 
@@ -444,10 +486,12 @@ void MainWindow::updateBomb(int nBlocks){
 }
 
 
-/*
- *  The Slots that the buttons use
- */
+/************************************
+ *  The Slots that the buttons use. *
+ ************************************/
 void MainWindow::menuPressed(){
+
+    // Quit Game and go back to Main Menu
     reset();
     scorePtr->resetScore();
     sframe->resetScoreBoard();
@@ -481,6 +525,8 @@ void MainWindow::pausedPressed(){
 void MainWindow::pauseSettingsPressed(){
     pauseMenu->hide();
     shuffleButton->hide();
+    verticalFlipButton->hide();
+    horizontalFlipButton->hide();
     settingsMenu->show();
     disconnect(backToMenu2, SIGNAL(clicked()), this, SLOT(backToMain()) );
     connect(backToMenu2, SIGNAL(clicked()), this, SLOT(backToPause()) );
@@ -490,6 +536,8 @@ void MainWindow::backToPause(){
     settingsMenu->hide();
     mainMenu->hide();
     shuffleButton->show();
+    horizontalFlipButton->show();
+    verticalFlipButton->show();
     pauseMenu->show();
     disconnect(backToMenu2, SIGNAL(clicked()), this, SLOT(backToPause()) );
     connect(backToMenu2, SIGNAL(clicked()), this, SLOT(backToMain()) );
@@ -514,8 +562,10 @@ void MainWindow::backToMain(){
 
     if(gameModeMenu->isVisible())
         gameModeMenu->hide();
+
     else if(settingsMenu->isVisible())
         settingsMenu->hide();
+
     else if(helpMenu->isVisible())
         helpMenu->hide();
 
@@ -523,14 +573,17 @@ void MainWindow::backToMain(){
 }
 
 void MainWindow::noSound(){
+
     if(soundCheck->isChecked()){
         soundCheck->setChecked(false);
         // Kill sound
     }
+
     else if(!soundCheck->isChecked()){
         soundCheck->setChecked(true);
         // Allow sound
     }
+
 }
 
 void MainWindow::screenLock(){
@@ -565,6 +618,103 @@ void MainWindow::standardMode(){
     }
     else{
         timeBegin();
+    }
+}
+
+void MainWindow::shufflePressed() {
+    // Only shuffles if not paused
+    if(!pauseMenu->isVisible()){
+
+        // perform Nswaps swaps, passing colors/bombs/multipliers
+        int Nswaps, i;
+        Nswaps=(boardSizeX*boardSizeY)*(boardSizeX*boardSizeY);
+
+        for (i=0; i<Nswaps; i++) {
+            int r1, c1, r2, c2, tempColor;
+            r1=rand()%boardSizeX;
+            r2=rand()%boardSizeX;
+            c1=rand()%boardSizeY;
+            c2=rand()%boardSizeY;
+
+            tempColor = gameBoard[r1][c1]->getColor();
+            //now uses QColor with setColor function
+            gameBoard[r1][c1]->setColor( gameBoard[r2][c2]->getColor() );
+            gameBoard[r2][c2]->setColor(tempColor);
+
+            rectArray[gameBoard[r1][c1]->getCoordX()][gameBoard[r1][c1]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[r1][c1]->getColor()), Qt::SolidPattern));
+            rectArray[gameBoard[r2][c2]->getCoordX()][gameBoard[r2][c2]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[r2][c2]->getColor()), Qt::SolidPattern));
+            // TO DO: need to swap bombs/multipler -> add getBomb method to Block
+            /*
+             *At this point, graph objects need to be swapped between rect items
+             *tempGraphObject = rectArray[gameBoard[r1][c1]->getCoordX()][gameBoard[r1][c1]->getCoordY()]->myGraphObject;
+             *rectArray[gameBoard[r1][c1]->getCoordX()][gameBoard[r1][c1]->getCoordY()]->myGraphObject = rectArray[gameBoard[r2][c2]->getCoordX()][gameBoard[r2][c2]->getCoordY()]->myGraphObject;
+             *rectArray[gameBoard[r2][c2]->getCoordX()][gameBoard[r2][c2]->getCoordY()->myGraphObject = tempGraphObject;
+             *
+             *The graph objects were just swapped but they still contain the previous coordinates
+             *rectArray[gameBoard[r1][c1]->getCoordX()][gameBoard[r1][c1]->getCoordY()]->myGraphObject->moved(gameBoard[r2][c2]->getCoordX(), gameBoard[r2][c2]->getCoordY());
+             *rectArray[gameBoard[r2][c2]->getCoordX()][gameBoard[r2][c2]->getCoordY()]->myGraphObject->moved(gameBoard[r1][c1]->getCoordX(), gameBoard[r1][c1]->getCoordY());
+             *
+             *May need to force another painting of these graph objects, but data structure continuity is maintained at this point
+             */
+        }
+
+    }
+}
+// End Slots
+
+void MainWindow::horizontalFlip() {
+    // Only flips if not paused
+    if(!pauseMenu->isVisible()){
+
+        int x, y;
+
+        for (x=0; x<boardSizeX; x++) {
+            for (y=0; y<boardSizeY/2; y++) {
+                int x1, y1, x2, y2, tempColor;
+                x1=x;
+                x2=x;
+                y1=y;
+                y2=boardSizeY-1-y;
+
+                tempColor = gameBoard[x1][y1]->getColor();
+                gameBoard[x1][y1]->setColor( gameBoard[x2][y2]->getColor() );
+                gameBoard[x2][y2]->setColor(tempColor);
+
+                rectArray[gameBoard[x1][y1]->getCoordX()][gameBoard[x1][y1]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x1][y1]->getColor()), Qt::SolidPattern));
+                rectArray[gameBoard[x2][y2]->getCoordX()][gameBoard[x2][y2]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x2][y2]->getColor()), Qt::SolidPattern));
+                // TO DO: need to swap bombs/multipler -> add getBomb method to Block
+                //Swapping follows similar process commented in shuffle
+            }
+        }
+
+    }
+}
+
+void MainWindow::verticalFlip() {
+
+    // Only flips if not paused
+    if(!pauseMenu->isVisible()){
+
+        int x, y;
+
+        for (x=0; x<boardSizeX/2; x++) {
+            for (y=0; y<boardSizeY; y++) {
+                int x1, y1, x2, y2, tempColor;
+                x1=x;
+                x2=boardSizeX-1-x;
+                y1=y;
+                y2=y;
+
+                tempColor = gameBoard[x1][y1]->getColor();
+                gameBoard[x1][y1]->setColor( gameBoard[x2][y2]->getColor() );
+                gameBoard[x2][y2]->setColor(tempColor);
+
+                rectArray[gameBoard[x1][y1]->getCoordX()][gameBoard[x1][y1]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x1][y1]->getColor()), Qt::SolidPattern));
+                rectArray[gameBoard[x2][y2]->getCoordX()][gameBoard[x2][y2]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x2][y2]->getColor()), Qt::SolidPattern));
+                // TO DO: need to swap bombs/multipler -> add getBomb method to Block
+                //Swapping follows similar process commented in shuffle
+            }
+        }
     }
 }
 
@@ -845,100 +995,5 @@ void MainWindow::timeBegin(){
     timer->start();
 }
 
-void MainWindow::shufflePressed() {
-    // Only shuffles if not paused
-    if(!pauseMenu->isVisible()){
 
-        // perform Nswaps swaps, passing colors/bombs/multipliers
-        int Nswaps, i;
-        Nswaps=(boardSizeX*boardSizeY)*(boardSizeX*boardSizeY);
-
-        for (i=0; i<Nswaps; i++) {
-            int r1, c1, r2, c2, tempColor;
-            r1=rand()%boardSizeX;
-            r2=rand()%boardSizeX;
-            c1=rand()%boardSizeY;
-            c2=rand()%boardSizeY;
-
-            tempColor = gameBoard[r1][c1]->getColor();
-            //now uses QColor with setColor function
-            gameBoard[r1][c1]->setColor( gameBoard[r2][c2]->getColor() );
-            gameBoard[r2][c2]->setColor(tempColor);
-
-            rectArray[gameBoard[r1][c1]->getCoordX()][gameBoard[r1][c1]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[r1][c1]->getColor()), Qt::SolidPattern));
-            rectArray[gameBoard[r2][c2]->getCoordX()][gameBoard[r2][c2]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[r2][c2]->getColor()), Qt::SolidPattern));
-            // TO DO: need to swap bombs/multipler -> add getBomb method to Block
-            /*
-             *At this point, graph objects need to be swapped between rect items
-             *tempGraphObject = rectArray[gameBoard[r1][c1]->getCoordX()][gameBoard[r1][c1]->getCoordY()]->myGraphObject;
-             *rectArray[gameBoard[r1][c1]->getCoordX()][gameBoard[r1][c1]->getCoordY()]->myGraphObject = rectArray[gameBoard[r2][c2]->getCoordX()][gameBoard[r2][c2]->getCoordY()]->myGraphObject;
-             *rectArray[gameBoard[r2][c2]->getCoordX()][gameBoard[r2][c2]->getCoordY()->myGraphObject = tempGraphObject;
-             *
-             *The graph objects were just swapped but they still contain the previous coordinates
-             *rectArray[gameBoard[r1][c1]->getCoordX()][gameBoard[r1][c1]->getCoordY()]->myGraphObject->moved(gameBoard[r2][c2]->getCoordX(), gameBoard[r2][c2]->getCoordY());
-             *rectArray[gameBoard[r2][c2]->getCoordX()][gameBoard[r2][c2]->getCoordY()]->myGraphObject->moved(gameBoard[r1][c1]->getCoordX(), gameBoard[r1][c1]->getCoordY());
-             *
-             *May need to force another painting of these graph objects, but data structure continuity is maintained at this point
-             */
-        }
-
-    }
-}
-
-
-
-void MainWindow::horizontalFlip() {
-    // Only flips if not paused
-    if(!pauseMenu->isVisible()){
-
-        int x, y;
-
-        for (x=0; x<boardSizeX; x++) {
-            for (y=0; y<boardSizeY/2; y++) {
-                int x1, y1, x2, y2, tempColor;
-                x1=x;
-                x2=x;
-                y1=y;
-                y2=boardSizeY-1-y;
-
-                tempColor = gameBoard[x1][y1]->getColor();
-                gameBoard[x1][y1]->setColor( gameBoard[x2][y2]->getColor() );
-                gameBoard[x2][y2]->setColor(tempColor);
-
-                rectArray[gameBoard[x1][y1]->getCoordX()][gameBoard[x1][y1]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x1][y1]->getColor()), Qt::SolidPattern));
-                rectArray[gameBoard[x2][y2]->getCoordX()][gameBoard[x2][y2]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x2][y2]->getColor()), Qt::SolidPattern));
-                // TO DO: need to swap bombs/multipler -> add getBomb method to Block
-                //Swapping follows similar process commented in shuffle
-            }
-        }
-
-    }
-}
-
-void MainWindow::verticalFlip() {
-
-    // Only flips if not paused
-    if(!pauseMenu->isVisible()){
-
-        int x, y;
-
-        for (x=0; x<boardSizeX/2; x++) {
-            for (y=0; y<boardSizeY; y++) {
-                int x1, y1, x2, y2, tempColor;
-                x1=x;
-                x2=boardSizeX-1-x;
-                y1=y;
-                y2=y;
-
-                tempColor = gameBoard[x1][y1]->getColor();
-                gameBoard[x1][y1]->setColor( gameBoard[x2][y2]->getColor() );
-                gameBoard[x2][y2]->setColor(tempColor);
-
-                rectArray[gameBoard[x1][y1]->getCoordX()][gameBoard[x1][y1]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x1][y1]->getColor()), Qt::SolidPattern));
-                rectArray[gameBoard[x2][y2]->getCoordX()][gameBoard[x2][y2]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x2][y2]->getColor()), Qt::SolidPattern));
-                // TO DO: need to swap bombs/multipler -> add getBomb method to Block
-                //Swapping follows similar process commented in shuffle
-            }
-        }
-    }
-}
+// End mainwindow_UI.cpp
