@@ -625,7 +625,7 @@ void MainWindow::standardMode(){
     // Mike Son update
     timer = new QTimer(this);
     btimer = new QTimer(this);
-    btimer->start(500);
+    btimer->start(333.333);
     connect(btimer, SIGNAL(timeout()),this, SLOT(bombtimeSlot()));
     timer->start(200);//move to start game code
     connect(timer, SIGNAL(timeout()),this, SLOT(timeSlot()));
@@ -640,7 +640,7 @@ void MainWindow::survivalMode(){
 
     timer = new QTimer(this);
     btimer = new QTimer(this);
-    btimer->start(500);
+    btimer->start(333.333);
     connect(btimer, SIGNAL(timeout()),this, SLOT(bombtimeSlot()));
     timer->start(200);//move to start game code
     connect(timer, SIGNAL(timeout()),this, SLOT(timeSlot()));
@@ -658,7 +658,7 @@ void MainWindow::endlessMode(){
 
     if(restart!=true){
     btimer = new QTimer(this);
-    btimer->start(500);
+    btimer->start(333.333);
     connect(btimer, SIGNAL(timeout()),this, SLOT(bombtimeSlot()));
     }
 }
@@ -993,8 +993,8 @@ vector<Block*> MainWindow::bombCollector(vector<Block*> blockVector, int x, int 
 
 void MainWindow::bombtimeSlot(){
 y++;
-if(y%2==0){
-    bcurrentTime=-3;
+if(y%3==0){
+    bcurrentTime--;
 }
 if(bcurrentTime==-1){
     btimeOver();
