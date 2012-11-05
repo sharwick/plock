@@ -169,22 +169,30 @@ void MainWindow::setupWindows(){
     gameModeMenu->hide();
 
     // Create the Menu's layout
-    modeMenuLayout = new QVBoxLayout(this);
+    modeMenuLayout = new QGridLayout(this);
     modeMenuLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
-    modeMenuLayout->setSpacing(0);
+    modeMenuLayout->setSpacing(30);
     gameModeMenu->setLayout(modeMenuLayout);
 
     // Initalize and add Items to layout
     gameModeTitle = new QLabel("Choose A Game Mode");
-    modeMenuLayout->addWidget(gameModeTitle, Qt::AlignTop);
+    modeMenuLayout->addWidget(gameModeTitle, 0, 1,  Qt::AlignTop);
 
     standardModeButton = new QPushButton("Standard Mode", this);
     connect(standardModeButton, SIGNAL(clicked()), this, SLOT(standardMode()) );
-    modeMenuLayout->addWidget(standardModeButton, Qt::AlignTop);
+    modeMenuLayout->addWidget(standardModeButton, 2, 1, Qt::AlignTop);
+
+    survivalModeButton = new QPushButton("Survival Mode", this);
+    connect(survivalModeButton, SIGNAL(clicked()), this, SLOT(survivalMode()) );
+    modeMenuLayout->addWidget(survivalModeButton, 3, 1, Qt::AlignTop);
+
+    endlessModeButton = new QPushButton("Endless Mode", this);
+    connect(endlessModeButton, SIGNAL(clicked()), this, SLOT(endlessMode()) );
+    modeMenuLayout->addWidget(endlessModeButton, 4, 1, Qt::AlignTop);
 
     backToMenu = new QPushButton("Back", this);
     connect(backToMenu, SIGNAL(clicked()), this, SLOT(backToMain()) );
-    modeMenuLayout->addWidget(backToMenu, Qt::AlignTop);
+    modeMenuLayout->addWidget(backToMenu, 6, 1, Qt::AlignTop);
 
 
 
@@ -209,12 +217,16 @@ void MainWindow::setupWindows(){
 
     soundCheck = new QCheckBox(this);
     soundCheck->setCheckable(true);
+    soundCheck->setAutoExclusive(false);
+    soundCheck->setTristate(false);
     connect(soundCheck, SIGNAL(clicked()), this, SLOT(noSound()) );
     settingsLayout->addWidget(new QLabel("No Sound:"), 1, 0, Qt::AlignLeft);
     settingsLayout->addWidget(soundCheck, 1, 1);
 
     screenLockCheck = new QCheckBox(this);
     screenLockCheck->setCheckable(true);
+    screenLockCheck->setAutoExclusive(false);
+    screenLockCheck->setTristate(false);
     connect(screenLockCheck, SIGNAL(clicked()), this, SLOT(screenLock()));
     settingsLayout->addWidget(new QLabel("Lock Screen:"), 2, 0, Qt::AlignLeft);
     settingsLayout->addWidget(screenLockCheck, 2, 1);
@@ -306,7 +318,8 @@ void MainWindow::setupGameScreen(){
     // Set Labels
     grid->addWidget(new QLabel("Bombs:"),0,1);
     grid->addWidget(new QLabel("Score:"),0,0);
-    grid->addWidget(new QLabel("Time:"),7,0);
+    timeLabel = new QLabel("Time:", this);
+    grid->addWidget(timeLabel, 7, 0);
 
     // Add score board
     scorePtr = new Score();
@@ -498,6 +511,7 @@ void MainWindow::menuPressed(){
     shuffleButton->hide();
     verticalFlipButton->hide();
     horizontalFlipButton->hide();
+    timeLabel->hide();
     pauseMenu->hide();
     mainMenu->show();
 
@@ -575,11 +589,13 @@ void MainWindow::backToMain(){
 void MainWindow::noSound(){
 
     if(soundCheck->isChecked()){
+        soundCheck->setCheckState(Qt::Unchecked);
         soundCheck->setChecked(false);
         // Kill sound
     }
 
     else if(!soundCheck->isChecked()){
+        soundCheck->setCheckState(Qt::Checked);
         soundCheck->setChecked(true);
         // Allow sound
     }
@@ -606,6 +622,9 @@ void MainWindow::standardMode(){
     shuffleButton->show();
     verticalFlipButton->show();
     horizontalFlipButton->show();
+    timeLabel->show();
+    ui->Timefill->show();
+    ui->Timeclock->show();
 
     // Mike Son update
     if(restart!=true){
@@ -618,6 +637,39 @@ void MainWindow::standardMode(){
     }
     else{
         timeBegin();
+    }
+}
+
+void MainWindow::survivalMode(){
+    gameModeMenu->hide();
+    shuffleButton->show();
+    verticalFlipButton->show();
+    horizontalFlipButton->show();
+
+    if(restart!=true){
+    timer = new QTimer(this);
+    btimer = new QTimer(this);
+    btimer->start(500);
+    connect(btimer, SIGNAL(timeout()),this, SLOT(bombtimeSlot()));
+    //timer->start(200);//move to start game code
+    //connect(timer, SIGNAL(timeout()),this, SLOT(timeSlot()));
+    }
+}
+
+void MainWindow::endlessMode(){
+    gameModeMenu->hide();
+    shuffleButton->show();
+    verticalFlipButton->show();
+    horizontalFlipButton->show();
+    timeLabel->hide();
+    ui->Timeclock->hide();
+    ui->Timefill->hide();
+
+    if(restart!=true){
+    timer = new QTimer(this);
+    btimer = new QTimer(this);
+    btimer->start(500);
+    connect(btimer, SIGNAL(timeout()),this, SLOT(bombtimeSlot()));
     }
 }
 

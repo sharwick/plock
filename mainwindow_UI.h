@@ -54,18 +54,18 @@ public:
 
 private:
     // Objects
-    QGridLayout *grid, *settingsLayout;
-    QVBoxLayout *mainMenuLayout, *modeMenuLayout, *helpMenuLayout, *pauseMenuLayout;
+    QGridLayout *grid, *modeMenuLayout, *settingsLayout;
+    QVBoxLayout *mainMenuLayout, *helpMenuLayout, *pauseMenuLayout;
     QGraphicsScene *theScene;
     QGraphicsView *blockView;
     QGraphicsRectItem *tempBlock;
 //    QProgressBar *bombBar, *timeBar;
     QPushButton *menuButton,*shuffleButton, *verticalFlipButton, *horizontalFlipButton,  *newGameButton, *settingsButton,
     *helpButton, *backToMenu, *backToMenu2, *backToMenu3, *standardModeButton,
-    *pauseAccept, *pauseRejected, *pauseSettings;
+    *pauseAccept, *pauseRejected, *pauseSettings, *endlessModeButton, *survivalModeButton;
     QGroupBox *mainMenu, *settingsMenu, *helpMenu, *gameModeMenu, *pauseMenu;
     QCheckBox *soundCheck, *screenLockCheck;
-    QLabel *titleLabel, *gameModeTitle, *settingsTitle;
+    QLabel *titleLabel, *gameModeTitle, *settingsTitle, *timeLabel;
     QTextBrowser *helpText;
     QSlider *colorSlider;
     myRectItem* rectArray[8][9];
@@ -128,6 +128,8 @@ private slots:
    void pauseSettingsPressed();
    void pauseBack();
    void standardMode();
+   void endlessMode();
+   void survivalMode();
    void screenLock();
    void noSound();
    void changeColorScheme();
