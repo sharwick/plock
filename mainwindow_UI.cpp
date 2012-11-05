@@ -476,7 +476,7 @@ void MainWindow::updateBomb(int nBlocks){
 
     int updateVal;
 //    updateVal = (nBlocks-1)*(nBlocks-1);
-    updateVal = nBlocks * 6;
+    updateVal = nBlocks * 2;
 
     if ((bombFill->maximumWidth()+updateVal) < bombLayer->maximumWidth()){
         bombFill->setMaximumWidth(bombFill->maximumWidth()+updateVal);
@@ -798,8 +798,8 @@ void MainWindow::processMatch(Block* matchedBlock)
 
     scorePtr->updateScore((int) gatheredBlocks.size(), false , multiplier);
     sframe->update(scorePtr->getScore());
-    determineColor(gatheredBlocks);
     updateBomb((int) gatheredBlocks.size());
+    determineColor(gatheredBlocks);
 }
 
 /*
@@ -994,7 +994,7 @@ vector<Block*> MainWindow::bombCollector(vector<Block*> blockVector, int x, int 
 void MainWindow::bombtimeSlot(){
 y++;
 if(y%2==0){
-    bcurrentTime--;
+    bcurrentTime=-3;
 }
 if(bcurrentTime==-1){
     btimeOver();
