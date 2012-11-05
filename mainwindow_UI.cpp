@@ -365,39 +365,44 @@ void MainWindow::setupGameScreen(){
 
     // Time Progress Bar
 
-        restart = false;
+    restart = false;
+    bcurrentTime=0;
+    currentTime=60;
+//    timeBar = new QProgressBar(this);
+//    timeBar->setFixedSize(screenSizeX - (screenSizeX/3), 20);
+    QPixmap newMap(ui->Timeclock->width(), ui->Timeclock->height());
+    newMap.fill(Qt::magenta);
+    ui->Timeclock->setPixmap(newMap);
+    newMap.fill(Qt::green);
+    ui->Timefill->setPixmap(newMap);
+    ui->Timefill->setMaximumWidth(ui->Timeclock->width());
 
-        Timeclock = new QLabel();
-        Timefill = new QLabel();
+    grid->addWidget(ui->Timeclock,7,1);
+    grid->addWidget(ui->Timefill,7,1);
+    //grid->addWidget(timeBar,7,1);
 
-        Timeclock->setGeometry(0,0,300,25);
-        Timefill->setGeometry(0,0,300,25);
 
-        QPixmap newMap(Timeclock->width(), Timeclock->height());
-        newMap.fill(Qt::magenta);
-        Timeclock->setPixmap(newMap);
-        newMap.fill(Qt::green);
-        Timefill->setPixmap(newMap);
-        grid->addWidget(Timeclock,7,1);
-        grid->addWidget(Timefill,7,1);
-
-        // Bomb Progress Bar
-
-        bombLayer = new QLabel();
-        bombFill = new QLabel();
-
-        bombLayer->setGeometry(0,0,120,25);
-        bombFill->setGeometry(0,0,120,25);
-        QPixmap bombColor(bombLayer->width(), bombLayer->height());
+    // Bomb Progress Bar
+    //    QLabel *bombLayer = new QLabel(ui->Timeclock);
+    //    QLabel *bombFill = new QLabel(ui->Timeclock);
+    //    bombLayer->setMaximumWidth(2*(ui->Timeclock->maximumWidth()/5));
+        ui->bombLayer->setGeometry(0,0,120,25);
+    //    bombLayer->setFrameShape(Box);
+    //    bombFill->setMaximumWidth(2*(ui->Timeclock->maximumWidth()/5));
+    //    bombFill->setFrameShape(Box);
+        ui->bombFill->setGeometry(0,0,120,25);
+        QPixmap bombColor(ui->bombLayer->width(), ui->bombLayer->height());
         bombColor.fill(Qt::white);
-        bombLayer->setPixmap(bombColor);
+        ui->bombLayer->setPixmap(bombColor);
         bombColor.fill(Qt::gray);
-        bombFill->setPixmap(bombColor);
-        grid->addWidget(bombLayer,1,1);
-        grid->addWidget(bombFill,1,1);
-        bombLayer->setMaximumWidth(bombLayer->width());
+        ui->bombFill->setPixmap(bombColor);
+        grid->addWidget(ui->bombLayer,1,1);
+        grid->addWidget(ui->bombFill,1,1);
+        ui->bombLayer->setMaximumWidth(ui->bombLayer->width());
+        ui->bombFill->setMaximumWidth(0);
 
-        // Setup Paused Menu
+
+    // Setup Paused Menu
 
 } // End setupInterface()
 
@@ -478,15 +483,15 @@ void MainWindow::updateBomb(int nBlocks){
 //    updateVal = (nBlocks-1)*(nBlocks-1);
     updateVal = nBlocks * 6;
 
-    if ((bombFill->maximumWidth()+updateVal) < bombLayer->maximumWidth()){
-        bombFill->setMaximumWidth(bombFill->maximumWidth()+updateVal);
-        if (bombFill->maximumWidth() > 0){
+    if ((ui->bombFill->maximumWidth()+updateVal) < ui->bombLayer->maximumWidth()){
+        ui->bombFill->setMaximumWidth(ui->bombFill->maximumWidth()+updateVal);
+        if (ui->bombFill->maximumWidth() > 0){
             bcurrentTime += (updateVal/2);
             btimeBegin();
         }
     }
-    else if ((bombFill->maximumWidth()+updateVal) >= bombLayer->maximumWidth()){
-             bombFill->setMaximumWidth(0);
+    else if ((ui->bombFill->maximumWidth()+updateVal) >= ui->bombLayer->maximumWidth()){
+             ui->bombFill->setMaximumWidth(0);
              btimeOver();
              bcurrentTime=0;
     }
@@ -510,6 +515,12 @@ void MainWindow::menuPressed(){
     pauseMenu->hide();
     mainMenu->show();
 
+    //timer, bombbar reset
+    restart=true;
+    ui->bombFill->setMaximumWidth(0);
+    bcurrentTime=0;
+    ui->Timefill->setMaximumWidth(ui->Timeclock->width());
+    currentTime=60;
 }
 
 void MainWindow::pauseBack(){
@@ -549,13 +560,6 @@ void MainWindow::backToPause(){
 void MainWindow::newGamePressed(){
     mainMenu->hide();
     gameModeMenu->show();
-
-    //timer, bombbar reset
-    restart=true;
-    bombFill->setMaximumWidth(0);
-    bcurrentTime=0;
-    Timefill->setMaximumWidth(Timeclock->width());
-    currentTime=60;
 }
 
 void MainWindow::settingsPressed(){
@@ -619,17 +623,21 @@ void MainWindow::standardMode(){
     verticalFlipButton->show();
     horizontalFlipButton->show();
     timeLabel->show();
-    Timefill->show();
-    Timeclock->show();
+    ui->Timefill->show();
+    ui->Timeclock->show();
 
     // Mike Son update
+    if(restart!=true){
     timer = new QTimer(this);
     btimer = new QTimer(this);
     btimer->start(500);
     connect(btimer, SIGNAL(timeout()),this, SLOT(bombtimeSlot()));
     timer->start(200);//move to start game code
     connect(timer, SIGNAL(timeout()),this, SLOT(timeSlot()));
-
+    }
+    else{
+        timeBegin();
+    }
 }
 
 void MainWindow::survivalMode(){
@@ -638,13 +646,14 @@ void MainWindow::survivalMode(){
     verticalFlipButton->show();
     horizontalFlipButton->show();
 
+    if(restart!=true){
     timer = new QTimer(this);
     btimer = new QTimer(this);
     btimer->start(500);
     connect(btimer, SIGNAL(timeout()),this, SLOT(bombtimeSlot()));
-    timer->start(200);//move to start game code
-    connect(timer, SIGNAL(timeout()),this, SLOT(timeSlot()));
-
+    //timer->start(200);//move to start game code
+    //connect(timer, SIGNAL(timeout()),this, SLOT(timeSlot()));
+    }
 }
 
 void MainWindow::endlessMode(){
@@ -653,10 +662,11 @@ void MainWindow::endlessMode(){
     verticalFlipButton->show();
     horizontalFlipButton->show();
     timeLabel->hide();
-    Timeclock->hide();
-    Timefill->hide();
+    ui->Timeclock->hide();
+    ui->Timefill->hide();
 
     if(restart!=true){
+    timer = new QTimer(this);
     btimer = new QTimer(this);
     btimer->start(500);
     connect(btimer, SIGNAL(timeout()),this, SLOT(bombtimeSlot()));
@@ -998,9 +1008,11 @@ if(y%2==0){
 }
 if(bcurrentTime==-1){
     btimeOver();
+//    close();
     return;
 }
-bombFill->setMaximumWidth(bombFill->maximumWidth()-(bombLayer->width()/120));
+//ui->Timenum->setText(QString::number(currentTime));
+ui->bombFill->setMaximumWidth(ui->bombFill->maximumWidth()-(ui->bombLayer->width()/120));
 }
 
 
@@ -1012,10 +1024,11 @@ if(x%5==0){
 }
 if(currentTime==-1){
     timeOver();
-    close();
+//    close();
     return;
 }
-Timefill->setMaximumWidth(Timefill->maximumWidth()-(Timeclock->width()/300));
+//ui->Timenum->setText(QString::number(currentTime));
+ui->Timefill->setMaximumWidth(ui->Timefill->maximumWidth()-(ui->Timeclock->width()/300));
 }
 
 

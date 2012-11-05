@@ -65,7 +65,7 @@ private:
     *pauseAccept, *pauseRejected, *pauseSettings, *endlessModeButton, *survivalModeButton;
     QGroupBox *mainMenu, *settingsMenu, *helpMenu, *gameModeMenu, *pauseMenu;
     QCheckBox *soundCheck, *screenLockCheck;
-    QLabel *titleLabel, *gameModeTitle, *settingsTitle, *timeLabel, *bombLayer, *bombFill, *Timeclock, *Timefill;
+    QLabel *titleLabel, *gameModeTitle, *settingsTitle, *timeLabel;
     QTextBrowser *helpText;
     QSlider *colorSlider;
     myRectItem* rectArray[8][9];
