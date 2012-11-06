@@ -675,6 +675,9 @@ void MainWindow::standardMode(){
     timeLabel->show();
     Timefill->show();
     Timeclock->show();
+    scorePtr->resetScore();
+    sframe->resetScoreBoard();
+
 
     stdModeFlag = 1;
     endlessModeFlag = 0;
@@ -691,6 +694,8 @@ void MainWindow::survivalMode(){
     timeLabel->show();
     Timefill->show();
     Timeclock->show();
+    scorePtr->resetScore();
+    sframe->resetScoreBoard();
 
     stdModeFlag = 0;
     endlessModeFlag = 0;
@@ -707,6 +712,8 @@ void MainWindow::endlessMode(){
     timeLabel->hide();
     Timeclock->hide();
     Timefill->hide();
+    scorePtr->resetScore();
+    sframe->resetScoreBoard();
 
     stdModeFlag = 0;
     endlessModeFlag = 1;
