@@ -158,6 +158,10 @@ void MainWindow::setupWindows(){
     connect( helpButton, SIGNAL(clicked()), this, SLOT(helpPressed()) );
     mainMenuLayout->addWidget(helpButton, Qt::AlignTop);
 
+    quitButton = new QPushButton("Quit", this);
+    quitButton->setFixedSize(blockSize*5, blockSize);
+    connect(quitButton, SIGNAL(clicked()), this, SLOT(quit()) );
+    mainMenuLayout->addWidget(quitButton, Qt::AlignTop);
 
 
     /* * * * * * * * * * * * * * * * * * *
@@ -781,6 +785,11 @@ void MainWindow::shufflePressed() {
 
     }
 }
+
+void MainWindow::quit(){
+    close();
+}
+
 // End Slots
 
 void MainWindow::horizontalFlip() {
