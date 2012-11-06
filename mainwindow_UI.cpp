@@ -374,7 +374,7 @@ void MainWindow::setupGameScreen(){
     survivalModeFlag = 0;
 
     // Set Labels
-    grid->addWidget(new QLabel("Bombs:"),0,1);
+    grid->addWidget(new QLabel("Bombs:"),1,0);
     grid->addWidget(new QLabel("Score:"),0,0);
     timeLabel = new QLabel("Time:", this);
     grid->addWidget(timeLabel, 7, 0);
@@ -383,19 +383,19 @@ void MainWindow::setupGameScreen(){
     sframe = new ScoreFrame();
     sframe->text->setFixedWidth(blockSize*2);
     sframe->text->setFixedHeight(blockSize );
-    grid->addWidget(sframe->text,1,0,1,1,Qt::AlignLeft);
+    grid->addWidget(sframe->text,0,1,1,1,Qt::AlignLeft);
 
     // Menu Button
     menuButton = new QPushButton("||",this);
-    menuButton->setFixedSize(blockSize ,blockSize);
+    menuButton->setFixedSize(blockSize * 1.25 ,blockSize * 1.25);
     connect(menuButton, SIGNAL(clicked()),this, SLOT(pausedPressed()));
     //menuButton->setGeometry((bombBar->x() + (blockSize*7) ), 0, blockSize, blockSize);
-    grid->addWidget(menuButton,1,3);
+    grid->addWidget(menuButton,1,2, Qt::AlignLeft);
 
 
     // Shuffle Button
     shuffleButton = new QPushButton("S",this);
-    shuffleButton->setGeometry((0 + (blockSize)*4 ), screenSizeY - (blockSize * 1.6), blockSize*2, blockSize);
+    shuffleButton->setGeometry((0 + (blockSize)*4 ), screenSizeY - (blockSize), blockSize*2, blockSize);
     connect(shuffleButton, SIGNAL(clicked()),this, SLOT(shufflePressed()));
     shuffleButton->hide();
 
@@ -403,12 +403,12 @@ void MainWindow::setupGameScreen(){
 
     verticalFlipButton = new QPushButton("Vflip",this);
     verticalFlipButton->setPalette(Pal);
-    verticalFlipButton->setGeometry((0 + (blockSize)*0 ), screenSizeY - (blockSize * 1.6), blockSize*2, blockSize);
+    verticalFlipButton->setGeometry((0 + (blockSize)*0 ), screenSizeY - (blockSize), blockSize*2, blockSize);
     connect(verticalFlipButton, SIGNAL(clicked()),this, SLOT(verticalFlip()));
     verticalFlipButton->hide();
 
     horizontalFlipButton = new QPushButton("Hflip",this);
-    horizontalFlipButton->setGeometry((0 + (blockSize)*2 ), screenSizeY - (blockSize * 1.6), blockSize*2, blockSize);
+    horizontalFlipButton->setGeometry((0 + (blockSize)*2 ), screenSizeY - (blockSize), blockSize*2, blockSize);
     connect(horizontalFlipButton, SIGNAL(clicked()),this, SLOT(horizontalFlip()));
     horizontalFlipButton->hide();
 
@@ -447,8 +447,8 @@ void MainWindow::setupGameScreen(){
     bombLayer = new QLabel();
     bombFill = new QLabel();
 
-    bombLayer->setGeometry(0,0,120,25);
-    bombFill->setGeometry(0,0,120,25);
+    bombLayer->setGeometry(0,0,300,25);
+    bombFill->setGeometry(0,0,300,25);
     QPixmap bombColor(bombLayer->width(), bombLayer->height());
     //bombColor.fill(Qt::white);
     bombColor.fill(QColor(250,250,250,255));
@@ -539,7 +539,7 @@ void MainWindow::updateBomb(int nBlocks){
 
     int updateVal;
 //    updateVal = (nBlocks-1)*(nBlocks-1);
-    updateVal = nBlocks * 2;
+    updateVal = nBlocks * 5;
 
     if ((bombFill->maximumWidth()+updateVal) < bombLayer->maximumWidth()){
         bombFill->setMaximumWidth(bombFill->maximumWidth()+updateVal);
