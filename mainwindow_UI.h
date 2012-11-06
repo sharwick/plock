@@ -86,7 +86,7 @@ private:
     int bcurrentTime;
     int stdModeFlag, endlessModeFlag, survivalModeFlag;
     int x, y;
-    bool restart;
+    bool start;
     void setUpClock();
     void timeOver();
     void btimeOver();
@@ -104,6 +104,7 @@ private:
     void setupBlocks();
     void setupGameScreen();
     void setupWindows();
+    void startGame();
 	
 	//Dan Block Functions
     void processMatch(Block*);

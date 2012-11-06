@@ -20,7 +20,6 @@ MainWindow::MainWindow(QWidget *parent)
     // Call our setup methods
     setupWindows();
     setupGameScreen();
-    setupBlocks();
 }
 
 MainWindow::~MainWindow()
@@ -404,7 +403,7 @@ void MainWindow::setupGameScreen(){
 
     // Time Progress Bar
 
-    restart = false;
+    start = false;
 
     Timeclock = new QLabel();
     Timefill = new QLabel();
@@ -419,6 +418,7 @@ void MainWindow::setupGameScreen(){
     Timefill->setPixmap(newMap);
     grid->addWidget(Timeclock,7,1);
     grid->addWidget(Timefill,7,1);
+    connect(timer, SIGNAL(timeout()), this, SLOT(timeSlot()));
 
     // Bomb Progress Bar
 
@@ -435,6 +435,7 @@ void MainWindow::setupGameScreen(){
     grid->addWidget(bombLayer,1,1);
     grid->addWidget(bombFill,1,1);
     bombLayer->setMaximumWidth(bombLayer->width());
+    connect(btimer, SIGNAL(timeout()), this, SLOT(bombtimeSlot()));
 
 
 } // End setupInterface()
@@ -587,13 +588,6 @@ void MainWindow::backToPause(){
 void MainWindow::newGamePressed(){
     mainMenu->hide();
     gameModeMenu->show();
-
-    //timer, bombbar reset
-    restart=true;
-    bombFill->setMaximumWidth(0);
-    bcurrentTime=0;
-    Timefill->setMaximumWidth(Timeclock->width());
-    currentTime=60;
 }
 
 void MainWindow::settingsPressed(){
@@ -682,15 +676,11 @@ void MainWindow::standardMode(){
     Timefill->show();
     Timeclock->show();
 
-    // Mike Son update
-    btimer->start(333.333);
-    connect(btimer, SIGNAL(timeout()),this, SLOT(bombtimeSlot()));
-    timer->start(200);//move to start game code
-    connect(timer, SIGNAL(timeout()),this, SLOT(timeSlot()));
-
     stdModeFlag = 1;
     endlessModeFlag = 0;
     survivalModeFlag = 0;
+
+    startGame();
 }
 
 void MainWindow::survivalMode(){
@@ -698,15 +688,15 @@ void MainWindow::survivalMode(){
     shuffleButton->show();
     verticalFlipButton->show();
     horizontalFlipButton->show();
-
-    btimer->start(333.333);
-    connect(btimer, SIGNAL(timeout()),this, SLOT(bombtimeSlot()));
-    timer->start(200);//move to start game code
-    connect(timer, SIGNAL(timeout()),this, SLOT(timeSlot()));
+    timeLabel->show();
+    Timefill->show();
+    Timeclock->show();
 
     stdModeFlag = 0;
     endlessModeFlag = 0;
     survivalModeFlag = 1;
+
+    startGame();
 }
 
 void MainWindow::endlessMode(){
@@ -718,14 +708,11 @@ void MainWindow::endlessMode(){
     Timeclock->hide();
     Timefill->hide();
 
-    if(restart!=true){
-    btimer->start(333.333);
-    connect(btimer, SIGNAL(timeout()),this, SLOT(bombtimeSlot()));
-    }
-
     stdModeFlag = 0;
     endlessModeFlag = 1;
     survivalModeFlag = 0;
+
+    startGame();
 }
 
 void MainWindow::shufflePressed() {
@@ -1099,6 +1086,35 @@ void MainWindow::timeOver(){
 }
 void MainWindow::timeBegin(){
     timer->start();
+}
+
+/*
+ *This function is called in each game mode. First, the old
+ *pointer references are nulled. Then setupBlocks is called
+ *to generate a new board. All of our game modes include a
+ *bomb, so the bomb timer code is used to set it up. If not
+ *in endless mode, the timer code is used to set the timer
+ *up.
+ *
+ *NYI: score reset.
+ */
+void MainWindow::startGame(){
+
+    for(int i = 0; i < boardSizeX; i++){
+        for(int j = 0; j < boardSizeY; j++){
+            gameBoard[i][j] = 0;
+            rectArray[i][j] = 0;
+        }
+    }
+    setupBlocks();
+    bombFill->setMaximumWidth(0);
+    bcurrentTime=0;
+    btimer->start(333.333);
+    if(endlessModeFlag != 1){
+        Timefill->setMaximumWidth(Timeclock->width());
+        currentTime=60;
+        timer->start(200);
+    }
 }
 
 
