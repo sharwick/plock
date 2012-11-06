@@ -16,6 +16,7 @@
 #include <QGraphicsRectItem>
 #include <QProgressBar>
 #include <QSlider>
+#include <QString>
 #include <QDialogButtonBox>
 #include <QMouseEvent>
 #include <QTextBrowser>
@@ -55,19 +56,20 @@ public:
 private:
     // Objects
     QGridLayout *grid, *modeMenuLayout, *settingsLayout;
-    QVBoxLayout *mainMenuLayout, *helpMenuLayout, *pauseMenuLayout;
+    QVBoxLayout *mainMenuLayout, *helpMenuLayout, *pauseMenuLayout, *gameOverLayout;
     QGraphicsScene *theScene;
     QGraphicsView *blockView;
     QGraphicsRectItem *tempBlock;
 //    QProgressBar *bombBar, *timeBar;
     QPushButton *menuButton,*shuffleButton, *verticalFlipButton, *horizontalFlipButton,  *newGameButton, *settingsButton,
     *helpButton, *backToMenu, *backToMenu2, *backToMenu3, *standardModeButton,
-    *pauseAccept, *pauseRejected, *pauseSettings, *endlessModeButton, *survivalModeButton;
-    QGroupBox *mainMenu, *settingsMenu, *helpMenu, *gameModeMenu, *pauseMenu;
+    *pauseAccept, *pauseRejected, *pauseSettings, *endlessModeButton, *survivalModeButton, *gameOverToMenu, *gameOverRestart;
+    QGroupBox *mainMenu, *settingsMenu, *helpMenu, *gameModeMenu, *pauseMenu, *gameOverMenu;
     QCheckBox *soundCheck, *screenLockCheck;
     QLabel *titleLabel, *gameModeTitle, *settingsTitle, *timeLabel, *bombLayer, *bombFill, *Timeclock, *Timefill;
     QTextBrowser *helpText;
     QSlider *colorSlider;
+    QLabel *tempScore;
     myRectItem* rectArray[8][9];
     QTimer *timer;
     QTimer *btimer;
@@ -82,6 +84,7 @@ private:
     int xPos, yPos;
     int currentTime;
     int bcurrentTime;
+    int stdModeFlag, endlessModeFlag, survivalModeFlag;
     int x, y;
     bool restart;
     void setUpClock();
@@ -127,6 +130,8 @@ private slots:
    void pausedPressed();
    void pauseSettingsPressed();
    void pauseBack();
+   void gameOverRestartSlot();
+   void gameOverMenuSlot();
    void standardMode();
    void endlessMode();
    void survivalMode();

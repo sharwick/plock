@@ -282,7 +282,7 @@ void MainWindow::setupWindows(){
     pauseMenu = new QGroupBox(this);
     pauseMenu->setAutoFillBackground(true);
     pauseMenu->setGeometry( (screenSizeX/2) - ((screenSizeX * 0.8) / 2), (screenSizeY/2) - ((screenSizeY * 0.4) / 2),
-                           screenSizeX * 0.8 , screenSizeY * 0.4 );
+                            screenSizeX * 0.8 , screenSizeY * 0.4 );
     // Create Menu's layout
     pauseMenuLayout = new QVBoxLayout(this);
     pauseMenuLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
@@ -302,6 +302,37 @@ void MainWindow::setupWindows(){
     connect(pauseSettings, SIGNAL(clicked()), this, SLOT(pauseSettingsPressed()) );
     connect(pauseAccept, SIGNAL(clicked()), this, SLOT(menuPressed()) );
 
+
+
+    /* * * * * * * * * * * * * * * * * * * *
+     * Setup Game Over Menu and its Items  *
+     * * * * * * * * * * * * * * * * * * * */
+    // Initalize Widget
+    gameOverMenu = new QGroupBox(this);
+    gameOverMenu->setAutoFillBackground(true);
+    gameOverMenu->setGeometry( (screenSizeX/2) - ((screenSizeX * 0.8) / 2), (screenSizeY/2) - ((screenSizeY * 0.4) / 2),
+                            screenSizeX * 0.8 , screenSizeY * 0.4 );
+    // Create Menu's Layout
+    gameOverLayout = new QVBoxLayout(this);
+    gameOverLayout->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
+    gameOverLayout->setSpacing(20);
+    gameOverMenu->setLayout(gameOverLayout);
+    gameOverMenu->hide();
+
+    // Initalize and add Items to the layout
+    scorePtr = new Score(); // Moved
+    gameOverLayout->addWidget(new QLabel("Your Final Score:", this));
+    tempScore = new QLabel(this);
+    gameOverLayout->addWidget(tempScore, Qt::AlignHCenter);
+
+    gameOverRestart = new QPushButton("Restart Game", this);
+    connect(gameOverRestart, SIGNAL(clicked()), this, SLOT(gameOverRestartSlot()) );
+    gameOverLayout->addWidget(gameOverRestart);
+
+    gameOverToMenu = new QPushButton("Main Menu", this);
+    connect(gameOverToMenu, SIGNAL(clicked()), this, SLOT(gameOverMenuSlot()) );
+    gameOverLayout->addWidget(gameOverToMenu);
+
 } // End setupWindow()
 
 /*********************************************************************
@@ -315,6 +346,15 @@ void MainWindow::setupGameScreen(){
     // Color scheme
     colorPtr = new Colors(0);
 
+    // Timers
+    timer = new QTimer(this);
+    btimer = new QTimer(this);
+
+    // Set Game Mode Flags
+    stdModeFlag = 0;
+    endlessModeFlag = 0;
+    survivalModeFlag = 0;
+
     // Set Labels
     grid->addWidget(new QLabel("Bombs:"),0,1);
     grid->addWidget(new QLabel("Score:"),0,0);
@@ -322,7 +362,6 @@ void MainWindow::setupGameScreen(){
     grid->addWidget(timeLabel, 7, 0);
 
     // Add score board
-    scorePtr = new Score();
     sframe = new ScoreFrame();
     sframe->text->setFixedWidth(blockSize*2);
     sframe->text->setFixedHeight(blockSize );
@@ -365,39 +404,38 @@ void MainWindow::setupGameScreen(){
 
     // Time Progress Bar
 
-        restart = false;
+    restart = false;
 
-        Timeclock = new QLabel();
-        Timefill = new QLabel();
+    Timeclock = new QLabel();
+    Timefill = new QLabel();
 
-        Timeclock->setGeometry(0,0,300,25);
-        Timefill->setGeometry(0,0,300,25);
+    Timeclock->setGeometry(0,0,300,25);
+    Timefill->setGeometry(0,0,300,25);
 
-        QPixmap newMap(Timeclock->width(), Timeclock->height());
-        newMap.fill(Qt::magenta);
-        Timeclock->setPixmap(newMap);
-        newMap.fill(Qt::green);
-        Timefill->setPixmap(newMap);
-        grid->addWidget(Timeclock,7,1);
-        grid->addWidget(Timefill,7,1);
+    QPixmap newMap(Timeclock->width(), Timeclock->height());
+    newMap.fill(Qt::magenta);
+    Timeclock->setPixmap(newMap);
+    newMap.fill(Qt::green);
+    Timefill->setPixmap(newMap);
+    grid->addWidget(Timeclock,7,1);
+    grid->addWidget(Timefill,7,1);
 
-        // Bomb Progress Bar
+    // Bomb Progress Bar
 
-        bombLayer = new QLabel();
-        bombFill = new QLabel();
+    bombLayer = new QLabel();
+    bombFill = new QLabel();
 
-        bombLayer->setGeometry(0,0,120,25);
-        bombFill->setGeometry(0,0,120,25);
-        QPixmap bombColor(bombLayer->width(), bombLayer->height());
-        bombColor.fill(Qt::white);
-        bombLayer->setPixmap(bombColor);
-        bombColor.fill(Qt::gray);
-        bombFill->setPixmap(bombColor);
-        grid->addWidget(bombLayer,1,1);
-        grid->addWidget(bombFill,1,1);
-        bombLayer->setMaximumWidth(bombLayer->width());
+    bombLayer->setGeometry(0,0,120,25);
+    bombFill->setGeometry(0,0,120,25);
+    QPixmap bombColor(bombLayer->width(), bombLayer->height());
+    bombColor.fill(Qt::white);
+    bombLayer->setPixmap(bombColor);
+    bombColor.fill(Qt::gray);
+    bombFill->setPixmap(bombColor);
+    grid->addWidget(bombLayer,1,1);
+    grid->addWidget(bombFill,1,1);
+    bombLayer->setMaximumWidth(bombLayer->width());
 
-        // Setup Paused Menu
 
 } // End setupInterface()
 
@@ -582,6 +620,28 @@ void MainWindow::backToMain(){
     mainMenu->show();
 }
 
+void MainWindow::gameOverMenuSlot(){
+    gameOverMenu->hide();
+    shuffleButton->hide();
+    verticalFlipButton->hide();
+    horizontalFlipButton->hide();
+    mainMenu->show();
+}
+
+void MainWindow::gameOverRestartSlot(){
+    gameOverMenu->hide();
+
+    if(stdModeFlag == 1){
+        standardMode();
+    }
+    else if(endlessModeFlag == 1){
+        endlessMode();
+    }
+    else if(survivalModeFlag == 1){
+        survivalMode();
+    }
+}
+
 void MainWindow::noSound(){
 
     if(soundCheck->isChecked()){
@@ -623,13 +683,14 @@ void MainWindow::standardMode(){
     Timeclock->show();
 
     // Mike Son update
-    timer = new QTimer(this);
-    btimer = new QTimer(this);
     btimer->start(333.333);
     connect(btimer, SIGNAL(timeout()),this, SLOT(bombtimeSlot()));
     timer->start(200);//move to start game code
     connect(timer, SIGNAL(timeout()),this, SLOT(timeSlot()));
 
+    stdModeFlag = 1;
+    endlessModeFlag = 0;
+    survivalModeFlag = 0;
 }
 
 void MainWindow::survivalMode(){
@@ -638,13 +699,14 @@ void MainWindow::survivalMode(){
     verticalFlipButton->show();
     horizontalFlipButton->show();
 
-    timer = new QTimer(this);
-    btimer = new QTimer(this);
     btimer->start(333.333);
     connect(btimer, SIGNAL(timeout()),this, SLOT(bombtimeSlot()));
     timer->start(200);//move to start game code
     connect(timer, SIGNAL(timeout()),this, SLOT(timeSlot()));
 
+    stdModeFlag = 0;
+    endlessModeFlag = 0;
+    survivalModeFlag = 1;
 }
 
 void MainWindow::endlessMode(){
@@ -657,10 +719,13 @@ void MainWindow::endlessMode(){
     Timefill->hide();
 
     if(restart!=true){
-    btimer = new QTimer(this);
     btimer->start(333.333);
     connect(btimer, SIGNAL(timeout()),this, SLOT(bombtimeSlot()));
     }
+
+    stdModeFlag = 0;
+    endlessModeFlag = 1;
+    survivalModeFlag = 0;
 }
 
 void MainWindow::shufflePressed() {
@@ -1006,16 +1071,18 @@ bombFill->setMaximumWidth(bombFill->maximumWidth()-(bombLayer->width()/120));
 
 
 void MainWindow::timeSlot(){
-x++;
-if(x%5==0){
-    currentTime--;
-}
-if(currentTime==-1){
-    timeOver();
-    close();
-    return;
-}
-Timefill->setMaximumWidth(Timefill->maximumWidth()-(Timeclock->width()/300));
+    x++;
+    if(x%5==0){
+        currentTime--;
+    }
+    if(currentTime==-1){
+        tempScore->setText(QString::number(scorePtr->getScore()));
+        gameOverMenu->show();
+        timeOver();
+        //close();
+        //return;
+    }
+    Timefill->setMaximumWidth(Timefill->maximumWidth()-(Timeclock->width()/300));
 }
 
 
