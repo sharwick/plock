@@ -136,23 +136,25 @@ void MainWindow::setupWindows(){
     mainMenu->setLayout(mainMenuLayout);
 
     // Initialize and add items to layout
-    titleLabel = new QLabel("   B L O C K S T A R");
+    titleLabel = new QLabel("B L O C K S T A R");
     titleLabel->setFixedSize(blockSize*5, blockSize*2);
     mainMenuLayout->addWidget(titleLabel, Qt::AlignHCenter);
 
     newGameButton = new QPushButton(this);
     newGameButton->setText("New Game");
-    newGameButton->setFixedSize(blockSize*3, blockSize);
+    newGameButton->setFixedSize(blockSize*5, blockSize);
     connect( newGameButton, SIGNAL(clicked()), this, SLOT(newGamePressed()) );
     mainMenuLayout->addWidget(newGameButton, Qt::AlignTop);
 
+
     settingsButton = new QPushButton("Settings", this);
-    settingsButton->setFixedSize(blockSize*3, blockSize);
+    settingsButton->setFixedSize(blockSize*5, blockSize);
     connect( settingsButton, SIGNAL(clicked()), this, SLOT(settingsPressed()) );
     mainMenuLayout->addWidget(settingsButton, Qt::AlignTop);
 
+
     helpButton = new QPushButton("About", this);
-    helpButton->setFixedSize(blockSize*3, blockSize);
+    helpButton->setFixedSize(blockSize*5, blockSize);
     connect( helpButton, SIGNAL(clicked()), this, SLOT(helpPressed()) );
     mainMenuLayout->addWidget(helpButton, Qt::AlignTop);
 
@@ -344,6 +346,19 @@ void MainWindow::setupGameScreen(){
 
     // Color scheme
     colorPtr = new Colors(0);
+    //colorPtr = new Colors(1);
+
+    QPalette Pal(palette());
+    Pal.setColor(QPalette::Button, colorPtr->getQColor(3));
+    Pal.setColor(QPalette::ButtonText, QColor(0,0,0,255) );
+    Pal.setColor(QPalette::Background, colorPtr->getQColor(0));
+    //Pal.setColor(QPalette::Text, QColor(250,250,250,127));
+    Pal.setColor(QPalette::Text, colorPtr->getQColor(3));
+    ////Pal.setColor(QPalette::BrightText, QColor(250,250,250,127));
+    //Pal.setColor(QPalette::WindowText, QColor(250,250,250,127));
+    Pal.setColor(QPalette::WindowText, colorPtr->getQColor(3));
+    this->setPalette(Pal);
+
 
     // Timers
     timer = new QTimer(this);
@@ -383,6 +398,7 @@ void MainWindow::setupGameScreen(){
     // Geometry Buttons
 
     verticalFlipButton = new QPushButton("Vflip",this);
+    verticalFlipButton->setPalette(Pal);
     verticalFlipButton->setGeometry((0 + (blockSize)*0 ), screenSizeY - (blockSize * 1.6), blockSize*2, blockSize);
     connect(verticalFlipButton, SIGNAL(clicked()),this, SLOT(verticalFlip()));
     verticalFlipButton->hide();
@@ -412,9 +428,11 @@ void MainWindow::setupGameScreen(){
     Timefill->setGeometry(0,0,300,25);
 
     QPixmap newMap(Timeclock->width(), Timeclock->height());
-    newMap.fill(Qt::magenta);
+    //newMap.fill(Qt::magenta);
+    newMap.fill(QColor(250,250,250,255));
     Timeclock->setPixmap(newMap);
-    newMap.fill(Qt::green);
+    //newMap.fill(Qt::green);
+    newMap.fill(colorPtr->getQColor(1));
     Timefill->setPixmap(newMap);
     grid->addWidget(Timeclock,7,1);
     grid->addWidget(Timefill,7,1);
@@ -428,9 +446,11 @@ void MainWindow::setupGameScreen(){
     bombLayer->setGeometry(0,0,120,25);
     bombFill->setGeometry(0,0,120,25);
     QPixmap bombColor(bombLayer->width(), bombLayer->height());
-    bombColor.fill(Qt::white);
+    //bombColor.fill(Qt::white);
+    bombColor.fill(QColor(250,250,250,255));
     bombLayer->setPixmap(bombColor);
-    bombColor.fill(Qt::gray);
+    //bombColor.fill(Qt::gray);
+    bombColor.fill(colorPtr->getQColor(1));
     bombFill->setPixmap(bombColor);
     grid->addWidget(bombLayer,1,1);
     grid->addWidget(bombFill,1,1);
