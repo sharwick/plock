@@ -63,7 +63,8 @@ private:
 //    QProgressBar *bombBar, *timeBar;
     QPushButton *menuButton,*shuffleButton, *verticalFlipButton, *horizontalFlipButton,  *newGameButton, *settingsButton,
     *helpButton, *backToMenu, *backToMenu2, *backToMenu3, *standardModeButton,
-    *pauseAccept, *pauseRejected, *pauseSettings, *endlessModeButton, *survivalModeButton, *gameOverToMenu, *gameOverRestart;
+    *pauseAccept, *pauseRejected, *pauseSettings, *endlessModeButton, *survivalModeButton, *gameOverToMenu, *gameOverRestart,
+    *quitButton;
     QGroupBox *mainMenu, *settingsMenu, *helpMenu, *gameModeMenu, *pauseMenu, *gameOverMenu;
     QCheckBox *soundCheck, *screenLockCheck;
     QLabel *titleLabel, *gameModeTitle, *settingsTitle, *timeLabel, *bombLayer, *bombFill, *Timeclock, *Timefill;
@@ -141,6 +142,7 @@ private slots:
    void changeColorScheme();
    void verticalFlip();
    void horizontalFlip();
+   void quit();
 
 };
 
