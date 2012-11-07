@@ -324,6 +324,7 @@ void MainWindow::setupWindows(){
     scorePtr = new Score(); // Moved
     gameOverLayout->addWidget(new QLabel("Your Final Score:", this));
     tempScore = new QLabel(this);
+    tempScore->setAlignment(Qt::AlignHCenter);
     gameOverLayout->addWidget(tempScore, Qt::AlignHCenter);
 
     gameOverRestart = new QPushButton("Restart Game", this);
@@ -390,20 +391,23 @@ void MainWindow::setupGameScreen(){
 
 
     // Shuffle Button
-    shuffleButton = new QPushButton("S",this);
+    //shuffleButton = new QPushButton("S",this);
+    shuffleButton = new QPushButton(QString::fromUtf8("\u25A6"),this);
     shuffleButton->setGeometry((0 + (blockSize)*4 ), screenSizeY - (blockSize * 1.6), blockSize*2, blockSize);
     connect(shuffleButton, SIGNAL(clicked()),this, SLOT(shufflePressed()));
     shuffleButton->hide();
 
     // Geometry Buttons
 
-    verticalFlipButton = new QPushButton("Vflip",this);
+    //verticalFlipButton = new QPushButton("Vflip",this);
+    verticalFlipButton = new QPushButton(QString::fromUtf8("\u2195"),this);
     verticalFlipButton->setPalette(Pal);
     verticalFlipButton->setGeometry((0 + (blockSize)*0 ), screenSizeY - (blockSize * 1.6), blockSize*2, blockSize);
     connect(verticalFlipButton, SIGNAL(clicked()),this, SLOT(verticalFlip()));
     verticalFlipButton->hide();
 
-    horizontalFlipButton = new QPushButton("Hflip",this);
+    //horizontalFlipButton = new QPushButton("Hflip",this);
+    horizontalFlipButton = new QPushButton(QString::fromUtf8("\u2194"),this);
     horizontalFlipButton->setGeometry((0 + (blockSize)*2 ), screenSizeY - (blockSize * 1.6), blockSize*2, blockSize);
     connect(horizontalFlipButton, SIGNAL(clicked()),this, SLOT(horizontalFlip()));
     horizontalFlipButton->hide();
