@@ -382,24 +382,24 @@ void MainWindow::setupGameScreen(){
 
     // Add score board
     sframe = new ScoreFrame();
-    sframe->text->setFixedWidth(blockSize*2);
+    sframe->text->setFixedWidth(blockSize*5);
     sframe->text->setFixedHeight(blockSize );
     grid->addWidget(sframe->text,0,1,1,1,Qt::AlignLeft);
 
     // Menu Button
     menuButton = new QPushButton("||",this);
-    menuButton->setFixedSize(blockSize * 1.25 ,blockSize * 1.25);
+    //menuButton->setFixedSize(blockSize * 1.25 ,blockSize * 1.25);
     connect(menuButton, SIGNAL(clicked()),this, SLOT(pausedPressed()));
     //menuButton->setGeometry((bombBar->x() + (blockSize*7) ), 0, blockSize, blockSize);
-    grid->addWidget(menuButton,1,2, Qt::AlignLeft);
-
+    //grid->addWidget(menuButton,1,2, Qt::AlignLeft);
+    menuButton->setGeometry((0 + (blockSize)*6 ), screenSizeY - (blockSize)*1.5, blockSize*2, blockSize);
+    menuButton->hide();
 
     // Shuffle Button
-    shuffleButton = new QPushButton("S",this);
-    shuffleButton->setGeometry((0 + (blockSize)*4 ), screenSizeY - (blockSize), blockSize*2, blockSize);
+
     //shuffleButton = new QPushButton("S",this);
     shuffleButton = new QPushButton(QString::fromUtf8("\u25A6"),this);
-    shuffleButton->setGeometry((0 + (blockSize)*4 ), screenSizeY - (blockSize * 1.6), blockSize*2, blockSize);
+    shuffleButton->setGeometry((0 + (blockSize)*4 ), screenSizeY - (blockSize)*1.5, blockSize*2, blockSize);
     connect(shuffleButton, SIGNAL(clicked()),this, SLOT(shufflePressed()));
     shuffleButton->hide();
 
@@ -408,15 +408,14 @@ void MainWindow::setupGameScreen(){
     //verticalFlipButton = new QPushButton("Vflip",this);
     verticalFlipButton = new QPushButton(QString::fromUtf8("\u2195"),this);
     verticalFlipButton->setPalette(Pal);
-    verticalFlipButton->setGeometry((0 + (blockSize)*0 ), screenSizeY - (blockSize), blockSize*2, blockSize);
+    verticalFlipButton->setGeometry((0 + (blockSize)*0 ), screenSizeY - (blockSize)*1.5, blockSize*2, blockSize);
     connect(verticalFlipButton, SIGNAL(clicked()),this, SLOT(verticalFlip()));
     verticalFlipButton->hide();
 
-    horizontalFlipButton = new QPushButton("Hflip",this);
-    horizontalFlipButton->setGeometry((0 + (blockSize)*2 ), screenSizeY - (blockSize), blockSize*2, blockSize);
+
     //horizontalFlipButton = new QPushButton("Hflip",this);
     horizontalFlipButton = new QPushButton(QString::fromUtf8("\u2194"),this);
-    horizontalFlipButton->setGeometry((0 + (blockSize)*2 ), screenSizeY - (blockSize * 1.6), blockSize*2, blockSize);
+    horizontalFlipButton->setGeometry((0 + (blockSize)*2 ), screenSizeY - (blockSize)*1.5, blockSize*2, blockSize);
     connect(horizontalFlipButton, SIGNAL(clicked()),this, SLOT(horizontalFlip()));
     horizontalFlipButton->hide();
 
@@ -577,6 +576,7 @@ void MainWindow::menuPressed(){
     shuffleButton->hide();
     verticalFlipButton->hide();
     horizontalFlipButton->hide();
+    menuButton->hide();
     timeLabel->hide();
     pauseMenu->hide();
     mainMenu->show();
@@ -601,6 +601,7 @@ void MainWindow::pauseSettingsPressed(){
     shuffleButton->hide();
     verticalFlipButton->hide();
     horizontalFlipButton->hide();
+    menuButton->hide();
     settingsMenu->show();
     disconnect(backToMenu2, SIGNAL(clicked()), this, SLOT(backToMain()) );
     connect(backToMenu2, SIGNAL(clicked()), this, SLOT(backToPause()) );
@@ -612,6 +613,7 @@ void MainWindow::backToPause(){
     shuffleButton->show();
     horizontalFlipButton->show();
     verticalFlipButton->show();
+    menuButton->show();
     pauseMenu->show();
     disconnect(backToMenu2, SIGNAL(clicked()), this, SLOT(backToPause()) );
     connect(backToMenu2, SIGNAL(clicked()), this, SLOT(backToMain()) );
@@ -651,6 +653,7 @@ void MainWindow::gameOverMenuSlot(){
     shuffleButton->hide();
     verticalFlipButton->hide();
     horizontalFlipButton->hide();
+    menuButton->hide();
     mainMenu->show();
 }
 
@@ -704,6 +707,7 @@ void MainWindow::standardMode(){
     shuffleButton->show();
     verticalFlipButton->show();
     horizontalFlipButton->show();
+    menuButton->show();
     timeLabel->show();
     Timefill->show();
     Timeclock->show();
@@ -723,6 +727,7 @@ void MainWindow::survivalMode(){
     shuffleButton->show();
     verticalFlipButton->show();
     horizontalFlipButton->show();
+    menuButton->show();
     timeLabel->show();
     Timefill->show();
     Timeclock->show();
@@ -741,6 +746,7 @@ void MainWindow::endlessMode(){
     shuffleButton->show();
     verticalFlipButton->show();
     horizontalFlipButton->show();
+    menuButton->show();
     timeLabel->hide();
     Timeclock->hide();
     Timefill->hide();
