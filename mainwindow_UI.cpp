@@ -392,30 +392,32 @@ void MainWindow::setupGameScreen(){
     connect(menuButton, SIGNAL(clicked()),this, SLOT(pausedPressed()));
     //menuButton->setGeometry((bombBar->x() + (blockSize*7) ), 0, blockSize, blockSize);
     //grid->addWidget(menuButton,1,2, Qt::AlignLeft);
-    menuButton->setGeometry((0 + (blockSize)*6 ), screenSizeY - (blockSize)*1.5, blockSize*2, blockSize);
+    menuButton->setGeometry((0 + (blockSize)*6 ), screenSizeY - (blockSize)*1.6, blockSize*2, blockSize);
     menuButton->hide();
 
     // Shuffle Button
 
     //shuffleButton = new QPushButton("S",this);
     shuffleButton = new QPushButton(QString::fromUtf8("\u25A6"),this);
-    shuffleButton->setGeometry((0 + (blockSize)*4 ), screenSizeY - (blockSize)*1.5, blockSize*2, blockSize);
+    shuffleButton->setGeometry((0 + (blockSize)*4 ), screenSizeY - (blockSize)*1.6, blockSize*2, blockSize);
     connect(shuffleButton, SIGNAL(clicked()),this, SLOT(shufflePressed()));
     shuffleButton->hide();
 
     // Geometry Buttons
 
     //verticalFlipButton = new QPushButton("Vflip",this);
-    verticalFlipButton = new QPushButton(QString::fromUtf8("\u2195"),this);
+    //verticalFlipButton = new QPushButton(QString::fromUtf8("\u2194"),this);
+    verticalFlipButton = new QPushButton(QString::fromUtf8("\u21C4"),this);
     verticalFlipButton->setPalette(Pal);
-    verticalFlipButton->setGeometry((0 + (blockSize)*0 ), screenSizeY - (blockSize)*1.5, blockSize*2, blockSize);
+    verticalFlipButton->setGeometry((0 + (blockSize)*0 ), screenSizeY - (blockSize)*1.6, blockSize*2, blockSize);
     connect(verticalFlipButton, SIGNAL(clicked()),this, SLOT(verticalFlip()));
     verticalFlipButton->hide();
 
 
     //horizontalFlipButton = new QPushButton("Hflip",this);
-    horizontalFlipButton = new QPushButton(QString::fromUtf8("\u2194"),this);
-    horizontalFlipButton->setGeometry((0 + (blockSize)*2 ), screenSizeY - (blockSize)*1.5, blockSize*2, blockSize);
+    //horizontalFlipButton = new QPushButton(QString::fromUtf8("\u2195"),this);
+    horizontalFlipButton = new QPushButton(QString::fromUtf8("\u21C5"),this);
+    horizontalFlipButton->setGeometry((0 + (blockSize)*2 ), screenSizeY - (blockSize)*1.6, blockSize*2, blockSize);
     connect(horizontalFlipButton, SIGNAL(clicked()),this, SLOT(horizontalFlip()));
     horizontalFlipButton->hide();
 
