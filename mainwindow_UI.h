@@ -114,6 +114,8 @@ private:
 	vector<Block*> checkSpecials(vector<Block*>);
     vector<Block*> bombCollector(vector<Block*>, int, int);
 
+    void processSurvival();
+
     //vector<GraphObject> scoringObjects; //NYI
 	
 protected:

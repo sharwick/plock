@@ -548,7 +548,7 @@ void MainWindow::updateBomb(int nBlocks){
 
     int updateVal;
 //    updateVal = (nBlocks-1)*(nBlocks-1);
-    updateVal = nBlocks * 5;
+    updateVal = nBlocks * 8;
 
     if ((bombFill->maximumWidth()+updateVal) < bombLayer->maximumWidth()){
         bombFill->setMaximumWidth(bombFill->maximumWidth()+updateVal);
@@ -897,6 +897,7 @@ void MainWindow::processMatch(Block* matchedBlock)
 	//gatheredBlocks = checkSpecials(gatheredBlocks); 
     gatheredBlocks = sortVector(gatheredBlocks);
 
+    //transition period right here, after all blocks have been turned black
 
    multiplier = 1;
 
@@ -1118,6 +1119,7 @@ void MainWindow::timeSlot(){
         tempScore->setText(QString::number(scorePtr->getScore()));
         gameOverMenu->show();
         timeOver();
+        btimeOver();
         //close();
         //return;
     }
@@ -1167,6 +1169,17 @@ void MainWindow::startGame(){
         currentTime=60;
         timer->start(200);
     }
+}
+
+void MainWindow::processSurvival(){
+    //this function would be called from the updateProgressTime function
+    //increment level counter (would need to have started at 1 for each survival call)
+    //group box with level x incoming, etc
+    shufflePressed();//shuffles blocks / graph objects
+    //timer stopped here or in updateProgressTime function
+    //increment timer speed, maybe formula from level counter
+    //set timer to 50%
+    //start timer with new incremented timer speed
 }
 
 
