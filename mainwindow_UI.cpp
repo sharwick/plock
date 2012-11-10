@@ -93,6 +93,8 @@ void MainWindow::showExpanded()
  *********************************************************************/
 void MainWindow::setupWindows(){
 
+    start = false;//necessary to avoid segfault in startGame function
+
     /* * * * * * * * * * * * * *
      * Setup the CentralWidget *
      * * * * * * * * * * * * * */
@@ -476,7 +478,12 @@ void MainWindow::setupGameScreen(){
     bombLayer->setMaximumWidth(bombLayer->width());
     connect(btimer, SIGNAL(timeout()), this, SLOT(bombtimeSlot()));
 
-
+    /* would ideally place an ellipse on the game board but doesn't work yet
+    QGraphicsEllipseItem *myEllipse = new QGraphicsEllipseItem();
+    myEllipse->setRect(3 * blockSize, 4 * blockSize, (blockSize - 1), (blockSize - 1));
+    myEllipse->setBrush(QBrush(Qt::yellow, Qt::SolidPattern));
+    theScene->addItem(myEllipse);
+    */
 } // End setupInterface()
 
 /*********************************************************************
@@ -1188,13 +1195,18 @@ void MainWindow::timeBegin(){
  *NYI: score reset.
  */
 void MainWindow::startGame(){
-
-    for(int i = 0; i < boardSizeX; i++){
-        for(int j = 0; j < boardSizeY; j++){
-            gameBoard[i][j] = 0;
-            rectArray[i][j] = 0;
+    if(start){
+        for(int i = 0; i < boardSizeX; i++){
+            for(int j = 0; j < boardSizeY; j++){
+                delete gameBoard[i][j];
+                gameBoard[i][j] = 0;
+                delete rectArray[i][j];
+                rectArray[i][j] = 0;
+            }
         }
     }
+    else
+        start = true; //start is initialized to false in menu set up
     setupBlocks();
     bombFill->setMaximumWidth(0);
     bcurrentTime=0;
@@ -1208,6 +1220,7 @@ void MainWindow::startGame(){
 
 void MainWindow::processSurvival(){
     //this function would be called from the updateProgressTime function
+    //stop timer
     //increment level counter (would need to have started at 1 for each survival call)
     //group box with level x incoming, etc
     shufflePressed();//shuffles blocks / graph objects

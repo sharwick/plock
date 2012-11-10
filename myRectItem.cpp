@@ -13,5 +13,3 @@ void myRectItem::mousePressEvent(QGraphicsSceneMouseEvent *){
 void myRectItem::mouseMoveEvent(QGraphicsSceneMouseEvent *){
     this->grabMouse();
 }
-
-

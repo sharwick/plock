@@ -26,6 +26,7 @@
 #include <Score.h>
 #include <ScoreFrame.h>
 
+#include <QGraphicsEllipseItem>
 
 //Dan Updates:
 
@@ -77,6 +78,8 @@ private:
     Colors *colorPtr;
     Score *scorePtr;
     ScoreFrame *sframe;
+
+    QGraphicsEllipseItem *myEllipse;
 
     // Variables
     int screenSizeX, screenSizeY;
