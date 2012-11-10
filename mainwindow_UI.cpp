@@ -489,7 +489,6 @@ void MainWindow::setupBlocks(){
 			//now would use temp as accessor in color class to send color to rectItem Bruch
             rectArray[x][y] = new myRectItem();
             rectArray[x][y]->setRect(blockSize * x, blockSize * y, blockSize, blockSize);
-            rectArray[x][y]->setFlags(QGraphicsItem::ItemIsSelectable);
             rectArray[x][y]->setBrush(QBrush(colorPtr->getQColor(temp), Qt::SolidPattern));
             theScene->addItem(rectArray[x][y]);
         }
