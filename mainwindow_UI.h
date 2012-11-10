@@ -61,7 +61,7 @@ private:
     QGraphicsView *blockView;
     QGraphicsRectItem *tempBlock;
 //    QProgressBar *bombBar, *timeBar;
-    QPushButton *menuButton,*shuffleButton, *verticalFlipButton, *horizontalFlipButton,  *newGameButton, *settingsButton,
+    QPushButton *menuButton,*shuffleButton, *rotateButton, *horizontalFlipButton,  *newGameButton, *settingsButton,
     *helpButton, *backToMenu, *backToMenu2, *backToMenu3, *standardModeButton,
     *pauseAccept, *pauseRejected, *pauseSettings, *endlessModeButton, *survivalModeButton, *gameOverToMenu, *gameOverRestart,
     *quitButton;
@@ -144,6 +144,7 @@ private slots:
    void changeColorScheme();
    void verticalFlip();
    void horizontalFlip();
+   void rotate();
    void quit();
 
 };

@@ -398,13 +398,14 @@ void MainWindow::setupGameScreen(){
     // Shuffle Button
 
     //shuffleButton = new QPushButton("S",this);
-    shuffleButton = new QPushButton(QString::fromUtf8("\u25A6"),this);
+    shuffleButton = new QPushButton(QString::fromUtf8("\u2248"),this); // 25A6
     shuffleButton->setGeometry((0 + (blockSize)*4 ), screenSizeY - (blockSize)*1.6, blockSize*2, blockSize);
     connect(shuffleButton, SIGNAL(clicked()),this, SLOT(shufflePressed()));
     shuffleButton->hide();
 
     // Geometry Buttons
 
+    /*
     //verticalFlipButton = new QPushButton("Vflip",this);
     //verticalFlipButton = new QPushButton(QString::fromUtf8("\u2194"),this);
     verticalFlipButton = new QPushButton(QString::fromUtf8("\u21C4"),this);
@@ -412,7 +413,12 @@ void MainWindow::setupGameScreen(){
     verticalFlipButton->setGeometry((0 + (blockSize)*0 ), screenSizeY - (blockSize)*1.6, blockSize*2, blockSize);
     connect(verticalFlipButton, SIGNAL(clicked()),this, SLOT(verticalFlip()));
     verticalFlipButton->hide();
+    */
 
+    rotateButton = new QPushButton(QString::fromUtf8("\u21B1"),this);
+    rotateButton->setGeometry((0 + (blockSize)*0 ), screenSizeY - (blockSize)*1.6, blockSize*2, blockSize);
+    connect(rotateButton, SIGNAL(clicked()),this, SLOT(rotate()));
+    rotateButton->hide();
 
     //horizontalFlipButton = new QPushButton("Hflip",this);
     //horizontalFlipButton = new QPushButton(QString::fromUtf8("\u2195"),this);
@@ -445,7 +451,7 @@ void MainWindow::setupGameScreen(){
     newMap.fill(QColor(250,250,250,255));
     Timeclock->setPixmap(newMap);
     //newMap.fill(Qt::green);
-    newMap.fill(colorPtr->getQColor(1));
+    newMap.fill(colorPtr->getQColor(6));
     Timefill->setPixmap(newMap);
     grid->addWidget(Timeclock,7,1);
     grid->addWidget(Timefill,7,1);
@@ -575,7 +581,7 @@ void MainWindow::menuPressed(){
     scorePtr->resetScore();
     sframe->resetScoreBoard();
     shuffleButton->hide();
-    verticalFlipButton->hide();
+    rotateButton->hide();
     horizontalFlipButton->hide();
     menuButton->hide();
     timeLabel->hide();
@@ -600,7 +606,7 @@ void MainWindow::pausedPressed(){
 void MainWindow::pauseSettingsPressed(){
     pauseMenu->hide();
     shuffleButton->hide();
-    verticalFlipButton->hide();
+    rotateButton->hide();
     horizontalFlipButton->hide();
     menuButton->hide();
     settingsMenu->show();
@@ -613,7 +619,7 @@ void MainWindow::backToPause(){
     mainMenu->hide();
     shuffleButton->show();
     horizontalFlipButton->show();
-    verticalFlipButton->show();
+    rotateButton->show();
     menuButton->show();
     pauseMenu->show();
     disconnect(backToMenu2, SIGNAL(clicked()), this, SLOT(backToPause()) );
@@ -652,7 +658,7 @@ void MainWindow::backToMain(){
 void MainWindow::gameOverMenuSlot(){
     gameOverMenu->hide();
     shuffleButton->hide();
-    verticalFlipButton->hide();
+    rotateButton->hide();
     horizontalFlipButton->hide();
     menuButton->hide();
     mainMenu->show();
@@ -706,7 +712,7 @@ void MainWindow::changeColorScheme(){
 void MainWindow::standardMode(){
     gameModeMenu->hide();
     shuffleButton->show();
-    verticalFlipButton->show();
+    rotateButton->show();
     horizontalFlipButton->show();
     menuButton->show();
     timeLabel->show();
@@ -726,7 +732,7 @@ void MainWindow::standardMode(){
 void MainWindow::survivalMode(){
     gameModeMenu->hide();
     shuffleButton->show();
-    verticalFlipButton->show();
+    rotateButton->show();
     horizontalFlipButton->show();
     menuButton->show();
     timeLabel->show();
@@ -745,7 +751,7 @@ void MainWindow::survivalMode(){
 void MainWindow::endlessMode(){
     gameModeMenu->hide();
     shuffleButton->show();
-    verticalFlipButton->show();
+    rotateButton->show();
     horizontalFlipButton->show();
     menuButton->show();
     timeLabel->hide();
@@ -834,6 +840,36 @@ void MainWindow::horizontalFlip() {
 
     }
 }
+
+void MainWindow::rotate() {
+
+    // Only flips if not paused
+    if(!pauseMenu->isVisible()){
+
+        int x, y;
+
+        for (x=0; x<boardSizeX/2; x++) {
+            for (y=0; y<boardSizeY; y++) {
+                int x1, y1, x2, y2, tempColor;
+                x1=x;
+                x2=boardSizeX-1-x;
+                y1=y;
+                y2=boardSizeY-1-y;;
+
+                tempColor = gameBoard[x1][y1]->getColor();
+                gameBoard[x1][y1]->setColor( gameBoard[x2][y2]->getColor() );
+                gameBoard[x2][y2]->setColor(tempColor);
+
+                rectArray[gameBoard[x1][y1]->getCoordX()][gameBoard[x1][y1]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x1][y1]->getColor()), Qt::SolidPattern));
+                rectArray[gameBoard[x2][y2]->getCoordX()][gameBoard[x2][y2]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x2][y2]->getColor()), Qt::SolidPattern));
+                // TO DO: need to swap bombs/multipler -> add getBomb method to Block
+                //Swapping follows similar process commented in shuffle
+            }
+        }
+    }
+}
+
+
 
 void MainWindow::verticalFlip() {
 
