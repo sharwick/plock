@@ -318,7 +318,7 @@ void MainWindow::setupWindows(){
     gameOverMenu = new QGroupBox(this);
     gameOverMenu->setAutoFillBackground(true);
     gameOverMenu->setGeometry( (screenSizeX/2) - ((screenSizeX * 0.8) / 2), (screenSizeY/2) - ((screenSizeY * 0.4) / 2),
-                            screenSizeX * 0.8 , screenSizeY * 0.4 );
+                            screenSizeX * 0.8 , screenSizeY * 0.5 );
     // Create Menu's Layout
     gameOverLayout = new QVBoxLayout(this);
     gameOverLayout->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
@@ -332,6 +332,17 @@ void MainWindow::setupWindows(){
     tempScore = new QLabel(this);
     tempScore->setAlignment(Qt::AlignHCenter);
     gameOverLayout->addWidget(tempScore, Qt::AlignHCenter);
+
+        finalLevelLabel = new QLabel("Your Final Level:", this);
+        gameOverLayout->addWidget(finalLevelLabel);
+        tempLevel = new QLabel(this);
+        tempLevel->setAlignment(Qt::AlignHCenter);
+        gameOverLayout->addWidget(tempLevel, Qt::AlignHCenter);
+
+        if (survivalModeFlag!=1) {
+            finalLevelLabel->setText("");
+            tempLevel->setText("");
+        }
 
     gameOverRestart = new QPushButton("Restart Game", this);
     connect(gameOverRestart, SIGNAL(clicked()), this, SLOT(gameOverRestartSlot()) );
@@ -353,16 +364,12 @@ void MainWindow::setupGameScreen(){
 
     // Color scheme
     colorPtr = new Colors(0);
-    //colorPtr = new Colors(1);
 
     QPalette Pal(palette());
     Pal.setColor(QPalette::Button, colorPtr->getQColor(3));
     Pal.setColor(QPalette::ButtonText, QColor(0,0,0,255) );
     Pal.setColor(QPalette::Background, colorPtr->getQColor(0));
-    //Pal.setColor(QPalette::Text, QColor(250,250,250,127));
     Pal.setColor(QPalette::Text, colorPtr->getQColor(3));
-    ////Pal.setColor(QPalette::BrightText, QColor(250,250,250,127));
-    //Pal.setColor(QPalette::WindowText, QColor(250,250,250,127));
     Pal.setColor(QPalette::WindowText, colorPtr->getQColor(3));
     this->setPalette(Pal);
 
@@ -390,40 +397,24 @@ void MainWindow::setupGameScreen(){
 
     // Menu Button
     menuButton = new QPushButton("||",this);
-    //menuButton->setFixedSize(blockSize * 1.25 ,blockSize * 1.25);
     connect(menuButton, SIGNAL(clicked()),this, SLOT(pausedPressed()));
-    //menuButton->setGeometry((bombBar->x() + (blockSize*7) ), 0, blockSize, blockSize);
-    //grid->addWidget(menuButton,1,2, Qt::AlignLeft);
     menuButton->setGeometry((0 + (blockSize)*6 ), screenSizeY - (blockSize)*1.6, blockSize*2, blockSize);
     menuButton->hide();
 
     // Shuffle Button
 
-    //shuffleButton = new QPushButton("S",this);
-    shuffleButton = new QPushButton(QString::fromUtf8("\u2248"),this); // 25A6
+    shuffleButton = new QPushButton(QString::fromUtf8("\u2248"),this); // or 25A6
     shuffleButton->setGeometry((0 + (blockSize)*4 ), screenSizeY - (blockSize)*1.6, blockSize*2, blockSize);
     connect(shuffleButton, SIGNAL(clicked()),this, SLOT(shufflePressed()));
     shuffleButton->hide();
 
     // Geometry Buttons
 
-    /*
-    //verticalFlipButton = new QPushButton("Vflip",this);
-    //verticalFlipButton = new QPushButton(QString::fromUtf8("\u2194"),this);
-    verticalFlipButton = new QPushButton(QString::fromUtf8("\u21C4"),this);
-    verticalFlipButton->setPalette(Pal);
-    verticalFlipButton->setGeometry((0 + (blockSize)*0 ), screenSizeY - (blockSize)*1.6, blockSize*2, blockSize);
-    connect(verticalFlipButton, SIGNAL(clicked()),this, SLOT(verticalFlip()));
-    verticalFlipButton->hide();
-    */
-
     rotateButton = new QPushButton(QString::fromUtf8("\u21B1"),this);
     rotateButton->setGeometry((0 + (blockSize)*0 ), screenSizeY - (blockSize)*1.6, blockSize*2, blockSize);
     connect(rotateButton, SIGNAL(clicked()),this, SLOT(rotate()));
     rotateButton->hide();
 
-    //horizontalFlipButton = new QPushButton("Hflip",this);
-    //horizontalFlipButton = new QPushButton(QString::fromUtf8("\u2195"),this);
     horizontalFlipButton = new QPushButton(QString::fromUtf8("\u21C5"),this);
     horizontalFlipButton->setGeometry((0 + (blockSize)*2 ), screenSizeY - (blockSize)*1.6, blockSize*2, blockSize);
     connect(horizontalFlipButton, SIGNAL(clicked()),this, SLOT(horizontalFlip()));
@@ -449,11 +440,9 @@ void MainWindow::setupGameScreen(){
     Timefill->setGeometry(0,0,300,25);
 
     QPixmap newMap(Timeclock->width(), Timeclock->height());
-    //newMap.fill(Qt::magenta);
-    newMap.fill(QColor(250,250,250,255));
+    newMap.fill(QColor(250,250,250,255)); // Back color
     Timeclock->setPixmap(newMap);
-    //newMap.fill(Qt::green);
-    newMap.fill(colorPtr->getQColor(6));
+    newMap.fill(colorPtr->getQColor(6)); // Front color
     Timefill->setPixmap(newMap);
     grid->addWidget(Timeclock,7,1);
     grid->addWidget(Timefill,7,1);
@@ -467,11 +456,9 @@ void MainWindow::setupGameScreen(){
     bombLayer->setGeometry(0,0,300,25);
     bombFill->setGeometry(0,0,300,25);
     QPixmap bombColor(bombLayer->width(), bombLayer->height());
-    //bombColor.fill(Qt::white);
-    bombColor.fill(QColor(250,250,250,255));
+    bombColor.fill(QColor(250,250,250,255)); // Back layer
     bombLayer->setPixmap(bombColor);
-    //bombColor.fill(Qt::gray);
-    bombColor.fill(colorPtr->getQColor(1));
+    bombColor.fill(colorPtr->getQColor(1)); // Front layer
     bombFill->setPixmap(bombColor);
     grid->addWidget(bombLayer,1,1);
     grid->addWidget(bombFill,1,1);
@@ -751,6 +738,7 @@ void MainWindow::survivalMode(){
     stdModeFlag = 0;
     endlessModeFlag = 0;
     survivalModeFlag = 1;
+    level=1;
 
     startGame();
 }
@@ -1159,6 +1147,16 @@ void MainWindow::timeSlot(){
     }
     if(currentTime==-1){
         tempScore->setText(QString::number(scorePtr->getScore()));
+
+        if (survivalModeFlag==1) {
+            tempLevel->setText(QString::number(level));
+            finalLevelLabel->setText("Your Final Level:");
+        }
+        else {
+            tempLevel->setText("");
+            finalLevelLabel->setText("");
+        }
+
         gameOverMenu->show();
         timeOver();
         btimeOver();

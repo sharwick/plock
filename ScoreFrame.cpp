@@ -21,12 +21,6 @@ ScoreFrame::ScoreFrame() {
     sfFont.setBold(true);
     text->setFont(sfFont);
 
-    /*
-    text->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-    text->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-    text->setLineWidth(4);
-    text->setStyleSheet("QLabel {background-color : blue; color : white; font: 9pt \"Courier New\";}");
-    */
 }
 
 void ScoreFrame::update(int n) {

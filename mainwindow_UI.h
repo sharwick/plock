@@ -68,16 +68,17 @@ private:
     *quitButton;
     QGroupBox *mainMenu, *settingsMenu, *helpMenu, *gameModeMenu, *pauseMenu, *gameOverMenu;
     QCheckBox *soundCheck, *screenLockCheck;
-    QLabel *titleLabel, *gameModeTitle, *settingsTitle, *timeLabel, *bombLayer, *bombFill, *Timeclock, *Timefill;
+    QLabel *titleLabel, *gameModeTitle, *settingsTitle, *timeLabel, *bombLayer, *bombFill, *Timeclock, *Timefill, *finalLevelLabel;
     QTextBrowser *helpText;
     QSlider *colorSlider;
-    QLabel *tempScore;
+    QLabel *tempScore, *tempLevel;
     myRectItem* rectArray[8][9];
     QTimer *timer;
     QTimer *btimer;
     Colors *colorPtr;
     Score *scorePtr;
     ScoreFrame *sframe;
+    int level;
 
     QGraphicsEllipseItem *myEllipse;
 

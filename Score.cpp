@@ -16,7 +16,6 @@ Score::Score() {
 }
 
 void Score::updateScore(int nBlocks, bool speedBonus, int multiplier) {
-    //score++;
 
     int updateValue;
     updateValue = (nBlocks-1)*(nBlocks-1);
