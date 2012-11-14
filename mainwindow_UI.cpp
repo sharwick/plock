@@ -94,6 +94,7 @@ void MainWindow::showExpanded()
 void MainWindow::setupWindows(){
 
     start = false;//necessary to avoid segfault in startGame function
+    timerCounter = 200; //timer for survival and hot potato
 
     /* * * * * * * * * * * * * *
      * Setup the CentralWidget *
@@ -564,6 +565,22 @@ void MainWindow::updateBomb(int nBlocks){
 
 }
 
+void MainWindow::updateProgress(int nBlocks){
+    int updateVal;
+    updateVal = nBlocks * 10;
+
+    if((Timefill->maximumWidth() + updateVal) < Timeclock->maximumWidth()){
+        Timefill->setMaximumWidth(Timefill->maximumWidth() + updateVal);
+        if(Timefill->maximumWidth() > 0){
+            currentTime += (updateVal/5);
+            timeBegin();
+        }
+    }
+    else if((Timefill->maximumWidth() + updateVal) >= Timeclock->maximumWidth()){
+        processProgress();//reached new level of survival
+    }
+}
+
 
 /************************************
  *  The Slots that the buttons use. *
@@ -739,6 +756,7 @@ void MainWindow::survivalMode(){
     endlessModeFlag = 0;
     survivalModeFlag = 1;
     level=1;
+    timerCounter = 200;
 
     startGame();
 }
@@ -934,6 +952,8 @@ void MainWindow::processMatch(Block* matchedBlock)
     scorePtr->updateScore((int) gatheredBlocks.size(), false , multiplier);
     sframe->update(scorePtr->getScore());
     updateBomb((int) gatheredBlocks.size());
+    if(survivalModeFlag == 1)
+        updateProgress((int) gatheredBlocks.size());
     determineColor(gatheredBlocks);
 }
 
@@ -1209,23 +1229,28 @@ void MainWindow::startGame(){
     bombFill->setMaximumWidth(0);
     bcurrentTime=0;
     btimer->start(333.333);
-    if(endlessModeFlag != 1){
+    if(stdModeFlag == 1){
         Timefill->setMaximumWidth(Timeclock->width());
         currentTime=60;
         timer->start(200);
     }
+    else if(survivalModeFlag == 1){
+        Timefill->setMaximumWidth(Timeclock->width() / 2);
+        currentTime = 30;
+        timer->start(timerCounter);
+    }
 }
 
-void MainWindow::processSurvival(){
+void MainWindow::processProgress(){
     //this function would be called from the updateProgressTime function
-    //stop timer
-    //increment level counter (would need to have started at 1 for each survival call)
+    timeOver();//stop timer
+    level++;//increment level counter (would need to have started at 1 for each survival call)
     //group box with level x incoming, etc
     shufflePressed();//shuffles blocks / graph objects
-    //timer stopped here or in updateProgressTime function
-    //increment timer speed, maybe formula from level counter
-    //set timer to 50%
-    //start timer with new incremented timer speed
+    timerCounter += (10 * level);//increment timer speed, maybe formula from level counter
+    Timefill->setMaximumWidth(Timeclock->width() / 2);//set timer to 50%
+    currentTime = 30;
+    timer->start(timerCounter);//start timer with new incremented timer speed
 }
 
 

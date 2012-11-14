@@ -79,6 +79,7 @@ private:
     Score *scorePtr;
     ScoreFrame *sframe;
     int level;
+    int timerCounter;
 
     QGraphicsEllipseItem *myEllipse;
 
@@ -99,6 +100,7 @@ private:
     void timeBegin();
     void reset();   
     void updateBomb(int nBlocks);
+    void updateProgress(int);
     int multiplier;
 	
 	//Dan Block Variables
@@ -118,7 +120,7 @@ private:
 	vector<Block*> checkSpecials(vector<Block*>);
     vector<Block*> bombCollector(vector<Block*>, int, int);
 
-    void processSurvival();
+    void processProgress();
 
     //vector<GraphObject> scoringObjects; //NYI
 	
