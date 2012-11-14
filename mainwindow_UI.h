@@ -25,7 +25,7 @@
 #include <Colors.h>
 #include <Score.h>
 #include <ScoreFrame.h>
-
+#include <highScores.h>
 #include <QGraphicsEllipseItem>
 
 //Dan Updates:
@@ -57,19 +57,19 @@ public:
 private:
     // Objects
     QGridLayout *grid, *modeMenuLayout, *settingsLayout;
-    QVBoxLayout *mainMenuLayout, *helpMenuLayout, *pauseMenuLayout, *gameOverLayout;
+    QVBoxLayout *mainMenuLayout, *helpMenuLayout, *pauseMenuLayout, *gameOverLayout, *highScoreLayout;
     QGraphicsScene *theScene;
     QGraphicsView *blockView;
     QGraphicsRectItem *tempBlock;
 //    QProgressBar *bombBar, *timeBar;
     QPushButton *menuButton,*shuffleButton, *rotateButton, *horizontalFlipButton,  *newGameButton, *settingsButton,
-    *helpButton, *backToMenu, *backToMenu2, *backToMenu3, *standardModeButton,
+    *helpButton, *backToMenu, *backToMenu2, *backToMenu3, *backToMenu4, *standardModeButton, *highScoreButton,
     *pauseAccept, *pauseRejected, *pauseSettings, *endlessModeButton, *survivalModeButton, *gameOverToMenu, *gameOverRestart,
     *quitButton;
-    QGroupBox *mainMenu, *settingsMenu, *helpMenu, *gameModeMenu, *pauseMenu, *gameOverMenu;
+    QGroupBox *mainMenu, *settingsMenu, *helpMenu, *gameModeMenu, *pauseMenu, *gameOverMenu, *highScoreMenu;
     QCheckBox *soundCheck, *screenLockCheck;
     QLabel *titleLabel, *gameModeTitle, *settingsTitle, *timeLabel, *bombLayer, *bombFill, *Timeclock, *Timefill, *finalLevelLabel;
-    QTextBrowser *helpText;
+    QTextBrowser *helpText, *highScoreText;
     QSlider *colorSlider;
     QLabel *tempScore, *tempLevel;
     myRectItem* rectArray[8][9];
@@ -80,8 +80,9 @@ private:
     ScoreFrame *sframe;
     int level;
     int timerCounter;
-
     QGraphicsEllipseItem *myEllipse;
+    HighScores *theHighScores;
+
 
     // Variables
     int screenSizeX, screenSizeY;
@@ -112,6 +113,7 @@ private:
     void setupGameScreen();
     void setupWindows();
     void startGame();
+    void loadHighScores();
 	
 	//Dan Block Functions
     void processMatch(Block*);
@@ -140,6 +142,7 @@ private slots:
    void pausedPressed();
    void pauseSettingsPressed();
    void pauseBack();
+   void highScoresShow();
    void gameOverRestartSlot();
    void gameOverMenuSlot();
    void standardMode();

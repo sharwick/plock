@@ -135,7 +135,7 @@ void MainWindow::setupWindows(){
     // Create Main Menu's layout
     mainMenuLayout = new QVBoxLayout(this);
     mainMenuLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
-    mainMenuLayout->setSpacing(0);
+    mainMenuLayout->setSpacing(20);
     mainMenu->setLayout(mainMenuLayout);
 
     // Initialize and add items to layout
@@ -149,6 +149,10 @@ void MainWindow::setupWindows(){
     connect( newGameButton, SIGNAL(clicked()), this, SLOT(newGamePressed()) );
     mainMenuLayout->addWidget(newGameButton, Qt::AlignTop);
 
+    highScoreButton = new QPushButton("High Scores", this);
+    highScoreButton->setFixedSize(blockSize*5, blockSize);
+    connect( highScoreButton, SIGNAL(clicked()), this, SLOT(highScoresShow()) );
+    mainMenuLayout->addWidget(highScoreButton, Qt::AlignTop);
 
     settingsButton = new QPushButton("Settings", this);
     settingsButton->setFixedSize(blockSize*5, blockSize);
@@ -202,6 +206,36 @@ void MainWindow::setupWindows(){
     connect(backToMenu, SIGNAL(clicked()), this, SLOT(backToMain()) );
     modeMenuLayout->addWidget(backToMenu, 6, 1, Qt::AlignTop);
 
+
+
+    /* * * * * * * * * * * * * * * * * * * *
+     * Setup High Score Menu and its items *
+     * * * * * * * * * * * * * * * * * * * */
+    // Initalize Widget
+    highScoreMenu = new QGroupBox(this);
+    highScoreMenu->setFixedSize(screenSizeX, screenSizeY);
+    highScoreMenu->setAutoFillBackground(true);
+    highScoreMenu->hide();
+
+    // Create the Menu's layout
+    highScoreLayout = new QVBoxLayout(this);
+    highScoreLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
+    highScoreLayout->setSpacing(0);
+    highScoreMenu->setLayout(highScoreLayout);
+
+    // Initalize and add Items to layout
+    highScoreLayout->addWidget(new QLabel("H I G H   S C O R E S"), Qt::AlignTop);
+
+    highScoreText = new QTextBrowser(this);
+    highScoreText->setFixedSize(screenSizeX * 0.7, screenSizeY * 0.6);
+    theHighScores = new HighScores();
+    loadHighScores();
+    highScoreLayout->addWidget(highScoreText, Qt::AlignTop);
+
+    backToMenu4 = new QPushButton("Menu", this);
+    backToMenu4->setFixedSize(blockSize * 3, blockSize);
+    connect(backToMenu4, SIGNAL(clicked()), this, SLOT(backToMain()) );
+    highScoreLayout->addWidget(backToMenu4, Qt::AlignTop);
 
 
     /* * * * * * * * * * * * * * * * * * *
@@ -663,6 +697,9 @@ void MainWindow::backToMain(){
     else if(helpMenu->isVisible())
         helpMenu->hide();
 
+    else if(highScoreMenu->isVisible())
+        highScoreMenu->hide();
+
     mainMenu->show();
 }
 
@@ -718,6 +755,15 @@ void MainWindow::screenLock(){
 
 void MainWindow::changeColorScheme(){
     // change color scheme based on slider value
+}
+
+void MainWindow::highScoresShow(){
+    if(mainMenu->isVisible())
+        mainMenu->hide();
+    else if(gameOverMenu->isVisible())
+        gameOverMenu->hide();
+
+    highScoreMenu->show();
 }
 
 void MainWindow::standardMode(){
@@ -1253,5 +1299,12 @@ void MainWindow::processProgress(){
     timer->start(timerCounter);//start timer with new incremented timer speed
 }
 
+void MainWindow::loadHighScores(){
+    theHighScores->readInHighScores();
+    for(int i=0; i < 10; i++){
+        QString tempString = QString::fromStdString(theHighScores->getScore(i));
+        highScoreText->setText(tempString);
+    }
+}
 
 // End mainwindow_UI.cpp
