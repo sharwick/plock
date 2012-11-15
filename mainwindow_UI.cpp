@@ -228,7 +228,7 @@ void MainWindow::setupWindows(){
 
     highScoreText = new QTextBrowser(this);
     highScoreText->setFixedSize(screenSizeX * 0.7, screenSizeY * 0.6);
-    theHighScores = new HighScores();
+    //theHighScores = new HighScores();
     loadHighScores();
     highScoreLayout->addWidget(highScoreText, Qt::AlignTop);
 
@@ -593,6 +593,8 @@ void MainWindow::updateBomb(int nBlocks){
     }
     else if ((bombFill->maximumWidth()+updateVal) >= bombLayer->maximumWidth()){
              bombFill->setMaximumWidth(0);
+             //funciton call to make new image
+             generateGraphicObject();
              btimeOver();
              bcurrentTime=0;
     }
@@ -1300,11 +1302,20 @@ void MainWindow::processProgress(){
 }
 
 void MainWindow::loadHighScores(){
-    theHighScores->readInHighScores();
-    for(int i=0; i < 10; i++){
-        QString tempString = QString::fromStdString(theHighScores->getScore(i));
-        highScoreText->setText(tempString);
-    }
+    //theHighScores->readInHighScores();
+    //for(int i=0; i < 10; i++){
+        //QString tempString = QString::fromStdString(theHighScores->getScore(i));
+        //highScoreText->setText(tempString);
+    //}
+}
+
+void MainWindow::generateGraphicObject(){
+    int randomRowX = rand() % 8;
+    int randomColY = rand() % 9;
+    QGraphicsEllipseItem *myEllipse = new QGraphicsEllipseItem();
+    myEllipse->setRect(blockSize * randomRowX, blockSize * randomColY, blockSize, blockSize);
+    myEllipse->setBrush(QBrush(Qt::yellow, Qt::SolidPattern));
+    theScene->addItem(myEllipse);
 }
 
 // End mainwindow_UI.cpp

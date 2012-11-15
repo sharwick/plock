@@ -123,6 +123,7 @@ private:
     vector<Block*> bombCollector(vector<Block*>, int, int);
 
     void processProgress();
+    void generateGraphicObject();
 
     //vector<GraphObject> scoringObjects; //NYI
 	
