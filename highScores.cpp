@@ -3,25 +3,31 @@
 
 HighScores::HighScores()
 {
-    highScoreInput.open("highscores.txt");
-    highScoreOutput.open("highScores.txt");
-
-    // Read in High Scores from file
-    readInHighScores();
-
+    theFile = new QFile("highscores.txt");
+    if(!theFile->open(QIODevice::Append)){
+        cout << "File Not Found" << endl;
+    }
+    else{
+        inputStream = new QTextStream(theFile);
+    }
 }
 
 HighScores::~HighScores(){
-    highScoreInput.close();
-    highScoreOutput.close();
+
 }
 
 void HighScores::readInHighScores(){
+
     int index = 0;
-    while(highScoreInput.good()){
-        getline(highScoreInput, tempString);
-        highScores[index] = tempString;
-        index++;
+    bool fail = false;
+
+    while(!inputStream->atEnd()){
+        tempString = inputStream->readLine();
+        highScoresArray[index] = tempString.toInt(&fail, 10);
+        if(fail){
+            cout << "Conversion Failed at index " << index << endl;
+            return;
+        }
     }
 }
 
@@ -29,8 +35,12 @@ void HighScores::writeHighScores(){
 
 }
 
-string HighScores::getScore(int s){
-    return highScores[s];
+int HighScores::getScore(int s){
+    if(highScoresArray[s] == NULL)
+        return 0;
+
+    else
+        return highScoresArray[s];
 }
 
 void HighScores::addHighScore(int score){

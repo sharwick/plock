@@ -139,7 +139,7 @@ void MainWindow::setupWindows(){
     mainMenu->setLayout(mainMenuLayout);
 
     // Initialize and add items to layout
-    titleLabel = new QLabel("B L O C K S T A R");
+    titleLabel = new QLabel("         B L O C K S T A R");
     titleLabel->setFixedSize(blockSize*5, blockSize*2);
     mainMenuLayout->addWidget(titleLabel, Qt::AlignHCenter);
 
@@ -208,6 +208,23 @@ void MainWindow::setupWindows(){
 
 
 
+    /* * * * * * * * * * * * * * * * * *
+     * Setup Start Menu and its items  *
+     * * * * * * * * * * * * * * * * * */
+    // Initalize Widget
+    startScreen = new QGroupBox(this);
+    startScreen->setAutoFillBackground(true);
+    startScreen->setGeometry(0, screenSizeY * 0.82, screenSizeX, screenSizeY);
+    // Create Layout
+    startLayout = new QVBoxLayout(this);
+    startLayout->setAlignment(Qt::AlignTop);
+    startLayout->setSpacing(0);
+    startScreen->setLayout(startLayout);
+    startLayout->addWidget(new QLabel("Press the screen to begin!",this));
+    startScreen->hide();
+
+
+
     /* * * * * * * * * * * * * * * * * * * *
      * Setup High Score Menu and its items *
      * * * * * * * * * * * * * * * * * * * */
@@ -218,24 +235,42 @@ void MainWindow::setupWindows(){
     highScoreMenu->hide();
 
     // Create the Menu's layout
-    highScoreLayout = new QVBoxLayout(this);
+    highScoreLayout = new QGridLayout(this);
     highScoreLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
-    highScoreLayout->setSpacing(0);
+    highScoreLayout->setSpacing(20);
     highScoreMenu->setLayout(highScoreLayout);
 
     // Initalize and add Items to layout
-    highScoreLayout->addWidget(new QLabel("H I G H   S C O R E S"), Qt::AlignTop);
+    highScoreLayout->addWidget(new QLabel("     H I G H   S C O R E S"), 0, 1, Qt::AlignTop);
 
-    highScoreText = new QTextBrowser(this);
-    highScoreText->setFixedSize(screenSizeX * 0.7, screenSizeY * 0.6);
-    //theHighScores = new HighScores();
-    loadHighScores();
-    highScoreLayout->addWidget(highScoreText, Qt::AlignTop);
+    score1 = new QLabel("1. ", this);
+    highScoreLayout->addWidget(score1, 1, 1, Qt::AlignHCenter);
+    score2 = new QLabel("2. ", this);
+    highScoreLayout->addWidget(score2, 2, 1, Qt::AlignHCenter);
+    score3 = new QLabel("3. ", this);
+    highScoreLayout->addWidget(score3, 3, 1, Qt::AlignHCenter);
+    score4 = new QLabel("4. ", this);
+    highScoreLayout->addWidget(score4, 4, 1, Qt::AlignHCenter);
+    score5 = new QLabel("5. ", this);
+    highScoreLayout->addWidget(score5, 5, 1, Qt::AlignHCenter);
+    score6 = new QLabel("6. ", this);
+    highScoreLayout->addWidget(score6, 6, 1, Qt::AlignHCenter);
+    score7 = new QLabel("7. ", this);
+    highScoreLayout->addWidget(score7, 7, 1, Qt::AlignHCenter);
+    score8 = new QLabel("8. ", this);
+    highScoreLayout->addWidget(score8, 8, 1, Qt::AlignHCenter);
+    score9 = new QLabel("9. ", this);
+    highScoreLayout->addWidget(score9, 9, 1, Qt::AlignHCenter);
+    score10 = new QLabel("10. ", this);
+    highScoreLayout->addWidget(score10, 10, 1, Qt::AlignHCenter);
+
+    theHighScores = new HighScores();
+    loadHighScores();   // Load in High Scores from the HighScores Object
 
     backToMenu4 = new QPushButton("Menu", this);
-    backToMenu4->setFixedSize(blockSize * 3, blockSize);
+    backToMenu4->setFixedSize(screenSizeX * 0.5, blockSize);
     connect(backToMenu4, SIGNAL(clicked()), this, SLOT(backToMain()) );
-    highScoreLayout->addWidget(backToMenu4, Qt::AlignTop);
+    highScoreLayout->addWidget(backToMenu4, 13, 1, Qt::AlignTop);
 
 
     /* * * * * * * * * * * * * * * * * * *
@@ -250,7 +285,7 @@ void MainWindow::setupWindows(){
     // Create the Menu's layout
     settingsLayout = new QGridLayout(this);
     settingsLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
-    settingsLayout->setSpacing(0);
+    settingsLayout->setSpacing(30);
     settingsMenu->setLayout(settingsLayout);
 
     // Initalize and add Items to the layout
@@ -333,16 +368,47 @@ void MainWindow::setupWindows(){
     pauseMenu->hide();
 
     // Initialize and add Items to the layout
-    pauseMenuLayout->addWidget(new QLabel("   Paused"), Qt::AlignHCenter | Qt::AlignTop);
+    pauseMenuLayout->addWidget(new QLabel("        Paused"), Qt::AlignHCenter | Qt::AlignTop);
     pauseRejected = new QPushButton("Resume", this);
     pauseSettings = new QPushButton("Settings", this);
     pauseAccept = new QPushButton("Main", this);
+    pauseRejected->setFixedSize(blockSize * 3, blockSize);
+    pauseSettings->setFixedSize(blockSize * 3, blockSize);
+    pauseAccept->setFixedSize(blockSize * 3, blockSize);
     pauseMenuLayout->addWidget(pauseRejected, Qt::AlignTop);
     pauseMenuLayout->addWidget(pauseSettings, Qt::AlignVCenter);
     pauseMenuLayout->addWidget(pauseAccept, Qt::AlignBottom);
     connect(pauseRejected, SIGNAL(clicked()), this, SLOT(pauseBack()) );
     connect(pauseSettings, SIGNAL(clicked()), this, SLOT(pauseSettingsPressed()) );
-    connect(pauseAccept, SIGNAL(clicked()), this, SLOT(menuPressed()) );
+    connect(pauseAccept, SIGNAL(clicked()), this, SLOT(confirmQuit()) );
+
+
+
+    /* * * * * * * * * * * * * * * * * * * * *
+     * Setup Confirm Exit Menu and its Items *
+     * * * * * * * * * * * * * * * * * * * * */
+    // Initalize Widget
+    confirmMenu = new QGroupBox(this);
+    confirmMenu->setAutoFillBackground(true);
+    confirmMenu->setGeometry( (screenSizeX/2) - ((screenSizeX * 0.6) / 2), (screenSizeY/2) - ((screenSizeY * 0.2) / 2),
+                            screenSizeX * 0.6 , screenSizeY * 0.2 );
+    // Create Menu's layout
+    confirmLayout = new QGridLayout(this);
+    confirmLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
+    confirmLayout->setSpacing(20);
+    confirmMenu->setLayout(confirmLayout);
+    confirmMenu->hide();
+
+    // Initialize Items and add them to the layout
+    confirmLayout->addWidget(new QLabel("Quit?"), 0, 1, Qt::AlignHCenter);
+    confirmAcceptButton = new QPushButton("Yes", this);
+    confirmAcceptButton->setFixedSize(blockSize * 1.5, blockSize * 0.8);
+    connect(confirmAcceptButton, SIGNAL(clicked()), this, SLOT(menuPressed()) );
+    confirmLayout->addWidget(confirmAcceptButton, 2, 0, Qt::AlignLeft);
+    confirmRejectButton = new QPushButton("No", this);
+    confirmRejectButton->setFixedSize(blockSize * 1.5, blockSize * 0.8);
+    connect(confirmRejectButton, SIGNAL(clicked()), this, SLOT(quitRejected()) );
+    confirmLayout->addWidget(confirmRejectButton, 2, 2, Qt::AlignRight);
 
 
 
@@ -559,6 +625,27 @@ void MainWindow::setupBlocks(){
 void MainWindow::mousePressEvent(QMouseEvent *event){
     if(!pauseMenu->isVisible()){    // Only allow clicks when not paused
 
+        // On first press hide start screen & start
+        if(startScreen->isVisible()){
+            startScreen->hide();
+            shuffleButton->show();
+            rotateButton->show();
+            horizontalFlipButton->show();
+            menuButton->show();
+
+            btimer->start(333.333);
+            if(stdModeFlag == 1){
+                Timefill->setMaximumWidth(Timeclock->width());
+                currentTime=60;
+                timer->start(200);
+            }
+            else if(survivalModeFlag == 1){
+                Timefill->setMaximumWidth(Timeclock->width() / 2);
+                currentTime = 30;
+                timer->start(timerCounter);
+            }
+        }
+
         QPoint point = blockView->pos();
 
         if( event->y() > point.y() &&
@@ -632,9 +719,15 @@ void MainWindow::menuPressed(){
     horizontalFlipButton->hide();
     menuButton->hide();
     timeLabel->hide();
-    pauseMenu->hide();
+    confirmMenu->hide();
+
     mainMenu->show();
 
+}
+
+void MainWindow::confirmQuit(){
+    pauseMenu->hide();
+    confirmMenu->show();
 }
 
 void MainWindow::pauseBack(){
@@ -671,6 +764,11 @@ void MainWindow::backToPause(){
     pauseMenu->show();
     disconnect(backToMenu2, SIGNAL(clicked()), this, SLOT(backToPause()) );
     connect(backToMenu2, SIGNAL(clicked()), this, SLOT(backToMain()) );
+}
+
+void MainWindow::quitRejected(){
+    confirmMenu->hide();
+    pauseMenu->show();
 }
 
 void MainWindow::newGamePressed(){
@@ -770,10 +868,7 @@ void MainWindow::highScoresShow(){
 
 void MainWindow::standardMode(){
     gameModeMenu->hide();
-    shuffleButton->show();
-    rotateButton->show();
-    horizontalFlipButton->show();
-    menuButton->show();
+    startScreen->show();
     timeLabel->show();
     Timefill->show();
     Timeclock->show();
@@ -790,10 +885,7 @@ void MainWindow::standardMode(){
 
 void MainWindow::survivalMode(){
     gameModeMenu->hide();
-    shuffleButton->show();
-    rotateButton->show();
-    horizontalFlipButton->show();
-    menuButton->show();
+    startScreen->show();
     timeLabel->show();
     Timefill->show();
     Timeclock->show();
@@ -811,10 +903,7 @@ void MainWindow::survivalMode(){
 
 void MainWindow::endlessMode(){
     gameModeMenu->hide();
-    shuffleButton->show();
-    rotateButton->show();
-    horizontalFlipButton->show();
-    menuButton->show();
+    startScreen->show();
     timeLabel->hide();
     Timeclock->hide();
     Timefill->hide();
@@ -1276,17 +1365,7 @@ void MainWindow::startGame(){
     setupBlocks();
     bombFill->setMaximumWidth(0);
     bcurrentTime=0;
-    btimer->start(333.333);
-    if(stdModeFlag == 1){
-        Timefill->setMaximumWidth(Timeclock->width());
-        currentTime=60;
-        timer->start(200);
-    }
-    else if(survivalModeFlag == 1){
-        Timefill->setMaximumWidth(Timeclock->width() / 2);
-        currentTime = 30;
-        timer->start(timerCounter);
-    }
+
 }
 
 void MainWindow::processProgress(){
@@ -1302,11 +1381,61 @@ void MainWindow::processProgress(){
 }
 
 void MainWindow::loadHighScores(){
-    //theHighScores->readInHighScores();
-    //for(int i=0; i < 10; i++){
-        //QString tempString = QString::fromStdString(theHighScores->getScore(i));
-        //highScoreText->setText(tempString);
-    //}
+    theHighScores->readInHighScores();
+    QString tempString, tempScore;
+
+    tempScore = QString::number(theHighScores->getScore(0));
+    tempString = "1. ";
+    tempString.append(tempScore);
+    score1->setText(tempString);
+
+    tempScore = QString::number(theHighScores->getScore(1));
+    tempString = "2. ";
+    tempString.append(tempScore);
+    score2->setText(tempString);
+
+    tempScore = QString::number(theHighScores->getScore(2));
+    tempString = "3. ";
+    tempString.append(tempScore);
+    score3->setText(tempString);
+
+    tempScore = QString::number(theHighScores->getScore(3));
+    tempString = "4. ";
+    tempString.append(tempScore);
+    score4->setText(tempString);
+
+    tempScore = QString::number(theHighScores->getScore(4));
+    tempString = "5. ";
+    tempString.append(tempScore);
+    score5->setText(tempString);
+
+    tempScore = QString::number(theHighScores->getScore(5));
+    tempString = "6. ";
+    tempString.append(tempScore);
+    score6->setText(tempString);
+
+    tempScore = QString::number(theHighScores->getScore(6));
+    tempString = "7. ";
+    tempString.append(tempScore);
+    score7->setText(tempString);
+
+    tempScore = QString::number(theHighScores->getScore(7));
+    tempString = "8. ";
+    tempString.append(tempScore);
+    score8->setText(tempString);
+
+    tempScore = QString::number(theHighScores->getScore(8));
+    tempString = "9. ";
+    tempString.append(tempScore);
+    score9->setText(tempString);
+
+    tempScore = QString::number(theHighScores->getScore(9));
+    tempString = "10. ";
+    tempString.append(tempScore);
+    score10->setText(tempString);
+
+
+
 }
 
 void MainWindow::generateGraphicObject(){

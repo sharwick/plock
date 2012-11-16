@@ -56,8 +56,8 @@ public:
 
 private:
     // Objects
-    QGridLayout *grid, *modeMenuLayout, *settingsLayout;
-    QVBoxLayout *mainMenuLayout, *helpMenuLayout, *pauseMenuLayout, *gameOverLayout, *highScoreLayout;
+    QGridLayout *grid, *modeMenuLayout, *settingsLayout, *confirmLayout, *highScoreLayout;
+    QVBoxLayout *mainMenuLayout, *helpMenuLayout, *pauseMenuLayout, *gameOverLayout, *startLayout;
     QGraphicsScene *theScene;
     QGraphicsView *blockView;
     QGraphicsRectItem *tempBlock;
@@ -65,13 +65,13 @@ private:
     QPushButton *menuButton,*shuffleButton, *rotateButton, *horizontalFlipButton,  *newGameButton, *settingsButton,
     *helpButton, *backToMenu, *backToMenu2, *backToMenu3, *backToMenu4, *standardModeButton, *highScoreButton,
     *pauseAccept, *pauseRejected, *pauseSettings, *endlessModeButton, *survivalModeButton, *gameOverToMenu, *gameOverRestart,
-    *quitButton;
-    QGroupBox *mainMenu, *settingsMenu, *helpMenu, *gameModeMenu, *pauseMenu, *gameOverMenu, *highScoreMenu;
+    *quitButton, *confirmAcceptButton, *confirmRejectButton;
+    QGroupBox *mainMenu, *settingsMenu, *helpMenu, *gameModeMenu, *pauseMenu, *gameOverMenu, *confirmMenu, *highScoreMenu, *startScreen;
     QCheckBox *soundCheck, *screenLockCheck;
     QLabel *titleLabel, *gameModeTitle, *settingsTitle, *timeLabel, *bombLayer, *bombFill, *Timeclock, *Timefill, *finalLevelLabel;
     QTextBrowser *helpText, *highScoreText;
     QSlider *colorSlider;
-    QLabel *tempScore, *tempLevel;
+    QLabel *tempScore, *tempLevel, *score1, *score2, *score3, *score4, *score5, *score6, *score7, *score8, *score9, *score10;
     myRectItem* rectArray[8][9];
     QTimer *timer;
     QTimer *btimer;
@@ -155,7 +155,10 @@ private slots:
    void verticalFlip();
    void horizontalFlip();
    void rotate();
+   void confirmQuit();
+   void quitRejected();
    void quit();
+
 
 };
 

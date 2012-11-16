@@ -2,10 +2,9 @@
 #define HIGHSCORES_H
 
 #include <QString>
+#include <QFile>
+#include <QTextStream>
 #include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string>
 
 using namespace std;
 
@@ -16,17 +15,17 @@ public:
     HighScores();
     ~HighScores();
 
-    ifstream highScoreInput;
-    ofstream highScoreOutput;
-    string tempString;
+    QFile *theFile;
+    QTextStream *inputStream;
+    QString tempString;
 
     // Variables
-    string highScores[10];
+    int highScoresArray[10];
 
     // Methods
     void readInHighScores();
     void writeHighScores();
-    string getScore(int);
+    int getScore(int);
     void addHighScore(int);
 };
 
