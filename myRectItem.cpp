@@ -13,3 +13,16 @@ void myRectItem::mousePressEvent(QGraphicsSceneMouseEvent *){
 void myRectItem::mouseMoveEvent(QGraphicsSceneMouseEvent *){
     this->grabMouse();
 }
+
+void myRectItem::setEllipse(QGraphicsEllipseItem *paramBomb){
+    bombPtr = paramBomb;
+}
+
+void myRectItem::removeGraphObject(QGraphicsScene* theScene){
+    if(bombPtr != 0){
+        //theScene->removeItem(bombPtr);
+        //delete bombPtr;
+        //bombPtr = 0;
+        bombPtr->setBrush(QBrush(Qt::yellow));
+    }
+}

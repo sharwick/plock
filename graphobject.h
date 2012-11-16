@@ -16,18 +16,13 @@
 class GraphObject
 {
 public:
-    GraphObject(int, int);
+    GraphObject();
     //erase method for null pointers but may be easier to set all to 0 rather than if/else if/else if...
     //createPointer method to assign relavant pointer value, can be overloaded with different pointer parameters
     //create pointer could also take in graphImage as well as pointer, switch on graphImage to assign correct pointer
-    void moved(int, int);
-    void changeIndex(int);
-    int getIndex();
 
 private:
-    int coordX;
-    int coordY;
-    int vectorIndex;
+
     /*
      *Add pointer references here to QClass used to graphically represent bombs/scores/arrows etc
      */

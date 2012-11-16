@@ -83,7 +83,6 @@ private:
     QGraphicsEllipseItem *myEllipse;
     HighScores *theHighScores;
 
-
     // Variables
     int screenSizeX, screenSizeY;
     int boardSizeX, boardSizeY;
@@ -103,6 +102,8 @@ private:
     void updateBomb(int nBlocks);
     void updateProgress(int);
     int multiplier;
+
+    void graphSwap(int, int, int, int);
 	
 	//Dan Block Variables
     Block *gameBoard[8][9];
@@ -126,6 +127,9 @@ private:
     void generateGraphicObject();
 
     //vector<GraphObject> scoringObjects; //NYI
+
+    //QTimer *blockTimer;
+    //int blockTimerCounter;
 	
 protected:
     void mousePressEvent(QMouseEvent *event);
@@ -158,6 +162,8 @@ private slots:
    void confirmQuit();
    void quitRejected();
    void quit();
+
+   //void blockTimerSlot();
 
 
 };
