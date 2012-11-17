@@ -3,7 +3,7 @@
 
 myRectItem::myRectItem()
 {
-
+    bombPtr = new QGraphicsEllipseItem();
 }
 
 void myRectItem::mousePressEvent(QGraphicsSceneMouseEvent *){
@@ -20,9 +20,8 @@ void myRectItem::setEllipse(QGraphicsEllipseItem *paramBomb){
 
 void myRectItem::removeGraphObject(QGraphicsScene* theScene){
     if(bombPtr != 0){
-        //theScene->removeItem(bombPtr);
-        //delete bombPtr;
-        //bombPtr = 0;
-        bombPtr->setBrush(QBrush(Qt::yellow));
+        theScene->removeItem(bombPtr);
+        bombPtr = 0;
+        //bombPtr->setBrush(QBrush(Qt::yellow));
     }
 }
