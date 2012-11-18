@@ -328,9 +328,10 @@ void MainWindow::setupWindows(){
 
     colorSlider = new QSlider(Qt::Horizontal ,this);
     colorSlider->setRange(0,3);
+    colorSlider->setStyleSheet("QSlider {background: white}");
     settingsLayout->addWidget(new QLabel("Color Scheme:"), 3, 0, Qt::AlignLeft);
     settingsLayout->addWidget(colorSlider, 3, 1);
-
+    connect(colorSlider, SIGNAL(valueChanged(int)), this, SLOT(changeColorScheme()));
 
 
     /* * * * * * * * * * * * * * * * *
@@ -924,6 +925,26 @@ void MainWindow::screenLock(){
  */
 void MainWindow::changeColorScheme(){
     // change color scheme based on slider value
+    colorPtr->setScheme(colorSlider->value());
+
+
+    QPalette Pal(palette());
+    Pal.setColor(QPalette::Button, colorPtr->getQColor(3));
+    Pal.setColor(QPalette::ButtonText, QColor(0,0,0,255) );
+    Pal.setColor(QPalette::Background, colorPtr->getQColor(0));
+    Pal.setColor(QPalette::Text, colorPtr->getQColor(3));
+    Pal.setColor(QPalette::WindowText, colorPtr->getQColor(3));
+
+    // Reset gameboard colors
+    for (int x=0; x<boardSizeX; x++) {
+        for (int y=0; y<boardSizeY; y++) {
+            rectArray[x][y]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x][y]->getColor()), Qt::SolidPattern));
+        }
+    }
+    /*
+    ui->centralWidget->repaint();
+    this->shuffleButton->repaint();
+    */
 }
 
 /**
