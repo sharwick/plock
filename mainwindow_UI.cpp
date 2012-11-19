@@ -383,7 +383,8 @@ void MainWindow::setupWindows(){
     pauseMenu->hide();
 
     // Initialize and add Items to the layout
-    pauseMenuLayout->addWidget(new QLabel("        Paused"), Qt::AlignHCenter | Qt::AlignTop);
+    pauseLabel = new QLabel("        Paused");
+    pauseMenuLayout->addWidget(pauseLabel, Qt::AlignHCenter | Qt::AlignTop);
     pauseRejected = new QPushButton("Resume", this);
     pauseSettings = new QPushButton("Settings", this);
     pauseAccept = new QPushButton("Main", this);
@@ -444,7 +445,8 @@ void MainWindow::setupWindows(){
 
     // Initalize and add Items to the layout
     scorePtr = new Score(); // Moved
-    gameOverLayout->addWidget(new QLabel("Your Final Score:", this));
+    finalScoreLabel = new QLabel("Your Final Score:", this);
+    gameOverLayout->addWidget(finalScoreLabel);
     tempScore = new QLabel(this);
     tempScore->setAlignment(Qt::AlignHCenter);
     gameOverLayout->addWidget(tempScore, Qt::AlignHCenter);
@@ -502,8 +504,10 @@ void MainWindow::setupGameScreen(){
     survivalModeFlag = 0;
 
     // Set Labels
-    grid->addWidget(new QLabel("Bombs:"),1,0);
-    grid->addWidget(new QLabel("Score:"),0,0);
+    bombLabel=new QLabel("Bombs:");
+    grid->addWidget(bombLabel,1,0);
+    scoreLabel = new QLabel("Score:");
+    grid->addWidget(scoreLabel,0,0);
     timeLabel = new QLabel("Time:", this);
     grid->addWidget(timeLabel, 7, 0);
 
@@ -941,10 +945,69 @@ void MainWindow::changeColorScheme(){
             rectArray[x][y]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x][y]->getColor()), Qt::SolidPattern));
         }
     }
-    /*
-    ui->centralWidget->repaint();
-    this->shuffleButton->repaint();
-    */
+
+    // Reset button colors
+    this->shuffleButton->setPalette(Pal);
+    this->rotateButton->setPalette(Pal);
+    this->horizontalFlipButton->setPalette(Pal);
+    this->menuButton->setPalette(Pal);
+
+    newGameButton->setPalette(Pal);
+    settingsButton->setPalette(Pal);
+    helpButton->setPalette(Pal);
+    backToMenu->setPalette(Pal);
+    backToMenu2->setPalette(Pal);
+    backToMenu3->setPalette(Pal);
+    backToMenu4->setPalette(Pal);
+    standardModeButton->setPalette(Pal);
+    highScoreButton->setPalette(Pal);
+    pauseAccept->setPalette(Pal);
+    pauseRejected->setPalette(Pal);
+    pauseSettings->setPalette(Pal);
+    endlessModeButton->setPalette(Pal);
+    survivalModeButton->setPalette(Pal);
+    gameOverToMenu->setPalette(Pal);
+    gameOverRestart->setPalette(Pal);
+    quitButton->setPalette(Pal);
+    confirmAcceptButton->setPalette(Pal);
+    confirmRejectButton->setPalette(Pal);
+
+
+    // Reset label colors
+    this->sframe->text->setPalette(Pal);
+
+    tempScore->setPalette(Pal);
+    tempLevel->setPalette(Pal);
+    score1->setPalette(Pal);
+    score2->setPalette(Pal);
+    score3->setPalette(Pal);
+    score4->setPalette(Pal);
+    score5->setPalette(Pal);
+    score6->setPalette(Pal);
+    score7->setPalette(Pal);
+    score8->setPalette(Pal);
+    score9->setPalette(Pal);
+    score10->setPalette(Pal);
+    titleLabel->setPalette(Pal);
+    gameModeTitle->setPalette(Pal);
+    settingsTitle->setPalette(Pal);
+    finalLevelLabel->setPalette(Pal);
+    finalScoreLabel->setPalette(Pal);
+    bombLabel->setPalette(Pal);
+    scoreLabel->setPalette(Pal);
+    timeLabel->setPalette(Pal);
+    pauseLabel->setPalette(Pal);
+
+
+    // Reset bar colors
+    QPixmap newMap(Timeclock->width(), 25);
+    newMap.fill(colorPtr->getQColor(1)); // Back color
+    Timefill->setPixmap(newMap);
+
+    QPixmap newMapB(Timeclock->width(), 25);
+    newMapB.fill(colorPtr->getQColor(6)); // Back color
+    bombFill->setPixmap(newMapB);
+
 }
 
 /**

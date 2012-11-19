@@ -28,8 +28,6 @@
 #include <highScores.h>
 #include <QGraphicsEllipseItem>
 
-//Dan Updates:
-
 #include "Block.h"
 
 namespace Ui {
@@ -68,7 +66,7 @@ private:
     *quitButton, *confirmAcceptButton, *confirmRejectButton;
     QGroupBox *mainMenu, *settingsMenu, *helpMenu, *gameModeMenu, *pauseMenu, *gameOverMenu, *confirmMenu, *highScoreMenu, *startScreen;
     QCheckBox *soundCheck, *screenLockCheck;
-    QLabel *titleLabel, *gameModeTitle, *settingsTitle, *timeLabel, *bombLayer, *bombFill, *Timeclock, *Timefill, *finalLevelLabel;
+    QLabel *titleLabel, *gameModeTitle, *settingsTitle, *timeLabel, *bombLayer, *bombFill, *Timeclock, *Timefill, *finalLevelLabel, *finalScoreLabel, *bombLabel, *scoreLabel, *pauseLabel;
     QTextBrowser *helpText, *highScoreText;
     QSlider *colorSlider;
     QLabel *tempScore, *tempLevel, *score1, *score2, *score3, *score4, *score5, *score6, *score7, *score8, *score9, *score10;

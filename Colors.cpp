@@ -58,12 +58,12 @@ void Colors::setScheme(int n) {
     if (n==3) {
         // Blues: probably not good for game, but maybe for menus
         colorArray[0] = QColor(0, 0, 0, 255);
-        colorArray[1] = QColor(241, 238, 246, 255);
+        colorArray[1] = QColor(43, 140, 190,255);
         colorArray[2] = QColor(208, 209, 230,255);
         colorArray[3] = QColor(166, 189, 219,255);
-        colorArray[4] = QColor(116, 169, 207,255);
-        colorArray[5] = QColor(43, 140, 190,255);
-        colorArray[6] = QColor(4, 90, 141,255);
+        colorArray[4] = QColor(241, 238, 246, 255);
+        colorArray[5] = QColor(4, 90, 141,255);
+        colorArray[6] = QColor(116, 169, 207,255);
 
         return;
     }
