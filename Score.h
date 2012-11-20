@@ -16,12 +16,14 @@ class Score {
 
 private:
     int score;
+    int multiplier;
 
 public:
     Score();
     int getScore();
-    void updateScore(int, bool, int);
+    void updateScore(int, bool);
     void resetScore();
+    void incrementMultiplier();
 };
 
 #endif // SCORE_H

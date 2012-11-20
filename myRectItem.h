@@ -12,7 +12,7 @@ public:
     myRectItem();
     QGraphicsEllipseItem *bombPtr;
     void setEllipse(QGraphicsEllipseItem*);
-    void removeGraphObject(QGraphicsScene*);
+    void removeGraphObject(bool);
 
 protected:
    void mousePressEvent(QGraphicsSceneMouseEvent *);

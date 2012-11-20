@@ -13,9 +13,10 @@ using namespace std;
 
 Score::Score() {
         score=0;
+        multiplier = 1;
 }
 
-void Score::updateScore(int nBlocks, bool speedBonus, int multiplier) {
+void Score::updateScore(int nBlocks, bool speedBonus) {
 
     int updateValue;
     updateValue = (nBlocks-1)*(nBlocks-1);
@@ -33,7 +34,12 @@ int Score::getScore() {
    return score;
 }
 
+void Score::incrementMultiplier(){
+    multiplier++;
+}
+
 void Score::resetScore() {
+    multiplier = 1;
     score=0;
 }
 

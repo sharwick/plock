@@ -1,4 +1,12 @@
-/*One line added; no real changes
+/**
+ * @author Daniel Keasler
+ * @copyright Blockstar
+ * @class block block.h "block.h"
+ * @brief Underlying data structures and algorithms for game play.
+ * @description The Block class contains integers and a series of "adjacent" pointers for easy comparisons used in the game play algorithms
+ */
+/*
+ *One line added; no real changes
  * One line added to show Mike git
  *One line change to show Devin git
  *Block.cpp
@@ -40,6 +48,13 @@
 //#include "Colors.h"
 
 using namespace std;
+/**
+ * @brief Block::Block
+ * @param xSpot int X Coordinate on game board, also array index
+ * @param ySpot int Y Coordinate on game board, also array index
+ * @param colorChoice Array Index of QColor in Colors.cpp, also used for adjacent color comparisons
+ * @brief Constructor assigns adjacent pointers to 0, bools to false, params to Coords, graph image to 0, and sends colorChoice to setColor
+ */
 Block::Block(int xSpot, int ySpot, int colorChoice){
     rightBlockPtr = 0;
     upBlockPtr = 0;
@@ -52,7 +67,6 @@ Block::Block(int xSpot, int ySpot, int colorChoice){
     graphImage = 0;
     setColor(colorChoice);
 }
-
 /*
  *setColor takes in an int value and immediately assigns that
  *  to the Blocks color. QIcon can be used to show an icon on
@@ -68,6 +82,11 @@ Block::Block(int xSpot, int ySpot, int colorChoice){
  *
  *  CHANGED: setColor only sets integer value for color 
  *  comparisons
+ */
+/**
+ * @author Daniel Keasler
+ * @param _color int Array Index in Colors.cpp
+ * @brief setColor updates graphical color changes with corresponding integer index
  */
 void Block::setColor(int _color){
     color = _color;
@@ -93,18 +112,35 @@ void Block::setColor(int _color){
  *  CHANGED: function names were changed to assign (from set)
  *  because setDown was a QPushButton function
  */
+/**
+ * @author Daniel Keasler
+ * @brief Block::assignRight rightward adjacent pointer is assigned
+ * @param tempBlock
+ */
 void Block::assignRight(Block *tempBlock){
 	rightBlockPtr = tempBlock;
 }
-
+/**
+ * @author Daniel Keasler
+ * @brief Block::assignUp upward adjacent pointer is assigned
+ * @param tempBlock
+ */
 void Block::assignUp(Block *tempBlock){
 	upBlockPtr = tempBlock;
 }
-
+/**
+ * @author Daniel Keasler
+ * @brief Block::assignDown downward adjacent pointer is assigned
+ * @param tempBlock
+ */
 void Block::assignDown(Block *tempBlock){
 	downBlockPtr = tempBlock;
 }
-
+/**
+ * @author Daniel Keasler
+ * @brief Block::assignLeft leftward adjacent pointer is assigned
+ * @param tempBlock
+ */
 void Block::assignLeft(Block *tempBlock){
 	leftBlockPtr = tempBlock;
 }
@@ -114,6 +150,11 @@ void Block::assignLeft(Block *tempBlock){
  *  will have an associated number and similar colors will also have similar
  *  numbers in the color field.
  */
+/**
+ * @author Daniel Keasler
+ * @brief Block::getColor
+ * @return int color for easy color comparisons as an integer value
+ */
 int Block::getColor(){
 	return color;
 }
@@ -122,18 +163,37 @@ int Block::getColor(){
  *The following 4 methods are basic mutator and accessor functions for boolean values.
  *  These values are used to assure proper scoring and coloring.
  */
+/**
+ * @author Daniel Keasler
+ * @brief Block::getMarkedBool - used to determine if this block was collected for scoring yet
+ * @return marked bool value
+ */
 bool Block::getMarkedBool(){
 	return markedBool;
 }
-
+/**
+ * @author Daniel Keasler
+ * @brief Block::getColoredBool - used to determine if this block needs to be recolored
+ * @return colored bool value
+ */
 bool Block::getColoredBool(){
 	return coloredBool;
 }
-
+/**
+ * @author Daniel Keasler
+ * @brief Block::setMarkedBool
+ * @param val
+ * @description set to true once particular block is collected for scoring, set to false after all proper blocks have been collected
+ */
 void Block::setMarkedBool(bool val){
 	markedBool = val;
 }
-
+/**
+ * @author Daniel Keasler
+ * @brief Block::setColoredBool
+ * @param val
+ * @description set to true once particular block needs a color change, set to false after this block has been recolored
+ */
 void Block::setColoredBool(bool val){
 	coloredBool = val;
 }
@@ -142,10 +202,19 @@ void Block::setColoredBool(bool val){
  *Both of the following are simple accessor functions used to have array index
  *  through Block access.
  */
+/**
+ * @author Daniel Keasler
+ * @brief Block::getCoordX - accessor function for Block's X coordinate
+ * @return int x coordinate
+ */
 int Block::getCoordX(){
     return CoordX;
 }
-
+/**
+ * @author Daniel Keasler
+ * @brief Block::getCoordY - accessor function for Block's Y coordinate
+ * @return int y coordinate
+ */
 int Block::getCoordY(){
     return CoordY;
 }
@@ -154,6 +223,12 @@ int Block::getCoordY(){
  *  and then if their color value matches the calling Block's color 
  *  value. If so, it returns true. Otherwise false is returned at the
  *  end. 
+ */
+/**
+ * @author Daniel Keasler
+ * @brief Block::foundMatch - detects if adjacent block matches color
+ * @return bool
+ * @description Mouse event will call this function on clicked block, will return true if any adjacent pointer has an equivalent color value
  */
 bool Block::foundMatch(){
     if(upBlockPtr != 0 && upBlockPtr->getColor() == getColor())
@@ -179,6 +254,14 @@ bool Block::foundMatch(){
  *  a new match is found and that Block needs to check its adjacent blocks.
  *  Block vector is returned through recursion to have access to all tiles
  *  found in the current match.
+ */
+/**
+ * @author Daniel Keasler
+ * @brief Block::gatherBlocks - recursive function collecting matching adjacent blocks
+ * @param blockVector
+ * @return vector<Block*>
+ * @description First three lines for algorithm use (is marked, needs color change, block is added to vector),
+ *  then if neighbor exists, is not marked, and has same color, recursion expands to that block
  */
 vector<Block*> Block::gatherBlocks(vector<Block*> blockVector){
     setMarkedBool(true);
@@ -213,6 +296,14 @@ void Block::setGraphImage(int _graphImage){
  *  process to add and change bool flags. Return and pass
  *  blockVector through recursion.
  */
+/**
+ * @author Daniel Keasler
+ * @brief Block::downCollector
+ * @param blockVector
+ * @return vector<Block*>
+ * @note Not used in current game
+ * @description would return collection of all down pointers from calling block in vector
+ */
 vector<Block*> Block::downCollector(vector<Block*> blockVector){
     if(!getMarkedBool())
     {
@@ -224,7 +315,14 @@ vector<Block*> Block::downCollector(vector<Block*> blockVector){
         blockVector = downBlockPtr->downCollector(blockVector);
     return blockVector;
 }
-
+/**
+ * @author Daniel Keasler
+ * @brief Block::rightCollector
+ * @param blockVector
+ * @return vector<Block*>
+ * @note Not used in current game
+ * @description would return collection of all right pointers from calling block in vector
+ */
 vector<Block*> Block::rightCollector(vector<Block*> blockVector){
     if(!getMarkedBool())
     {
@@ -236,7 +334,14 @@ vector<Block*> Block::rightCollector(vector<Block*> blockVector){
         blockVector = rightBlockPtr->rightCollector(blockVector);
     return blockVector;
 }
-
+/**
+ * @author Daniel Keasler
+ * @brief Block::upCollector
+ * @param blockVector
+ * @return vector<Block*>
+ * @note Not used in current game
+ * @description would return collection of all up pointers from calling block in vector
+ */
 vector<Block*> Block::upCollector(vector<Block*> blockVector){
     if(!getMarkedBool())
     {
@@ -248,7 +353,14 @@ vector<Block*> Block::upCollector(vector<Block*> blockVector){
         blockVector = upBlockPtr->upCollector(blockVector);
     return blockVector;
 }
-
+/**
+ * @author Daniel Keasler
+ * @brief Block::leftCollector
+ * @param blockVector
+ * @return vector<Block*>
+ * @note Not used in current game
+ * @description would return collection of all left pointers from calling block in vector
+ */
 vector<Block*> Block::leftCollector(vector<Block*> blockVector){
     if(!getMarkedBool())
     {

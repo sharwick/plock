@@ -712,7 +712,7 @@ void MainWindow::updateBomb(int nBlocks){
     else if ((bombFill->maximumWidth()+updateVal) >= bombLayer->maximumWidth()){
              bombFill->setMaximumWidth(0);
              //funciton call to make new image
-             generateGraphicObject();
+             generateGraphicObject(-1, -1);
              btimeOver();
              bcurrentTime=0;
     }
@@ -1072,7 +1072,8 @@ void MainWindow::shufflePressed() {
             rectArray[gameBoard[r1][c1]->getCoordX()][gameBoard[r1][c1]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[r1][c1]->getColor()), Qt::SolidPattern));
             rectArray[gameBoard[r2][c2]->getCoordX()][gameBoard[r2][c2]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[r2][c2]->getColor()), Qt::SolidPattern));
 
-            graphSwap(r1, c1, r2, c2);
+            if(gameBoard[r1][c1]->getGraphImage() != gameBoard[r2][c2]->getGraphImage())
+                graphSwap(r1, c1, r2, c2);
             // TO DO: need to swap bombs/multipler -> add getBomb method to Block
             /*
              *At this point, graph objects need to be swapped between rect items
@@ -1124,7 +1125,8 @@ void MainWindow::horizontalFlip() {
                 rectArray[gameBoard[x1][y1]->getCoordX()][gameBoard[x1][y1]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x1][y1]->getColor()), Qt::SolidPattern));
                 rectArray[gameBoard[x2][y2]->getCoordX()][gameBoard[x2][y2]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x2][y2]->getColor()), Qt::SolidPattern));
 
-                graphSwap(x1, y1, x2, y2);
+                if(gameBoard[x1][y1]->getGraphImage() != gameBoard[x2][y2]->getGraphImage())
+                    graphSwap(x1, y1, x2, y2);
                 // TO DO: need to swap bombs/multipler -> add getBomb method to Block
                 //Swapping follows similar process commented in shuffle
             }
@@ -1157,8 +1159,8 @@ void MainWindow::rotate() {
 
                 rectArray[gameBoard[x1][y1]->getCoordX()][gameBoard[x1][y1]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x1][y1]->getColor()), Qt::SolidPattern));
                 rectArray[gameBoard[x2][y2]->getCoordX()][gameBoard[x2][y2]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x2][y2]->getColor()), Qt::SolidPattern));
-
-                graphSwap(x1, y1, x2, y2);
+                if(gameBoard[x1][y1]->getGraphImage() != gameBoard[x2][y2]->getGraphImage())
+                    graphSwap(x1, y1, x2, y2);
                 // TO DO: need to swap bombs/multipler -> add getBomb method to Block
                 //Swapping follows similar process commented in shuffle
             }
@@ -1190,8 +1192,8 @@ void MainWindow::verticalFlip() {
 
                 rectArray[gameBoard[x1][y1]->getCoordX()][gameBoard[x1][y1]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x1][y1]->getColor()), Qt::SolidPattern));
                 rectArray[gameBoard[x2][y2]->getCoordX()][gameBoard[x2][y2]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x2][y2]->getColor()), Qt::SolidPattern));
-
-                graphSwap(x1, y1, x2, y2);
+                if(gameBoard[x1][y1]->getGraphImage() != gameBoard[x2][y2]->getGraphImage())
+                    graphSwap(x1, y1, x2, y2);
                 // TO DO: need to swap bombs/multipler -> add getBomb method to Block
                 //Swapping follows similar process commented in shuffle
             }
@@ -1242,7 +1244,7 @@ void MainWindow::processMatch(Block* matchedBlock)
 
     multiplier = 1;
 
-    scorePtr->updateScore((int) gatheredBlocks.size(), false , multiplier);
+    scorePtr->updateScore((int) gatheredBlocks.size(), false);
     sframe->update(scorePtr->getScore());
     updateBomb((int) gatheredBlocks.size());
     if(survivalModeFlag == 1)
@@ -1388,35 +1390,38 @@ vector<Block*> MainWindow::checkSpecials(vector<Block*> blockVector)
 {
     for(int i = 0; (unsigned)i < blockVector.size(); i++)
     {
-        if(blockVector[i]->getGraphImage() != 0)
+        if(blockVector[i]->getGraphImage() == 2)
         {
-            switch(blockVector[i]->getGraphImage()){
+         //           switch(blockVector[i]->getGraphImage()){
 
-            case 1 : //score case
-                //score mult is updated first
-                //vector swap and erase of this scoring object
-                //changeIndex called for swapped graph objects
-                break;
-            case 2 : //bomb case
-                blockVector = bombCollector(blockVector, blockVector[i]->getCoordX(), blockVector[i]->getCoordY());
-                break;
-            case 3 : //vertical case
-                blockVector = blockVector[i]->upCollector(blockVector);
-                blockVector = blockVector[i]->downCollector(blockVector);
-                break;
-            case 4 : //horizontal case
-                blockVector = blockVector[i]->rightCollector(blockVector);
-                blockVector = blockVector[i]->leftCollector(blockVector);
-                break;
-            case 5 : //4 arrows case
-                blockVector = blockVector[i]->upCollector(blockVector);
-                blockVector = blockVector[i]->downCollector(blockVector);
-                blockVector = blockVector[i]->rightCollector(blockVector);
-                blockVector = blockVector[i]->leftCollector(blockVector);
-                break;
-            }
+         //           case 1 : //score case
+                        //score mult is updated first
+                        //vector swap and erase of this scoring object
+                        //changeIndex called for swapped graph objects
+          //              break;
+           //         case 2 : //bomb case
+           //             blockVector = bombCollector(blockVector, blockVector[i]->getCoordX(), blockVector[i]->getCoordY());
+           //             break;
+          //          case 3 : //vertical case
+          //              blockVector = blockVector[i]->upCollector(blockVector);
+          //              blockVector = blockVector[i]->downCollector(blockVector);
+          //              break;
+          //          case 4 : //horizontal case
+           //             blockVector = blockVector[i]->rightCollector(blockVector);
+           //             blockVector = blockVector[i]->leftCollector(blockVector);
+          //              break;
+          //          case 5 : //4 arrows case
+          //              blockVector = blockVector[i]->upCollector(blockVector);
+          //              blockVector = blockVector[i]->downCollector(blockVector);
+          //              blockVector = blockVector[i]->rightCollector(blockVector);
+         //               blockVector = blockVector[i]->leftCollector(blockVector);
+         //               break;
+         //           }
+            scorePtr->incrementMultiplier();
+            blockVector = bombCollector(blockVector, blockVector[i]->getCoordX(), blockVector[i]->getCoordY());
             blockVector[i]->setGraphImage(0);
-            rectArray[blockVector[i]->getCoordX()][blockVector[i]->getCoordY()]->removeGraphObject(theScene);
+            theScene->removeItem(rectArray[blockVector[i]->getCoordX()][blockVector[i]->getCoordY()]->bombPtr);
+            rectArray[blockVector[i]->getCoordX()][blockVector[i]->getCoordY()]->removeGraphObject(false);
             //zero pointer in myRectItem->myGraphObject
             //clear image from myRectItem
         }
@@ -1561,7 +1566,9 @@ void MainWindow::startGame(){
                 gameBoard[i][j] = 0;
                 //if(rectArray[i][j]->bombPtr != 0)
                     //rectArray[i][j]->bombPtr->setBrush(QBrush(Qt::yellow));
-                rectArray[i][j]->removeGraphObject(theScene);
+                if(rectArray[i][j]->bombPtr != 0)
+                    theScene->removeItem(rectArray[i][j]->bombPtr);
+                rectArray[i][j]->removeGraphObject(true);
                 delete rectArray[i][j]->bombPtr;
                 theScene->removeItem(rectArray[i][j]);
                 //rectArray[i][j]->setBrush(QBrush(Qt::yellow));
@@ -1665,24 +1672,29 @@ void MainWindow::loadHighScores(){
 /**
  * @brief MainWindow::generateGraphicObject
  */
-void MainWindow::generateGraphicObject(){
-    int objectChoice = (rand() % 4) + 2;
-    int randomCoordX = rand() % 8;
-    int randomCoordY = rand() % 9;
-    while(gameBoard[randomCoordX][randomCoordY]->getGraphImage() != 0){
-        randomCoordX = rand() % 8;
-        randomCoordY = rand() % 9;
+void MainWindow::generateGraphicObject(int CoordX, int CoordY){
+    bool randomAssign = false;
+    if(CoordX < 0)
+    {
+        CoordX = rand() % 8;
+        CoordY = rand() % 9;
+        randomAssign = true;
     }
-    switch(objectChoice){
-    case 2 :
-        QGraphicsEllipseItem *myEllipse = new QGraphicsEllipseItem();
-        myEllipse->setRect(blockSize * randomCoordX, blockSize * randomCoordY, blockSize - 10, blockSize - 10);
-        myEllipse->setBrush(QBrush(Qt::yellow, Qt::SolidPattern));
-        rectArray[randomCoordX][randomCoordY]->setEllipse(myEllipse);
-        theScene->addItem(myEllipse);
+    while(randomAssign && gameBoard[CoordX][CoordY]->getGraphImage() == 2)
+    {
+        CoordX = rand() % 8;
+        CoordY = rand() % 9;
     }
-    gameBoard[randomCoordX][randomCoordY]->setGraphImage(objectChoice);
+
+    QGraphicsEllipseItem *myEllipse = new QGraphicsEllipseItem();
+    myEllipse->setRect((blockSize * CoordX) + 5, (blockSize * CoordY) + 5, blockSize - 10, blockSize - 10);
+    myEllipse->setBrush(QBrush(Qt::black, Qt::SolidPattern));
+    rectArray[CoordX][CoordY]->setEllipse(myEllipse);
+    //delete myEllipse;
+    gameBoard[CoordX][CoordY]->setGraphImage(2);
+    theScene->addItem(myEllipse);
 }
+
 
 /**
  * @brief MainWindow::graphSwap
@@ -1692,34 +1704,19 @@ void MainWindow::generateGraphicObject(){
  * @param secondY
  */
 void MainWindow::graphSwap(int firstX, int firstY, int secondX, int secondY){
-    int tempOneGraphImage, tempTwoGraphImage;
-
-    tempOneGraphImage = gameBoard[firstX][firstY]->getGraphImage();
-    tempTwoGraphImage = gameBoard[secondX][secondY]->getGraphImage();
-
-    rectArray[firstX][firstY]->removeGraphObject(theScene);
-    rectArray[secondX][secondY]->removeGraphObject(theScene);
-
-    switch(tempOneGraphImage){
-    case 2:
-        QGraphicsEllipseItem *myEllipse = new QGraphicsEllipseItem();
-        myEllipse->setRect(blockSize * secondX, blockSize * secondY, blockSize - 10, blockSize - 10);
-        myEllipse->setBrush(QBrush(Qt::yellow, Qt::SolidPattern));
-        theScene->addItem(myEllipse);
-        rectArray[secondX][secondY]->setEllipse(myEllipse);
+    if(gameBoard[firstX][firstY]->getGraphImage() == 2){
+        theScene->removeItem(rectArray[firstX][firstY]->bombPtr);
+        rectArray[firstX][firstY]->removeGraphObject(false);
+        gameBoard[firstX][firstY]->setGraphImage(0);
+        generateGraphicObject(secondX, secondY);
+    }
+    else{
+        theScene->removeItem(rectArray[secondX][secondY]->bombPtr);
+        rectArray[secondX][secondY]->removeGraphObject(false);
+        gameBoard[secondX][secondY]->setGraphImage(0);
+        generateGraphicObject(firstX, firstY);
     }
 
-    switch(tempTwoGraphImage){
-    case 2:
-        QGraphicsEllipseItem *myEllipse = new QGraphicsEllipseItem();
-        myEllipse->setRect(blockSize * firstX, blockSize * firstY, blockSize - 10, blockSize - 10);
-        myEllipse->setBrush(QBrush(Qt::yellow, Qt::SolidPattern));
-        theScene->addItem(myEllipse);
-        rectArray[firstX][firstY]->setEllipse(myEllipse);
-    }
-
-    gameBoard[firstX][firstY]->setGraphImage(tempTwoGraphImage);
-    gameBoard[secondX][secondY]->setGraphImage(tempOneGraphImage);
 }
 
 // End mainwindow_UI.cpp

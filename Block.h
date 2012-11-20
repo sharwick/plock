@@ -1,3 +1,7 @@
+/**
+ * @author Daniel Keasler
+ * @copyright Blockstar 2012
+ */
 /*
  *Block.h
  *

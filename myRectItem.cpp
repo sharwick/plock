@@ -46,10 +46,12 @@ void myRectItem::setEllipse(QGraphicsEllipseItem *paramBomb){
  * @brief myRectItem::removeGraphObject
  * @param theScene
  */
-void myRectItem::removeGraphObject(QGraphicsScene* theScene){
+void myRectItem::removeGraphObject(bool endGame){
     if(bombPtr != 0){
-        theScene->removeItem(bombPtr);
+        if(endGame)
+            delete bombPtr;
         bombPtr = 0;
         //bombPtr->setBrush(QBrush(Qt::yellow));
     }
 }
+
