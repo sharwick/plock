@@ -66,7 +66,7 @@ private:
     *quitButton, *confirmAcceptButton, *confirmRejectButton;
     QGroupBox *mainMenu, *settingsMenu, *helpMenu, *gameModeMenu, *pauseMenu, *gameOverMenu, *confirmMenu, *highScoreMenu, *startScreen;
     QCheckBox *soundCheck, *screenLockCheck;
-    QLabel *titleLabel, *gameModeTitle, *settingsTitle, *timeLabel, *bombLayer, *bombFill, *Timeclock, *Timefill, *finalLevelLabel, *finalScoreLabel, *bombLabel, *scoreLabel, *pauseLabel;
+    QLabel *titleLabel, *gameModeTitle, *settingsTitle, *timeLabel, *bombLayer, *bombFill, *Timeclock, *Timefill, *finalLevelLabel, *finalScoreLabel, *bombLabel, *scoreLabel, *pauseLabel, *quitLabel, *colorSchemeLabel, *pressScreenLabel, *highScoresLabel;
     QTextBrowser *helpText, *highScoreText;
     QSlider *colorSlider;
     QLabel *tempScore, *tempLevel, *score1, *score2, *score3, *score4, *score5, *score6, *score7, *score8, *score9, *score10;
@@ -80,6 +80,8 @@ private:
     int timerCounter;
     QGraphicsEllipseItem *myEllipse;
     HighScores *theHighScores;
+    vector<QLabel*> labelVector;
+    vector<QPushButton*> buttonVector;
 
     // Variables
     int screenSizeX, screenSizeY;
