@@ -955,9 +955,11 @@ void MainWindow::changeColorScheme(){
     }
 
     // Reset gameboard colors
-    for (int x=0; x<boardSizeX; x++) {
-        for (int y=0; y<boardSizeY; y++) {
-            rectArray[x][y]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x][y]->getColor()), Qt::SolidPattern));
+    if (start) {
+        for (int x=0; x<boardSizeX; x++) {
+            for (int y=0; y<boardSizeY; y++) {
+                rectArray[x][y]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x][y]->getColor()), Qt::SolidPattern));
+            }
         }
     }
 
