@@ -1135,8 +1135,6 @@ void MainWindow::nextLevel(){
     progressLabel->show();
     Timefill->show();
     Timeclock->show();
-    scorePtr->resetScore();
-    sframe->resetScoreBoard();
     gtimer->stop();
     gCount = 4;
     k=0;
@@ -1795,7 +1793,7 @@ void MainWindow::processProgress(){
         levelClear->show();
         level++;//increment level counter (would need to have started at 1 for each survival call)
         //group box with level x incoming, etc
-        timerCounter -= 10/*(7 * (level-1))*/;//increment timer speed, maybe formula from level counter
+        timerCounter -= (7 * (level-1));//increment timer speed, maybe formula from level counter
 //        progressLevel = ((1000 / timerCounter) * 60);
         Timefill->setMaximumWidth(Timeclock->width() / 2);//set timer to 50%
         currentTime = 30;
