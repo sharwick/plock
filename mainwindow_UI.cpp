@@ -253,20 +253,37 @@ void MainWindow::setupWindows(){
     // Create the Menu's layout
     highScoreLayout = new QGridLayout(this);
     highScoreLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
-    highScoreLayout->setSpacing(20);
+    highScoreLayout->setSpacing(10);
     highScoreMenu->setLayout(highScoreLayout);
 
     // Initalize and add Items to layout
-    highScoresLabel = new QLabel("H I G H   S C O R E S"); labelVector.push_back(highScoresLabel);
-    highScoreLayout->addWidget(highScoresLabel, 0, 2, Qt::AlignTop);
+    highScoresLabel = new QLabel("HIGH SCORES"); labelVector.push_back(highScoresLabel);
+    highScoreLayout->addWidget(highScoresLabel, 0, 1, Qt::AlignTop);
 
+    highScoreLayout->addWidget(new QLabel("Standard", this), 1, 0, Qt::AlignHCenter);
+    highScoreLayout->addWidget(new QLabel("Survival", this), 1, 1, Qt::AlignHCenter);
+    highScoreLayout->addWidget(new QLabel("Endless", this), 1, 2, Qt::AlignHCenter);
+
+    for(int index = 0; index < 5; index++){
+        standardScores[index] = new QLabel("", this);
+        standardScores[index]->setFixedSize(blockSize * 3, blockSize);
+        highScoreLayout->addWidget(standardScores[index], index+2, 0, Qt::AlignHCenter);
+
+        survivalScores[index] = new QLabel("", this);
+        survivalScores[index]->setFixedSize(blockSize * 3, blockSize);
+        highScoreLayout->addWidget(survivalScores[index], index+2, 1, Qt::AlignHCenter);
+
+        endlessScores[index] = new QLabel("", this);
+        endlessScores[index]->setFixedSize(blockSize * 3, blockSize);
+        highScoreLayout->addWidget(endlessScores[index], index+2, 2, Qt::AlignHCenter);
+    }
 
 
     theHighScores = new HighScores();
-    //loadHighScores();   // Load in High Scores from the HighScores Object
+    loadHighScores();   // Load in High Scores from the HighScores Object
 
     backToMenu4 = new QPushButton("Menu", this); buttonVector.push_back(backToMenu4);
-    backToMenu4->setFixedSize(screenSizeX * 0.5, blockSize);
+    backToMenu4->setFixedSize(blockSize * 3, blockSize);
     connect(backToMenu4, SIGNAL(clicked()), this, SLOT(backToMain()) );
     highScoreLayout->addWidget(backToMenu4, 13, 1, Qt::AlignTop);
 
@@ -1682,58 +1699,27 @@ void MainWindow::processProgress(){
  */
 void MainWindow::loadHighScores(){
     theHighScores->readInHighScores();
-    QString tempString, tempScore;
+    QString tempString;
+    char *tempChar;
+    for(int index = 0; index < 5; index++){
+        tempString = QString::number(index+1);
+        tempString.append(".  ");
+        tempChar = theHighScores->getScore("standard", index);
+        tempString.append(tempChar);
+        standardScores[index]->setText(tempString);
 
-    tempScore = QString::number(theHighScores->getScore(0));
-    tempString = "1. ";
-    tempString.append(tempScore);
-    score1->setText(tempString);
+        tempString = QString::number(index+1);
+        tempString.append(".  ");
+        tempChar = theHighScores->getScore("survival", index);
+        tempString.append(tempChar);
+        survivalScores[index]->setText(tempString);
 
-    tempScore = QString::number(theHighScores->getScore(1));
-    tempString = "2. ";
-    tempString.append(tempScore);
-    score2->setText(tempString);
-
-    tempScore = QString::number(theHighScores->getScore(2));
-    tempString = "3. ";
-    tempString.append(tempScore);
-    score3->setText(tempString);
-
-    tempScore = QString::number(theHighScores->getScore(3));
-    tempString = "4. ";
-    tempString.append(tempScore);
-    score4->setText(tempString);
-
-    tempScore = QString::number(theHighScores->getScore(4));
-    tempString = "5. ";
-    tempString.append(tempScore);
-    score5->setText(tempString);
-
-    tempScore = QString::number(theHighScores->getScore(5));
-    tempString = "6. ";
-    tempString.append(tempScore);
-    score6->setText(tempString);
-
-    tempScore = QString::number(theHighScores->getScore(6));
-    tempString = "7. ";
-    tempString.append(tempScore);
-    score7->setText(tempString);
-
-    tempScore = QString::number(theHighScores->getScore(7));
-    tempString = "8. ";
-    tempString.append(tempScore);
-    score8->setText(tempString);
-
-    tempScore = QString::number(theHighScores->getScore(8));
-    tempString = "9. ";
-    tempString.append(tempScore);
-    score9->setText(tempString);
-
-    tempScore = QString::number(theHighScores->getScore(9));
-    tempString = "10. ";
-    tempString.append(tempScore);
-    score10->setText(tempString);
-
+        tempString = QString::number(index+1);
+        tempString.append(".  ");
+        tempChar = theHighScores->getScore("endless", index);
+        tempString.append(tempChar);
+        endlessScores[index]->setText(tempString);
+    }
 }
 
 /**

@@ -69,7 +69,7 @@ private:
     QLabel *titleLabel, *gameModeTitle, *settingsTitle, *timeLabel, *bombLayer, *bombFill, *Timeclock, *Timefill, *finalLevelLabel, *finalScoreLabel, *bombLabel, *scoreLabel, *pauseLabel, *quitLabel, *colorSchemeLabel, *pressScreenLabel, *highScoresLabel;
     QTextBrowser *helpText, *highScoreText;
     QSlider *colorSlider;
-    QLabel *tempScore, *tempLevel, *score1, *score2, *score3, *score4, *score5, *score6, *score7, *score8, *score9, *score10;
+    QLabel *tempScore, *tempLevel, *standardScores[5], *survivalScores[5], *endlessScores[5];
     myRectItem* rectArray[8][9];
     QTimer *timer;
     QTimer *btimer;

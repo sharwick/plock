@@ -18,12 +18,12 @@
  */
 HighScores::HighScores()
 {
-    theFile = new QFile("highscores.txt");
-    if(!theFile->open(QIODevice::Append)){
-        cout << "File Not Found" << endl;
+    fileFlag = 0;
+    try{
+        theFile.open("highscores.txt");
     }
-    else{
-        inputStream = new QTextStream(theFile);
+    catch(exception e){
+        fileFlag = -1;
     }
 }
 
@@ -31,26 +31,55 @@ HighScores::HighScores()
  * @brief HighScores::~HighScores
  */
 HighScores::~HighScores(){
-    delete theFile;
-    delete inputStream;
+
 }
 
 /**
  * @brief HighScores::readInHighScores
  */
 void HighScores::readInHighScores(){
+    if(fileFlag == -1){
 
-    int index = 0;
-    bool fail = false;
-
-    while(!inputStream->atEnd()){
-        tempString = inputStream->readLine();
-        highScoresArray[index] = tempString.toInt(&fail, 10);
-        if(fail){
-            cout << "Conversion Failed at index " << index << endl;
-            return;
+        for(int i=0; i < 5; i++){
+            standardHighScores[i] = "0";
+            survivalHighScores[i] = "0";;
+            endlessHighScores[i] = "0";;
         }
     }
+
+    if(fileFlag == 0){
+
+        int index = 0;
+        if(theFile.is_open()){
+            while(!theFile.eof()){
+
+                getline(theFile, tempString);
+
+                if(index < 5)
+                    standardHighScores[index] = tempString;
+                else if(index < 10 && index >= 5)
+                    survivalHighScores[index-5] = tempString;
+                else if(index >= 10)
+                    endlessHighScores[index-10] = tempString;
+
+                index++;
+            }
+        }
+        else{
+            index = 0;
+            while(index < 15){
+                if(index < 5)
+                    standardHighScores[index] = "0";
+                else if(index < 10 && index >= 5)
+                    survivalHighScores[index-5] = "0";
+                else if(index >= 10)
+                    endlessHighScores[index-10] = "0";
+
+                index++;
+            }
+        }
+    }
+    theFile.close();
 }
 
 /**
@@ -65,12 +94,21 @@ void HighScores::writeHighScores(){
  * @param s Index of the score wanted.
  * @return Returns score at the index requested.
  */
-int HighScores::getScore(int s){
-    if(highScoresArray[s] == NULL)
-        return 0;
+char* HighScores::getScore(char* type, int index){
+    char *tempChar;
 
-    else
-        return highScoresArray[s];
+    if(type == "standard"){
+        tempChar = (char*)standardHighScores[index].c_str();
+        return tempChar;
+    }
+    else if(type == "survival"){
+        tempChar = (char*)survivalHighScores[index].c_str();
+        return tempChar;
+    }
+    else{
+        tempChar = (char*)endlessHighScores[index].c_str();
+        return tempChar;
+    }
 }
 
 /**

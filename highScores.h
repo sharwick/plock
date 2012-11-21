@@ -1,10 +1,10 @@
 #ifndef HIGHSCORES_H
 #define HIGHSCORES_H
 
-#include <QString>
-#include <QFile>
-#include <QTextStream>
 #include <iostream>
+#include <fstream>
+#include <string>
+#include <exception>
 
 using namespace std;
 
@@ -12,20 +12,24 @@ class HighScores
 {
 
 public:
+    // Constructors
     HighScores();
     ~HighScores();
 
-    QFile *theFile;
-    QTextStream *inputStream;
-    QString tempString;
+    // Objects
+    ifstream theFile;
+    string standardHighScores[5];
+    string survivalHighScores[5];
+    string endlessHighScores[5];
 
     // Variables
-    int highScoresArray[10];
+    int fileFlag;
+    string tempString;
 
     // Methods
     void readInHighScores();
     void writeHighScores();
-    int getScore(int);
+    char* getScore(char*, int);
     void addHighScore(int);
 };
 
