@@ -109,6 +109,11 @@ void MainWindow::setupWindows(){
 
     start = false;//necessary to avoid segfault in startGame function
     timerCounter = 200; //timer for survival and hot potato
+    gCount=4;
+    gtimer = new QTimer(this);
+    connect(gtimer, SIGNAL(timeout()), this, SLOT(gtimeSlot()));
+    gtimer->start(1000);
+    gtimer->stop();
 
     /* * * * * * * * * * * * * *
      * Setup the CentralWidget *
@@ -493,6 +498,37 @@ void MainWindow::setupWindows(){
     connect(gameOverToMenu, SIGNAL(clicked()), this, SLOT(confirmQuit()) );
     gameOverLayout->addWidget(gameOverToMenu, Qt::AlignTop);
 
+
+    /* * * * * * * * * * * * * * * * * * * *
+             *          Survival Mode Items        *
+             * * * * * * * * * * * * * * * * * * * */
+
+
+            levelClear = new QGroupBox(this);
+            levelClear->setAutoFillBackground(true);
+            levelClear->setGeometry( (screenSizeX/2) - ((screenSizeX * 0.8) / 2), (screenSizeY/2) - ((screenSizeY * 0.4) / 2),
+                                     screenSizeX * 0.8 , screenSizeY * 0.4 );
+
+            // create layout
+            levelClearLayout = new QVBoxLayout(this);
+            levelClearLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
+            levelClearLayout->setSpacing(25);
+            levelClear->setLayout(levelClearLayout);
+            levelClear->hide();
+
+            //Initalize and add Items to the layout
+
+            levelClearLabel = new QLabel(" Level Clear !"); labelVector.push_back(levelClearLabel);
+            levelClearLayout->addWidget(levelClearLabel, Qt::AlignHCenter | Qt::AlignTop);
+            levelNext = new QPushButton("Next Level", this); buttonVector.push_back(levelNext);
+        //    levelQuit = new QPushButton("Quit", this); buttonVector.push_back(levelQuit);
+            levelNext->setFixedSize(blockSize * 3, blockSize);
+        //    levelQuit->setFixedSize(blockSize * 3, blockSize);
+            levelClearLayout->addWidget(levelNext, Qt::AlignTop);
+        //    levelClearLayout->addWidget(levelQuit, Qt::AlignVCenter);
+            connect(levelNext, SIGNAL(clicked()), this, SLOT(nextLevel()) );
+        //    connect(levelQuit, SIGNAL(clicked()), this, SLOT(confirmQuit()) );
+
 } // End setupWindow()
 
 
@@ -533,6 +569,9 @@ void MainWindow::setupGameScreen(){
     grid->addWidget(scoreLabel,0,0);
     timeLabel = new QLabel("Time:", this); labelVector.push_back(timeLabel);
     grid->addWidget(timeLabel, 7, 0);
+    progressLabel = new QLabel("Progress:", this); labelVector.push_back(progressLabel);
+    grid->addWidget(progressLabel, 7, 0);
+
 
     // Add score board
     sframe = new ScoreFrame();
@@ -584,6 +623,8 @@ void MainWindow::setupGameScreen(){
 
     Timeclock->setGeometry(0,0,300,25);
     Timefill->setGeometry(0,0,300,25);
+
+    Timeclock->setMaximumWidth(Timeclock->width());
 
     QPixmap newMap(Timeclock->width(), Timeclock->height());
     newMap.fill(QColor(250,250,250,255)); // Back color
@@ -686,7 +727,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
             else if(survivalModeFlag == 1){
                 Timefill->setMaximumWidth(Timeclock->width() / 2);
                 currentTime = 30;
-                timer->start(timerCounter);
+//                timer->start(timerCounter);
             }
         }
 
@@ -721,7 +762,7 @@ void MainWindow::updateBomb(int nBlocks){
     if ((bombFill->maximumWidth()+updateVal) < bombLayer->maximumWidth()){
         bombFill->setMaximumWidth(bombFill->maximumWidth()+updateVal);
         if (bombFill->maximumWidth() > 0){
-            bcurrentTime += (updateVal/2);
+            bcurrentTime += (updateVal/4);
             btimeBegin();
         }
     }
@@ -741,12 +782,12 @@ void MainWindow::updateBomb(int nBlocks){
  */
 void MainWindow::updateProgress(int nBlocks){
     int updateVal;
-    updateVal = nBlocks * 10;
+    updateVal = nBlocks * 7;
 
     if((Timefill->maximumWidth() + updateVal) < Timeclock->maximumWidth()){
         Timefill->setMaximumWidth(Timefill->maximumWidth() + updateVal);
         if(Timefill->maximumWidth() > 0){
-            currentTime += (updateVal/5);
+            currentTime += (updateVal/3);
             timeBegin();
         }
     }
@@ -1066,6 +1107,7 @@ void MainWindow::standardMode(){
     startScreen->show();
     shuffleButton->hide();
     rotateButton->hide();
+    progressLabel->hide();
     horizontalFlipButton->hide();
     menuButton->hide();
     timeLabel->show();
@@ -1082,6 +1124,30 @@ void MainWindow::standardMode(){
     startGame();
 }
 
+
+/**
+ * @brief MainWindow::nextLevel
+ */
+void MainWindow::nextLevel(){
+    startScreen->hide();
+    timeLabel->hide();
+    levelClear->hide();
+    progressLabel->show();
+    Timefill->show();
+    Timeclock->show();
+    scorePtr->resetScore();
+    sframe->resetScoreBoard();
+    gtimer->stop();
+    gCount = 4;
+    k=0;
+
+    shufflePressed();//shuffles blocks / graph objects
+//    timer->start(timerCounter);//start timer with new incremented timer speed
+    timer->start(timerCounter);
+    btimeBegin();
+}
+
+
 /**
  * @brief MainWindow::survivalMode
  */
@@ -1092,7 +1158,8 @@ void MainWindow::survivalMode(){
     rotateButton->hide();
     horizontalFlipButton->hide();
     menuButton->hide();
-    timeLabel->show();
+    timeLabel->hide();
+    progressLabel->show();
     Timefill->show();
     Timeclock->show();
     scorePtr->resetScore();
@@ -1102,6 +1169,7 @@ void MainWindow::survivalMode(){
     endlessModeFlag = 0;
     survivalModeFlag = 1;
     level=1;
+    progressLevel= 180;
     timerCounter = 200;
 
     startGame();
@@ -1324,7 +1392,10 @@ void MainWindow::processMatch(Block* matchedBlock)
     gatheredBlocks = checkSpecials(gatheredBlocks);
     gatheredBlocks = sortVector(gatheredBlocks);
 
-    //transition period right here, after all blocks have been turned black
+    QEventLoop loop;
+    QTimer::singleShot(100, &loop, SLOT(quit()) );
+    loop.exec();
+        //transition period right here, after all blocks have been turned black
 
     multiplier = 1;
 
@@ -1554,6 +1625,23 @@ vector<Block*> MainWindow::bombCollector(vector<Block*> blockVector, int x, int 
 
 //END Dan Block Functions
 
+
+/**
+ * @brief MainWindow::gtimeSlot
+ */
+void MainWindow::gtimeSlot(){
+k++;
+if(k%1==0){
+    gCount--;
+}
+if(gCount==-1){
+    nextLevel();
+    gtimer->stop();
+}
+//bombFill->setMaximumWidth(bombFill->maximumWidth()-(bombLayer->width()/120));
+}
+
+
 /**
  * @brief MainWindow::bombtimeSlot
  */
@@ -1574,7 +1662,7 @@ bombFill->setMaximumWidth(bombFill->maximumWidth()-(bombLayer->width()/120));
  */
 void MainWindow::timeSlot(){
     x++;
-    if(x%5==0){
+    if(x%4==0){
         currentTime--;
     }
     if(currentTime==-1){
@@ -1595,7 +1683,25 @@ void MainWindow::timeSlot(){
         //close();
         //return;
     }
-    Timefill->setMaximumWidth(Timefill->maximumWidth()-(Timeclock->width()/300));
+    if(Timefill->maximumWidth() == 0){
+                tempScore->setText(QString::number(scorePtr->getScore()));
+
+                if (survivalModeFlag==1) {
+                    tempLevel->setText(QString::number(level));
+                    finalLevelLabel->setText("Your Final Level:");
+                }
+                else {
+                    tempLevel->setText("");
+                    finalLevelLabel->setText("");
+                }
+
+                gameOverMenu->show();
+                timeOver();
+                btimeOver();
+                //close();
+                //return;
+    }
+    Timefill->setMaximumWidth(Timefill->maximumWidth()-(Timeclock->width()/150));
 }
 
 //void MainWindow::blockTimerSlot(){
@@ -1675,7 +1781,7 @@ void MainWindow::startGame(){
     else if(survivalModeFlag == 1){
         Timefill->setMaximumWidth(Timeclock->width() / 2);
         currentTime = 30;
-        timer->start(timerCounter);
+        timer->start(200);
     }
 }
 
@@ -1684,14 +1790,20 @@ void MainWindow::startGame(){
  */
 void MainWindow::processProgress(){
     //this function would be called from the updateProgressTime function
-    timeOver();//stop timer
-    level++;//increment level counter (would need to have started at 1 for each survival call)
-    //group box with level x incoming, etc
-    shufflePressed();//shuffles blocks / graph objects
-    timerCounter += (10 * level);//increment timer speed, maybe formula from level counter
-    Timefill->setMaximumWidth(Timeclock->width() / 2);//set timer to 50%
-    currentTime = 30;
-    timer->start(timerCounter);//start timer with new incremented timer speed
+        timeOver();//stop timer
+        btimeOver();
+        levelClear->show();
+        level++;//increment level counter (would need to have started at 1 for each survival call)
+        //group box with level x incoming, etc
+        timerCounter -= 10/*(7 * (level-1))*/;//increment timer speed, maybe formula from level counter
+//        progressLevel = ((1000 / timerCounter) * 60);
+        Timefill->setMaximumWidth(Timeclock->width() / 2);//set timer to 50%
+        currentTime = 30;
+
+//        connect(gtimer, SIGNAL(timeout()), this, SLOT(gtimeSlot()));
+
+        gtimer->start();
+
 }
 
 /**

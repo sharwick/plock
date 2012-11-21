@@ -55,7 +55,7 @@ public:
 private:
     // Objects
     QGridLayout *grid, *modeMenuLayout, *settingsLayout, *confirmLayout, *highScoreLayout;
-    QVBoxLayout *mainMenuLayout, *helpMenuLayout, *pauseMenuLayout, *gameOverLayout, *startLayout;
+    QVBoxLayout *mainMenuLayout, *helpMenuLayout, *pauseMenuLayout, *gameOverLayout, *startLayout, *levelClearLayout;
     QGraphicsScene *theScene;
     QGraphicsView *blockView;
     QGraphicsRectItem *tempBlock;
@@ -63,20 +63,22 @@ private:
     QPushButton *menuButton,*shuffleButton, *rotateButton, *horizontalFlipButton,  *newGameButton, *settingsButton,
     *helpButton, *backToMenu, *backToMenu2, *backToMenu3, *backToMenu4, *standardModeButton, *highScoreButton,
     *pauseAccept, *pauseRejected, *pauseSettings, *pauseHighScore, *endlessModeButton, *survivalModeButton, *gameOverToMenu, *gameOverRestart,
-    *quitButton, *confirmAcceptButton, *confirmRejectButton, *gameOverHighScore;
-    QGroupBox *mainMenu, *settingsMenu, *helpMenu, *gameModeMenu, *pauseMenu, *gameOverMenu, *confirmMenu, *highScoreMenu, *startScreen;
+    *quitButton, *confirmAcceptButton, *confirmRejectButton, *gameOverHighScore, *levelNext;
+    QGroupBox *mainMenu, *settingsMenu, *helpMenu, *gameModeMenu, *pauseMenu, *gameOverMenu, *confirmMenu, *highScoreMenu, *startScreen, *levelClear;
     QCheckBox *soundCheck, *screenLockCheck;
-    QLabel *titleLabel, *gameModeTitle, *settingsTitle, *timeLabel, *bombLayer, *bombFill, *Timeclock, *Timefill, *finalLevelLabel, *finalScoreLabel, *bombLabel, *scoreLabel, *pauseLabel, *quitLabel, *colorSchemeLabel, *pressScreenLabel, *highScoresLabel;
+    QLabel *titleLabel, *gameModeTitle, *settingsTitle, *timeLabel, *bombLayer, *bombFill, *Timeclock, *Timefill, *finalLevelLabel, *finalScoreLabel, *bombLabel, *scoreLabel, *pauseLabel, *quitLabel, *colorSchemeLabel, *pressScreenLabel, *highScoresLabel, *levelClearLabel, *progressLabel;
     QTextBrowser *helpText, *highScoreText;
     QSlider *colorSlider;
     QLabel *tempScore, *tempLevel, *standardScores[5], *survivalScores[5], *endlessScores[5];
     myRectItem* rectArray[8][9];
     QTimer *timer;
     QTimer *btimer;
+    QTimer *gtimer;
     Colors *colorPtr;
     Score *scorePtr;
     ScoreFrame *sframe;
     int level;
+    int progressLevel;
     int timerCounter;
     QGraphicsEllipseItem *myEllipse;
     HighScores *theHighScores;
@@ -90,8 +92,9 @@ private:
     int xPos, yPos;
     int currentTime;
     int bcurrentTime;
+    int gCount;
     int stdModeFlag, endlessModeFlag, survivalModeFlag;
-    int x, y;
+    int x, y, k;
     bool start;
     void setUpClock();
     void timeOver();
@@ -137,6 +140,7 @@ protected:
 private slots:
    void menuPressed();
    void timeSlot();
+   void gtimeSlot();
    void bombtimeSlot();
    void shufflePressed();
    void newGamePressed();
@@ -154,6 +158,7 @@ private slots:
    void standardMode();
    void endlessMode();
    void survivalMode();
+   void nextLevel();
    void screenLock();
    void noSound();
    void changeColorScheme();
