@@ -62,8 +62,8 @@ private:
 //    QProgressBar *bombBar, *timeBar;
     QPushButton *menuButton,*shuffleButton, *rotateButton, *horizontalFlipButton,  *newGameButton, *settingsButton,
     *helpButton, *backToMenu, *backToMenu2, *backToMenu3, *backToMenu4, *standardModeButton, *highScoreButton,
-    *pauseAccept, *pauseRejected, *pauseSettings, *endlessModeButton, *survivalModeButton, *gameOverToMenu, *gameOverRestart,
-    *quitButton, *confirmAcceptButton, *confirmRejectButton;
+    *pauseAccept, *pauseRejected, *pauseSettings, *pauseHighScore, *endlessModeButton, *survivalModeButton, *gameOverToMenu, *gameOverRestart,
+    *quitButton, *confirmAcceptButton, *confirmRejectButton, *gameOverHighScore;
     QGroupBox *mainMenu, *settingsMenu, *helpMenu, *gameModeMenu, *pauseMenu, *gameOverMenu, *confirmMenu, *highScoreMenu, *startScreen;
     QCheckBox *soundCheck, *screenLockCheck;
     QLabel *titleLabel, *gameModeTitle, *settingsTitle, *timeLabel, *bombLayer, *bombFill, *Timeclock, *Timefill, *finalLevelLabel, *finalScoreLabel, *bombLabel, *scoreLabel, *pauseLabel, *quitLabel, *colorSchemeLabel, *pressScreenLabel, *highScoresLabel;
@@ -144,6 +144,7 @@ private slots:
    void helpPressed();
    void backToMain();
    void backToPause();
+   void backToGameOver();
    void pausedPressed();
    void pauseSettingsPressed();
    void pauseBack();
@@ -161,6 +162,7 @@ private slots:
    void rotate();
    void confirmQuit();
    void quitRejected();
+   void quitRejectedGameOver();
    void quit();
 
    //void blockTimerSlot();
