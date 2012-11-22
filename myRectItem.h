@@ -2,16 +2,17 @@
 #define MYRECTITEM_H
 //soon to potentially include graphobject.h
 #include <QGraphicsRectItem>
-#include <QGraphicsEllipseItem>
-#include <QRectF>
+//#include <QGraphicsEllipseItem>
+//#include <QRectF>
+#include <QGraphicsSimpleTextItem>
 
 class myRectItem : public QGraphicsRectItem
 {
 
 public:
     myRectItem();
-    QGraphicsEllipseItem *bombPtr;
-    void setEllipse(QGraphicsEllipseItem*);
+    QGraphicsSimpleTextItem* textPtr;
+    void setTextItem(QGraphicsSimpleTextItem*);
     void removeGraphObject(bool);
 
 protected:

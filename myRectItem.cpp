@@ -16,7 +16,7 @@
  */
 myRectItem::myRectItem()
 {
-    bombPtr = new QGraphicsEllipseItem();
+    textPtr = new QGraphicsSimpleTextItem();
 }
 
 /**
@@ -38,8 +38,8 @@ void myRectItem::mouseMoveEvent(QGraphicsSceneMouseEvent *){
  * @brief myRectItem::setEllipse
  * @param paramBomb
  */
-void myRectItem::setEllipse(QGraphicsEllipseItem *paramBomb){
-    bombPtr = paramBomb;
+void myRectItem::setTextItem(QGraphicsSimpleTextItem *paramBomb){
+    textPtr = paramBomb;
 }
 
 /**
@@ -47,10 +47,10 @@ void myRectItem::setEllipse(QGraphicsEllipseItem *paramBomb){
  * @param theScene
  */
 void myRectItem::removeGraphObject(bool endGame){
-    if(bombPtr != 0){
+    if(textPtr != 0){
         if(endGame)
-            delete bombPtr;
-        bombPtr = 0;
+            delete textPtr;
+        textPtr = 0;
         //bombPtr->setBrush(QBrush(Qt::yellow));
     }
 }

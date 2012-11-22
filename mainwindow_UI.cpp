@@ -1400,7 +1400,7 @@ void MainWindow::processMatch(Block* matchedBlock)
     gatheredBlocks = sortVector(gatheredBlocks);
 
     QEventLoop loop;
-    QTimer::singleShot(100, &loop, SLOT(quit()) );
+    QTimer::singleShot(50, &loop, SLOT(quit()) );
     loop.exec();
         //transition period right here, after all blocks have been turned black
 
@@ -1582,7 +1582,7 @@ vector<Block*> MainWindow::checkSpecials(vector<Block*> blockVector)
             scorePtr->incrementMultiplier();
             blockVector = bombCollector(blockVector, blockVector[i]->getCoordX(), blockVector[i]->getCoordY());
             blockVector[i]->setGraphImage(0);
-            theScene->removeItem(rectArray[blockVector[i]->getCoordX()][blockVector[i]->getCoordY()]->bombPtr);
+            theScene->removeItem(rectArray[blockVector[i]->getCoordX()][blockVector[i]->getCoordY()]->textPtr);
             rectArray[blockVector[i]->getCoordX()][blockVector[i]->getCoordY()]->removeGraphObject(false);
             //zero pointer in myRectItem->myGraphObject
             //clear image from myRectItem
@@ -1764,10 +1764,10 @@ void MainWindow::startGame(){
                 gameBoard[i][j] = 0;
                 //if(rectArray[i][j]->bombPtr != 0)
                     //rectArray[i][j]->bombPtr->setBrush(QBrush(Qt::yellow));
-                if(rectArray[i][j]->bombPtr != 0)
-                    theScene->removeItem(rectArray[i][j]->bombPtr);
+                if(rectArray[i][j]->textPtr != 0)
+                    theScene->removeItem(rectArray[i][j]->textPtr);
                 rectArray[i][j]->removeGraphObject(true);
-                delete rectArray[i][j]->bombPtr;
+                //delete rectArray[i][j]->textPtr;
                 theScene->removeItem(rectArray[i][j]);
                 //rectArray[i][j]->setBrush(QBrush(Qt::yellow));
                 delete rectArray[i][j];
@@ -1860,13 +1860,25 @@ void MainWindow::generateGraphicObject(int CoordX, int CoordY){
         CoordY = rand() % 9;
     }
 
-    QGraphicsEllipseItem *myEllipse = new QGraphicsEllipseItem();
-    myEllipse->setRect((blockSize * CoordX) + 5, (blockSize * CoordY) + 5, blockSize - 10, blockSize - 10);
-    myEllipse->setBrush(QBrush(Qt::black, Qt::SolidPattern));
-    rectArray[CoordX][CoordY]->setEllipse(myEllipse);
+    //QGraphicsEllipseItem *myEllipse = new QGraphicsEllipseItem();
+    //myEllipse->setRect((blockSize * CoordX) + 5, (blockSize * CoordY) + 5, blockSize - 10, blockSize - 10);
+    //myEllipse->setBrush(QBrush(Qt::black, Qt::SolidPattern));
+    //rectArray[CoordX][CoordY]->setEllipse(myEllipse);
     //delete myEllipse;
+    //gameBoard[CoordX][CoordY]->setGraphImage(2);
+    //theScene->addItem(myEllipse);
+
+    QGraphicsSimpleTextItem *myTextItem = new QGraphicsSimpleTextItem();
+    QString myString(QChar(0x2605));
+    myTextItem->setText(myString);
+    myTextItem->setX((CoordX * blockSize) + 4.5);
+    myTextItem->setY((CoordY * blockSize) - 4);
+    myTextItem->setScale(3);
+    myTextItem->setBrush(QBrush(Qt::black, Qt::SolidPattern));
+    rectArray[CoordX][CoordY]->setTextItem(myTextItem);
     gameBoard[CoordX][CoordY]->setGraphImage(2);
-    theScene->addItem(myEllipse);
+    theScene->addItem(myTextItem);
+
 }
 
 
@@ -1879,13 +1891,13 @@ void MainWindow::generateGraphicObject(int CoordX, int CoordY){
  */
 void MainWindow::graphSwap(int firstX, int firstY, int secondX, int secondY){
     if(gameBoard[firstX][firstY]->getGraphImage() == 2){
-        theScene->removeItem(rectArray[firstX][firstY]->bombPtr);
+        theScene->removeItem(rectArray[firstX][firstY]->textPtr);
         rectArray[firstX][firstY]->removeGraphObject(false);
         gameBoard[firstX][firstY]->setGraphImage(0);
         generateGraphicObject(secondX, secondY);
     }
     else{
-        theScene->removeItem(rectArray[secondX][secondY]->bombPtr);
+        theScene->removeItem(rectArray[secondX][secondY]->textPtr);
         rectArray[secondX][secondY]->removeGraphObject(false);
         gameBoard[secondX][secondY]->setGraphImage(0);
         generateGraphicObject(firstX, firstY);
