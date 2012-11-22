@@ -24,7 +24,8 @@ ScoreFrame::ScoreFrame() {
 }
 
 void ScoreFrame::update(int n) {
-    text->setText(QString::number(n));
+    QString num = QLocale(QLocale::English).toString((double) n, 'f', 0);
+    text->setText(num);
 }
 
 void ScoreFrame::resetScoreBoard() {
