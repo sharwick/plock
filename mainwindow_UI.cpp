@@ -566,7 +566,7 @@ void MainWindow::setupGameScreen(){
     // Set Labels
     bombLabel=new QLabel("Bombs:"); labelVector.push_back(bombLabel);
     grid->addWidget(bombLabel,1,0);
-    scoreLabel = new QLabel("Score:"); labelVector.push_back(scoreLabel);
+    scoreLabel = new QLabel("Score: x1"); labelVector.push_back(scoreLabel);
     grid->addWidget(scoreLabel,0,0);
     timeLabel = new QLabel("Time:", this); labelVector.push_back(timeLabel);
     grid->addWidget(timeLabel, 7, 0);
@@ -1580,6 +1580,8 @@ vector<Block*> MainWindow::checkSpecials(vector<Block*> blockVector)
          //               break;
          //           }
             scorePtr->incrementMultiplier();
+            scoreLabel->setText("Score: x" + QString::number(multiplier));
+
             blockVector = bombCollector(blockVector, blockVector[i]->getCoordX(), blockVector[i]->getCoordY());
             blockVector[i]->setGraphImage(0);
             theScene->removeItem(rectArray[blockVector[i]->getCoordX()][blockVector[i]->getCoordY()]->textPtr);
