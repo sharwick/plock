@@ -1030,7 +1030,9 @@ void MainWindow::changeColorScheme(){
     }
 
     for (int i=0; i< (int) buttonVector.size(); i++) {
-        ((QLabel*) buttonVector.at(i))->setPalette(Pal);
+        //((QLabel*) buttonVector.at(i))->setPalette(Pal);
+        // Buttons do not work on all machines when a palette is used
+        ((QPushButton*) buttonVector.at(i))->setStyleSheet("* {background-color: " + colorPtr->getQColor(3).name() + "}");
     }
 
     // Reset gameboard colors
