@@ -19,7 +19,7 @@ Score::Score() {
 void Score::updateScore(int nBlocks, bool speedBonus) {
 
     int updateValue;
-    updateValue = (nBlocks-1)*(nBlocks-1);
+    updateValue = (nBlocks-1)*(nBlocks-1)*(nBlocks-1)*(nBlocks-1);
 
     if (speedBonus)
         updateValue += 1;

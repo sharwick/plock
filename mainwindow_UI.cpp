@@ -1673,7 +1673,9 @@ void MainWindow::timeSlot(){
         currentTime--;
     }
     if(currentTime==-1){
-        tempScore->setText(QString::number(scorePtr->getScore()));
+        int n= scorePtr->getScore();
+        QString num = QLocale(QLocale::English).toString((double) n, 'f', 0);
+        tempScore->setText(num);
 
         if (survivalModeFlag==1) {
             tempLevel->setText(QString::number(level));
@@ -1692,7 +1694,9 @@ void MainWindow::timeSlot(){
     }
     if(Timefill->maximumWidth() == 0){
                 gamedone = true;
-                tempScore->setText(QString::number(scorePtr->getScore()));
+
+                QString num = QLocale(QLocale::English).toString((double) scorePtr->getScore(), 'f', 0);
+                tempScore->setText(num);
 
                 if (survivalModeFlag==1) {
                     tempLevel->setText(QString::number(level));
