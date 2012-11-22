@@ -24,6 +24,7 @@ public:
     void updateScore(int, bool);
     void resetScore();
     void incrementMultiplier();
+    int getMultiplier();
 };
 
 #endif // SCORE_H

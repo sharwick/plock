@@ -1404,8 +1404,6 @@ void MainWindow::processMatch(Block* matchedBlock)
     loop.exec();
         //transition period right here, after all blocks have been turned black
 
-    multiplier = 1;
-
     scorePtr->updateScore((int) gatheredBlocks.size(), false);
     sframe->update(scorePtr->getScore());
     updateBomb((int) gatheredBlocks.size());
@@ -1580,7 +1578,8 @@ vector<Block*> MainWindow::checkSpecials(vector<Block*> blockVector)
          //               break;
          //           }
             scorePtr->incrementMultiplier();
-            scoreLabel->setText("Score: x" + QString::number(multiplier));
+            QString m = QLocale(QLocale::English).toString((double) scorePtr->getMultiplier(), 'f', 0);
+            scoreLabel->setText("Score: x" + m);
 
             blockVector = bombCollector(blockVector, blockVector[i]->getCoordX(), blockVector[i]->getCoordY());
             blockVector[i]->setGraphImage(0);

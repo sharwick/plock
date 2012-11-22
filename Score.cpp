@@ -43,4 +43,8 @@ void Score::resetScore() {
     score=0;
 }
 
+int Score::getMultiplier() {
+    return multiplier;
+}
+
 

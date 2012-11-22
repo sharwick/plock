@@ -104,8 +104,6 @@ private:
     void reset();   
     void updateBomb(int nBlocks);
     void updateProgress(int);
-    int multiplier;
-
     void graphSwap(int, int, int, int);
 	
 	//Dan Block Variables
