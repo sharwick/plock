@@ -95,7 +95,7 @@ private:
     int gCount;
     int stdModeFlag, endlessModeFlag, survivalModeFlag;
     int x, y, k;
-    bool start;
+    bool start, gamedone;
     void setUpClock();
     void timeOver();
     void btimeOver();

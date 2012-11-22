@@ -108,6 +108,7 @@ void MainWindow::showExpanded()
 void MainWindow::setupWindows(){
 
     start = false;//necessary to avoid segfault in startGame function
+    gamedone = false; ///necessary to avoid asking to quit again when the game is done.
     timerCounter = 200; //timer for survival and hot potato
     gCount=4;
     gtimer = new QTimer(this);
@@ -495,7 +496,7 @@ void MainWindow::setupWindows(){
 
     gameOverToMenu = new QPushButton("Main Menu", this); buttonVector.push_back(gameOverToMenu);
     gameOverToMenu->setFixedSize(blockSize * 3, blockSize);
-    connect(gameOverToMenu, SIGNAL(clicked()), this, SLOT(confirmQuit()) );
+    connect(gameOverToMenu, SIGNAL(clicked()), this, SLOT(menuPressed()) );
     gameOverLayout->addWidget(gameOverToMenu, Qt::AlignTop);
 
 
@@ -819,12 +820,17 @@ void MainWindow::menuPressed(){
 
     mainMenu->show();
 
+    if(gamedone==true)
+        gameOverMenu->hide();
+
 }
 
 /**
  * @brief MainWindow::confirmQuit
  */
 void MainWindow::confirmQuit(){
+
+    if(gamedone!=true){
     if(pauseMenu->isVisible())
         pauseMenu->hide();
 
@@ -835,6 +841,7 @@ void MainWindow::confirmQuit(){
     }
 
     confirmMenu->show();
+    }
 }
 
 /**
@@ -1684,6 +1691,7 @@ void MainWindow::timeSlot(){
         //return;
     }
     if(Timefill->maximumWidth() == 0){
+                gamedone = true;
                 tempScore->setText(QString::number(scorePtr->getScore()));
 
                 if (survivalModeFlag==1) {
@@ -1771,6 +1779,7 @@ void MainWindow::startGame(){
         start = true; //start is initialized to false in menu set up
     setupBlocks();
     bombFill->setMaximumWidth(0);
+    gamedone = false;
     bcurrentTime=0;
     btimer->start(333.333);
     if(stdModeFlag == 1){
