@@ -337,7 +337,7 @@ void MainWindow::setupWindows(){
     settingsLayout->addWidget(backToMenu2, 4, 0, Qt::AlignHCenter);
 
     colorSlider = new QSlider(Qt::Horizontal ,this);
-    colorSlider->setRange(0,3);
+    colorSlider->setRange(0,4);
     colorSlider->setStyleSheet("QSlider {background: white}");
     colorSchemeLabel=new QLabel("Color Scheme:"); labelVector.push_back(colorSchemeLabel);
     settingsLayout->addWidget(colorSchemeLabel, 3, 0, Qt::AlignLeft);
@@ -986,7 +986,8 @@ void MainWindow::gameOverRestartSlot(){
 }
 
 /**
- * @brief MainWindow::noSound
+ * @brief   MainWindow::noSound
+ *          This method is not currently being used.
  */
 void MainWindow::noSound(){
 
@@ -1005,7 +1006,8 @@ void MainWindow::noSound(){
 }
 
 /**
- * @brief MainWindow::screenLock
+ * @brief   MainWindow::screenLock
+ *          This method is not currently being used.
  */
 void MainWindow::screenLock(){
     if(screenLockCheck->isChecked()){
@@ -1019,7 +1021,9 @@ void MainWindow::screenLock(){
 }
 
 /**
- * @brief MainWindow::changeColorScheme
+ * @brief   changeColorScheme() creates a new palette based on the users input on the slider provided in the Settings menu.  A new palette is created and then all QLabels and QPushButtons are reassigned to this palette.
+ *          The update affects QPushButtons, QLabels, and the timers (both time and bomb).
+ * @bug     On 3 of 4 computers used in this group, no way could be found to update the color scheme of the QPushButtons.  On 1 computer, we were successful in updating the QPushButtons using both style sheets and palettes, but neither method worked on the other machines.
  */
 void MainWindow::changeColorScheme(){
     // change color scheme based on slider value (by setting all labels and buttons to new palette)
@@ -1038,8 +1042,9 @@ void MainWindow::changeColorScheme(){
 
     for (int i=0; i< (int) buttonVector.size(); i++) {
         //((QLabel*) buttonVector.at(i))->setPalette(Pal);
-        // Buttons do not work on all machines when a palette is used
+        // Buttons do not change colors on all machines when a palette is used
         ((QPushButton*) buttonVector.at(i))->setStyleSheet("* {background-color: " + colorPtr->getQColor(3).name() + "}");
+        // Buttons do not change colors on all machines when a style sheet is used
     }
 
     // Reset gameboard colors
@@ -1205,9 +1210,15 @@ void MainWindow::endlessMode(){
     startGame();
 }
 
+
 /**
- * @brief MainWindow::shufflePressed
+ * @brief   shufflePressed() preserves the blocks' color and any stars but shuffles the blocks randomly.
+            The shuffle is performed by randomly swapping pairs of blocks.  The number of swaps performed is quadratic in the area of the board.
+            This button is inactive if the game is paused.
+ * @param   None
+ * @return  Void
  */
+
 void MainWindow::shufflePressed() {
     // Only shuffles if not paused
     if(!pauseMenu->isVisible()){
@@ -1260,9 +1271,14 @@ void MainWindow::quit(){
 
 // End Slots
 
+
 /**
- * @brief MainWindow::horizontalFlip
+ * @brief   horizontalFlip() preserves the blocks' color and any stars but shuffles the blocks so that they get flipped along the horizontal access.
+            This button is inactive if the game is paused.
+ * @param   None
+ * @return  Void
  */
+
 void MainWindow::horizontalFlip() {
     // Only flips if not paused
     if(!pauseMenu->isVisible()){
@@ -1294,9 +1310,14 @@ void MainWindow::horizontalFlip() {
     }
 }
 
+
 /**
- * @brief MainWindow::rotate
+ * @brief   rotate() preserves the blocks' color and any stars but rotates the blocks 180 degrees.
+            This button is inactive if the game is paused.
+ * @param   None
+ * @return  Void
  */
+
 void MainWindow::rotate() {
 
     // Only flips if not paused
@@ -1327,9 +1348,16 @@ void MainWindow::rotate() {
     }
 }
 
+
+
 /**
- * @brief MainWindow::verticalFlip
+ * @brief   verticalFlip() preserves the blocks' color and any stars but shuffles the blocks so that they get flipped along the vertical access.
+            This button is inactive if the game is paused.
+            This method is not currently in use in the game because it does not offer a strategic benefit the way the other shuffles do.
+ * @param   None
+ * @return  Void
  */
+
 void MainWindow::verticalFlip() {
 
     // Only flips if not paused
@@ -1353,8 +1381,6 @@ void MainWindow::verticalFlip() {
                 rectArray[gameBoard[x2][y2]->getCoordX()][gameBoard[x2][y2]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x2][y2]->getColor()), Qt::SolidPattern));
                 if(gameBoard[x1][y1]->getGraphImage() != gameBoard[x2][y2]->getGraphImage())
                     graphSwap(x1, y1, x2, y2);
-                // TO DO: need to swap bombs/multipler -> add getBomb method to Block
-                //Swapping follows similar process commented in shuffle
             }
         }
     }
@@ -1378,6 +1404,9 @@ void MainWindow::reset() {
             gameBoard[r][c]->setColor(tempColor);
         }
     }
+
+    // Need to undo any updates to the multiplier label
+    scoreLabel->setText("Score: x1");
 }
 
 
@@ -1797,6 +1826,7 @@ void MainWindow::startGame(){
         currentTime = 30;
         timer->start(200);
     }
+    scoreLabel->setText("Score: x1");
 }
 
 /**
