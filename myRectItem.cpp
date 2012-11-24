@@ -24,14 +24,13 @@ myRectItem::myRectItem()
  */
 void myRectItem::mousePressEvent(QGraphicsSceneMouseEvent *){
     this->grabMouse();
-
 }
 
 /**
  * @brief myRectItem::mouseMoveEvent
  */
 void myRectItem::mouseMoveEvent(QGraphicsSceneMouseEvent *){
-    this->grabMouse();
+    //this->grabMouse();
 }
 
 /**
