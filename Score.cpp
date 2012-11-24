@@ -19,6 +19,7 @@ Score::Score() {
 
 
 /** @brief  The score is updated by adding a quartic polynomial of the number of blocks eliminated.
+  *         An upper bound of 100,000,000 is set on the score.
   * @param  nBlocks The integer nBlocks is the number of blocks deleted in the last move.
   * @param  speedBonus The boolean value speedBonus is not currently in use.  It is intended to allow the score to be incremented if the player makes multiple consecutive moves within a specified timeframe.
   * @return Void
@@ -34,7 +35,14 @@ void Score::updateScore(int nBlocks, bool speedBonus) {
 
     updateValue *= multiplier;
 
-    score += updateValue;
+    // Set upper limit on score so that there are no issues of overflow/game freezing.
+    int upperBound=100000000;
+
+    if (updateValue<upperBound && score<=upperBound)
+        score += updateValue;
+
+    if (score>upperBound)
+        score=upperBound;
 
 }
 
@@ -48,11 +56,13 @@ int Score::getScore() {
 
 
 /** @brief  When a star is eliminated, this method is called to increment the multiplier.
+  *         An upper bound of 50 is set on the multiplier.
   * @return Void
   *
   */
 void Score::incrementMultiplier(){
-    multiplier++;
+    if (multiplier<50)
+        multiplier++;
 }
 
 
