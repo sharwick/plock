@@ -159,37 +159,40 @@ void MainWindow::setupWindows(){
     mainMenu->setLayout(mainMenuLayout);
 
     // Initialize and add items to layout
+    tempFont = QFont();
+    tempFont.setPointSize(blockSize/6);
+    tempFont.setBold(true);
     titleLabel = new QLabel("B L O C K S T A R"); labelVector.push_back(titleLabel);
-    titleLabel->setFixedSize(blockSize*5, blockSize*2);
+    titleLabel->setFixedSize(blockSize*4.25, blockSize*2);
+    titleLabel->setFont(tempFont);
     mainMenuLayout->addWidget(titleLabel, Qt::AlignHCenter);
 
     newGameButton = new QPushButton(this); buttonVector.push_back(newGameButton);
     newGameButton->setText("New Game");
-    newGameButton->setFixedSize(blockSize*5, blockSize);
+    newGameButton->setFixedSize(blockSize*4, blockSize);
     connect( newGameButton, SIGNAL(clicked()), this, SLOT(newGamePressed()) );
     mainMenuLayout->addWidget(newGameButton, Qt::AlignTop);
 
-
     highScoreButton = new QPushButton("High Scores", this); buttonVector.push_back(highScoreButton);
-    highScoreButton->setFixedSize(blockSize*5, blockSize);
+    highScoreButton->setFixedSize(blockSize*4, blockSize);
     connect( highScoreButton, SIGNAL(clicked()), this, SLOT(highScoresShow()) );
     mainMenuLayout->addWidget(highScoreButton, Qt::AlignTop);
 
     settingsButton = new QPushButton("Settings", this); buttonVector.push_back(settingsButton);
-    settingsButton->setFixedSize(blockSize*5, blockSize);
+    settingsButton->setFixedSize(blockSize*4, blockSize);
     connect( settingsButton, SIGNAL(clicked()), this, SLOT(settingsPressed()) );
     mainMenuLayout->addWidget(settingsButton, Qt::AlignTop);
 
-
     helpButton = new QPushButton("About", this);buttonVector.push_back(helpButton);
-    helpButton->setFixedSize(blockSize*5, blockSize);
+    helpButton->setFixedSize(blockSize*4, blockSize);
     connect( helpButton, SIGNAL(clicked()), this, SLOT(helpPressed()) );
     mainMenuLayout->addWidget(helpButton, Qt::AlignTop);
 
     quitButton = new QPushButton("Quit", this); buttonVector.push_back(quitButton);
-    quitButton->setFixedSize(blockSize*5, blockSize);
+    quitButton->setFixedSize(blockSize*4, blockSize);
     connect(quitButton, SIGNAL(clicked()), this, SLOT(quit()) );
     mainMenuLayout->addWidget(quitButton, Qt::AlignTop);
+
 
 
     /* * * * * * * * * * * * * * * * * * *
@@ -242,6 +245,7 @@ void MainWindow::setupWindows(){
     startLayout->setSpacing(0);
     startScreen->setLayout(startLayout);
     pressScreenLabel = new QLabel("Double tap board to begin!", this); labelVector.push_back(pressScreenLabel);
+    pressScreenLabel->setFont(tempFont);
     startLayout->addWidget(pressScreenLabel);
     startScreen->hide();
 
@@ -264,34 +268,38 @@ void MainWindow::setupWindows(){
 
     // Initalize and add Items to layout
     highScoresLabel = new QLabel("HIGH SCORES"); labelVector.push_back(highScoresLabel);
-    highScoreLayout->addWidget(highScoresLabel, 0, 1, Qt::AlignTop);
+    highScoresLabel->setFixedSize(blockSize * 4, blockSize);
+    highScoresLabel->setFont(tempFont);
+    highScoreLayout->addWidget(highScoresLabel, 0, 1, Qt::AlignHCenter);
 
-    highScoreLayout->addWidget(new QLabel("Standard", this), 1, 0, Qt::AlignHCenter);
-    highScoreLayout->addWidget(new QLabel("Survival", this), 1, 1, Qt::AlignHCenter);
-    highScoreLayout->addWidget(new QLabel("Endless", this), 1, 2, Qt::AlignHCenter);
+    standardLabel = new QLabel("Standard", this); labelVector.push_back(standardLabel);
+    highScoreLayout->addWidget(standardLabel, 1, 0, Qt::AlignHCenter);
+    survivalLabel = new QLabel("Survival", this); labelVector.push_back(survivalLabel);
+    highScoreLayout->addWidget(survivalLabel, 1, 1, Qt::AlignHCenter);
+    endlessLabel = new QLabel("Endless", this); labelVector.push_back(endlessLabel);
+    highScoreLayout->addWidget(endlessLabel, 1, 2, Qt::AlignHCenter);
 
     for(int index = 0; index < 5; index++){
         standardScores[index] = new QLabel("", this);
-        standardScores[index]->setFixedSize(blockSize * 3, blockSize);
+        standardScores[index]->setFixedSize(blockSize * 3, blockSize); labelVector.push_back(standardScores[index]);
         highScoreLayout->addWidget(standardScores[index], index+2, 0, Qt::AlignHCenter);
 
         survivalScores[index] = new QLabel("", this);
-        survivalScores[index]->setFixedSize(blockSize * 3, blockSize);
+        survivalScores[index]->setFixedSize(blockSize * 3, blockSize); labelVector.push_back(survivalScores[index]);
         highScoreLayout->addWidget(survivalScores[index], index+2, 1, Qt::AlignHCenter);
 
         endlessScores[index] = new QLabel("", this);
-        endlessScores[index]->setFixedSize(blockSize * 3, blockSize);
+        endlessScores[index]->setFixedSize(blockSize * 3, blockSize); labelVector.push_back(endlessScores[index]);
         highScoreLayout->addWidget(endlessScores[index], index+2, 2, Qt::AlignHCenter);
     }
-
 
     theHighScores = new HighScores();
     loadHighScores();   // Load in High Scores from the HighScores Object
 
     backToMenu4 = new QPushButton("Menu", this); buttonVector.push_back(backToMenu4);
-    backToMenu4->setFixedSize(blockSize * 3, blockSize);
+    backToMenu4->setFixedSize(blockSize * 4, blockSize);
     connect(backToMenu4, SIGNAL(clicked()), this, SLOT(backToMain()) );
-    highScoreLayout->addWidget(backToMenu4, 13, 1, Qt::AlignTop);
+    highScoreLayout->addWidget(backToMenu4, 13, 1, Qt::AlignBottom);
 
 
     /* * * * * * * * * * * * * * * * * * *
@@ -310,35 +318,18 @@ void MainWindow::setupWindows(){
     settingsMenu->setLayout(settingsLayout);
 
     // Initalize and add Items to the layout
-    settingsTitle = new QLabel("S e t t i n g s"); labelVector.push_back(settingsTitle);
-    settingsLayout->addWidget(settingsTitle, 0, 0, Qt::AlignTop);
-
-    /*
-    soundCheck = new QCheckBox(this);
-    soundCheck->setCheckable(true);
-    soundCheck->setAutoExclusive(false);
-    soundCheck->setTristate(false);
-    connect(soundCheck, SIGNAL(clicked()), this, SLOT(noSound()) );
-    settingsLayout->addWidget(new QLabel("No Sound:"), 1, 0, Qt::AlignLeft);
-    settingsLayout->addWidget(soundCheck, 1, 1);
-
-    screenLockCheck = new QCheckBox(this);
-    screenLockCheck->setCheckable(true);
-    screenLockCheck->setAutoExclusive(false);
-    screenLockCheck->setTristate(false);
-    connect(screenLockCheck, SIGNAL(clicked()), this, SLOT(screenLock()));
-    settingsLayout->addWidget(new QLabel("Lock Screen:"), 2, 0, Qt::AlignLeft);
-    settingsLayout->addWidget(screenLockCheck, 2, 1);
-    */
+    settingsTitle = new QLabel("Settings"); labelVector.push_back(settingsTitle);
+    settingsTitle->setFont(tempFont);
+    settingsLayout->addWidget(settingsTitle, 0, 1);
 
     backToMenu2 = new QPushButton("Back", this); buttonVector.push_back(backToMenu2);
     backToMenu2->setFixedSize(blockSize * 3, blockSize);
     connect(backToMenu2, SIGNAL(clicked()), this, SLOT(backToMain()) );
-    settingsLayout->addWidget(backToMenu2, 4, 0, Qt::AlignHCenter);
+    settingsLayout->addWidget(backToMenu2, 6, 1, Qt::AlignBottom);
 
     colorSlider = new QSlider(Qt::Horizontal ,this);
     colorSlider->setRange(0,4);
-    colorSlider->setStyleSheet("QSlider {background: white}");
+    colorSlider->setStyleSheet("QSlider {background: black}");
     colorSchemeLabel=new QLabel("Color Scheme:"); labelVector.push_back(colorSchemeLabel);
     settingsLayout->addWidget(colorSchemeLabel, 3, 0, Qt::AlignLeft);
     settingsLayout->addWidget(colorSlider, 3, 1);
@@ -361,21 +352,35 @@ void MainWindow::setupWindows(){
     helpMenu->setLayout(helpMenuLayout);
 
     // Initialize and add Items to the layout
-    helpMenuLayout->addWidget(new QLabel("About"), Qt::AlignTop | Qt::AlignHCenter);
-    helpMenuLayout->addWidget(new QLabel("B L O C K S T A R"), Qt::AlignTop);
+    aboutLabel = new QLabel("About Blockstar", this); labelVector.push_back(aboutLabel);
+    aboutLabel->setFont(tempFont);
+    helpMenuLayout->addWidget(aboutLabel, Qt::AlignHCenter);
 
     helpText = new QTextBrowser(this);
     helpText->setFixedSize(screenSizeX * 0.9, screenSizeY * 0.75);
     QPalette helpPal = helpText->palette();
     helpPal.setColor(QPalette::Base, QColor(0, 0, 0));
     helpText->setPalette(helpPal);
-    helpText->setText(QString("Blockstar \n"
-                                  "An android game based on Plock. \n"
-                                  "UIC CS 340 Fall 2012 \n"
-                                  "Authors: Shannon Harwick, Daniel Keasler, Devin Rusnak, Mike Son \n" ));
-    helpMenuLayout->addWidget(helpText, Qt::AlignLeft);
+    aboutText = QString("An android game based on Plock. \n"
+                        "UIC CS 340 Fall 2012 \n"
+                        "Authors: Shannon Harwick, Daniel Keasler, Devin Rusnak, Mike Son. \n"
+                        "\n"
+                        "How to Play: \n"
+                        "The goal of the game is to match similar colored blocks. "
+                        "As the blocks are cleared new blocks fill in from the top of the board. "
+                        "As you score points, your bomb bar grows and when it is full a random "
+                        "bomb is placed on the board in the form of a star. When you click on them "
+                        "an area around them are cleared out. "
+                        "There are three game modes to choose from. First is Standard Mode, which "
+                        "is a sixty second game where you have to score as high as possible. "
+                        "Next is Survival Mode where you have a certian amount of time to accumulate "
+                        "a certian score, which changes with each level. Last there is Endless Mode "
+                        " where you have an unlimited amount of time to play.");
+    helpText->setText(aboutText);
+    helpMenuLayout->addWidget(helpText, Qt::AlignTop);
 
     backToMenu3 = new QPushButton("Back", this); buttonVector.push_back(backToMenu3);
+    backToMenu3->setFixedSize(blockSize * 4, blockSize);
     connect(backToMenu3, SIGNAL(clicked()), this, SLOT(backToMain()) );
     helpMenuLayout->addWidget(backToMenu3, Qt::AlignHCenter);
 
@@ -397,8 +402,8 @@ void MainWindow::setupWindows(){
     pauseMenu->hide();
 
     // Initialize and add Items to the layout
-    pauseLabel = new QLabel("Paused"); labelVector.push_back(pauseLabel);
-    pauseMenuLayout->addWidget(pauseLabel, Qt::AlignRight);
+    pauseLabel = new QLabel("The Game is Paused"); labelVector.push_back(pauseLabel);
+    pauseMenuLayout->addWidget(pauseLabel, Qt::AlignHCenter);
 
     pauseRejected = new QPushButton("Resume", this); buttonVector.push_back(pauseRejected);
     pauseRejected->setFixedSize(blockSize * 3, blockSize);
@@ -419,6 +424,7 @@ void MainWindow::setupWindows(){
     pauseAccept->setFixedSize(blockSize * 3, blockSize);
     pauseMenuLayout->addWidget(pauseAccept, Qt::AlignHCenter);
     connect(pauseAccept, SIGNAL(clicked()), this, SLOT(confirmQuit()) );
+
 
 
     /* * * * * * * * * * * * * * * * * * * * *
@@ -501,34 +507,32 @@ void MainWindow::setupWindows(){
 
 
     /* * * * * * * * * * * * * * * * * * * *
-             *          Survival Mode Items        *
-             * * * * * * * * * * * * * * * * * * * */
+     *          Survival Mode Items        *
+     * * * * * * * * * * * * * * * * * * * */
+    levelClear = new QGroupBox(this);
+    levelClear->setAutoFillBackground(true);
+    levelClear->setGeometry( (screenSizeX/2) - ((screenSizeX * 0.8) / 2), (screenSizeY/2) - ((screenSizeY * 0.4) / 2),
+                             screenSizeX * 0.8 , screenSizeY * 0.4 );
 
+    // create layout
+    levelClearLayout = new QVBoxLayout(this);
+    levelClearLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
+    levelClearLayout->setSpacing(25);
+    levelClear->setLayout(levelClearLayout);
+    levelClear->hide();
 
-            levelClear = new QGroupBox(this);
-            levelClear->setAutoFillBackground(true);
-            levelClear->setGeometry( (screenSizeX/2) - ((screenSizeX * 0.8) / 2), (screenSizeY/2) - ((screenSizeY * 0.4) / 2),
-                                     screenSizeX * 0.8 , screenSizeY * 0.4 );
+    //Initalize and add Items to the layout
 
-            // create layout
-            levelClearLayout = new QVBoxLayout(this);
-            levelClearLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
-            levelClearLayout->setSpacing(25);
-            levelClear->setLayout(levelClearLayout);
-            levelClear->hide();
-
-            //Initalize and add Items to the layout
-
-            levelClearLabel = new QLabel(" Level Clear !"); labelVector.push_back(levelClearLabel);
-            levelClearLayout->addWidget(levelClearLabel, Qt::AlignHCenter | Qt::AlignTop);
-            levelNext = new QPushButton("Next Level", this); buttonVector.push_back(levelNext);
-        //    levelQuit = new QPushButton("Quit", this); buttonVector.push_back(levelQuit);
-            levelNext->setFixedSize(blockSize * 3, blockSize);
-        //    levelQuit->setFixedSize(blockSize * 3, blockSize);
-            levelClearLayout->addWidget(levelNext, Qt::AlignTop);
-        //    levelClearLayout->addWidget(levelQuit, Qt::AlignVCenter);
-            connect(levelNext, SIGNAL(clicked()), this, SLOT(nextLevel()) );
-        //    connect(levelQuit, SIGNAL(clicked()), this, SLOT(confirmQuit()) );
+    levelClearLabel = new QLabel(" Level Clear !"); labelVector.push_back(levelClearLabel);
+    levelClearLayout->addWidget(levelClearLabel, Qt::AlignHCenter | Qt::AlignTop);
+    levelNext = new QPushButton("Next Level", this); buttonVector.push_back(levelNext);
+    //    levelQuit = new QPushButton("Quit", this); buttonVector.push_back(levelQuit);
+    levelNext->setFixedSize(blockSize * 3, blockSize);
+    //    levelQuit->setFixedSize(blockSize * 3, blockSize);
+    levelClearLayout->addWidget(levelNext, Qt::AlignTop);
+    //    levelClearLayout->addWidget(levelQuit, Qt::AlignVCenter);
+    connect(levelNext, SIGNAL(clicked()), this, SLOT(nextLevel()) );
+    //    connect(levelQuit, SIGNAL(clicked()), this, SLOT(confirmQuit()) );
 
 } // End setupWindow()
 
@@ -808,6 +812,8 @@ void MainWindow::updateProgress(int nBlocks){
 void MainWindow::menuPressed(){
 
     // Quit Game and go back to Main Menu
+    if(endlessModeFlag == 1)
+        addScore();
     reset();
     scorePtr->resetScore();
     sframe->resetScoreBoard();
@@ -986,41 +992,6 @@ void MainWindow::gameOverRestartSlot(){
 }
 
 /**
- * @brief   MainWindow::noSound
- *          This method is not currently being used.
- */
-void MainWindow::noSound(){
-
-    if(soundCheck->isChecked()){
-        soundCheck->setCheckState(Qt::Unchecked);
-        soundCheck->setChecked(false);
-        // Kill sound
-    }
-
-    else if(!soundCheck->isChecked()){
-        soundCheck->setCheckState(Qt::Checked);
-        soundCheck->setChecked(true);
-        // Allow sound
-    }
-
-}
-
-/**
- * @brief   MainWindow::screenLock
- *          This method is not currently being used.
- */
-void MainWindow::screenLock(){
-    if(screenLockCheck->isChecked()){
-        screenLockCheck->setChecked(false);
-        // no flipping
-    }
-   else if(!screenLockCheck->isChecked()){
-        screenLockCheck->setChecked(true);
-        // Allow flipping
-    }
-}
-
-/**
  * @brief   changeColorScheme() creates a new palette based on the users input on the slider provided in the Settings menu.  A new palette is created and then all QLabels and QPushButtons are reassigned to this palette.
  *          The update affects QPushButtons, QLabels, and the timers (both time and bomb).
  * @bug     On 3 of 4 computers used in this group, no way could be found to update the color scheme of the QPushButtons.  On 1 computer, we were successful in updating the QPushButtons using both style sheets and palettes, but neither method worked on the other machines.
@@ -1035,6 +1006,9 @@ void MainWindow::changeColorScheme(){
     Pal.setColor(QPalette::Background, colorPtr->getQColor(0));
     Pal.setColor(QPalette::Text, colorPtr->getQColor(3));
     Pal.setColor(QPalette::WindowText, colorPtr->getQColor(3));
+    Pal.setColor(QPalette::Base, QColor(0, 0, 0));
+
+    helpText->setPalette(Pal);  // Change about menu text's color
 
     for (int i=0; i< (int) labelVector.size(); i++) {
         ((QLabel*) labelVector.at(i))->setPalette(Pal);
@@ -1138,7 +1112,6 @@ void MainWindow::standardMode(){
     startGame();
 }
 
-
 /**
  * @brief MainWindow::nextLevel
  */
@@ -1210,6 +1183,23 @@ void MainWindow::endlessMode(){
     startGame();
 }
 
+/**
+ * @brief MainWindow::addScore
+ */
+void MainWindow::addScore(){
+    menuButton->hide();
+    if(stdModeFlag == 1){
+        theHighScores->addHighScore("standard", scorePtr->getScore());
+    }
+    else if(survivalModeFlag == 1){
+        theHighScores->addHighScore("survival", scorePtr->getScore());
+    }
+    else if(endlessModeFlag == 1){
+        theHighScores->addHighScore("endless", scorePtr->getScore());
+    }
+
+    updateScoreLabels();
+}
 
 /**
  * @brief   shufflePressed() preserves the blocks' color and any stars but shuffles the blocks randomly.
@@ -1713,6 +1703,7 @@ void MainWindow::timeSlot(){
         }
 
         gameOverMenu->show();
+        addScore();
         timeOver();
         btimeOver();
         //close();
@@ -1734,6 +1725,7 @@ void MainWindow::timeSlot(){
                 }
 
                 gameOverMenu->show();
+                addScore();
                 timeOver();
                 btimeOver();
                 //close();
@@ -1851,6 +1843,30 @@ void MainWindow::processProgress(){
  */
 void MainWindow::loadHighScores(){
     theHighScores->readInHighScores();
+    QString tempString;
+    char *tempChar;
+    for(int index = 0; index < 5; index++){
+        tempString = QString::number(index+1);
+        tempString.append(".  ");
+        tempChar = theHighScores->getScore("standard", index);
+        tempString.append(tempChar);
+        standardScores[index]->setText(tempString);
+
+        tempString = QString::number(index+1);
+        tempString.append(".  ");
+        tempChar = theHighScores->getScore("survival", index);
+        tempString.append(tempChar);
+        survivalScores[index]->setText(tempString);
+
+        tempString = QString::number(index+1);
+        tempString.append(".  ");
+        tempChar = theHighScores->getScore("endless", index);
+        tempString.append(tempChar);
+        endlessScores[index]->setText(tempString);
+    }
+}
+
+void MainWindow::updateScoreLabels(){
     QString tempString;
     char *tempChar;
     for(int index = 0; index < 5; index++){

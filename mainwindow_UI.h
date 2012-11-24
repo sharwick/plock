@@ -17,6 +17,7 @@
 #include <QProgressBar>
 #include <QSlider>
 #include <QString>
+#include <QFont>
 #include <QDialogButtonBox>
 #include <QMouseEvent>
 #include <QTextBrowser>
@@ -64,16 +65,17 @@ private:
     *helpButton, *backToMenu, *backToMenu2, *backToMenu3, *backToMenu4, *standardModeButton, *highScoreButton,
     *pauseAccept, *pauseRejected, *pauseSettings, *pauseHighScore, *endlessModeButton, *survivalModeButton, *gameOverToMenu, *gameOverRestart,
     *quitButton, *confirmAcceptButton, *confirmRejectButton, *gameOverHighScore, *levelNext;
-    QGroupBox *mainMenu, *settingsMenu, *helpMenu, *gameModeMenu, *pauseMenu, *gameOverMenu, *confirmMenu, *highScoreMenu, *startScreen, *levelClear;
-    QCheckBox *soundCheck, *screenLockCheck;
-    QLabel *titleLabel, *gameModeTitle, *settingsTitle, *timeLabel, *bombLayer, *bombFill, *Timeclock, *Timefill, *finalLevelLabel, *finalScoreLabel, *bombLabel, *scoreLabel, *pauseLabel, *quitLabel, *colorSchemeLabel, *pressScreenLabel, *highScoresLabel, *levelClearLabel, *progressLabel;
+    QGroupBox *mainMenu, *settingsMenu, *helpMenu, *gameModeMenu, *pauseMenu, *confirmMenu, *gameOverMenu, *highScoreMenu, *startScreen, *levelClear;
+    QLabel *titleLabel, *gameModeTitle, *settingsTitle, *timeLabel, *bombLayer, *bombFill, *Timeclock, *Timefill, *finalLevelLabel, *finalScoreLabel,
+    *bombLabel, *scoreLabel, *pauseLabel, *quitLabel, *colorSchemeLabel, *pressScreenLabel, *highScoresLabel, *levelClearLabel, *progressLabel,
+    *standardLabel, *survivalLabel, *endlessLabel, *aboutLabel;
     QTextBrowser *helpText, *highScoreText;
     QSlider *colorSlider;
     QLabel *tempScore, *tempLevel, *standardScores[5], *survivalScores[5], *endlessScores[5];
     myRectItem* rectArray[8][9];
-    QTimer *timer;
-    QTimer *btimer;
-    QTimer *gtimer;
+    QTimer *timer, *btimer, *gtimer;
+    QString aboutText;
+    QFont tempFont;
     Colors *colorPtr;
     Score *scorePtr;
     ScoreFrame *sframe;
@@ -116,6 +118,7 @@ private:
     void setupWindows();
     void startGame();
     void loadHighScores();
+    void updateScoreLabels();
 	
 	//Dan Block Functions
     void processMatch(Block*);
@@ -153,12 +156,11 @@ private slots:
    void highScoresShow();
    void gameOverRestartSlot();
    void gameOverMenuSlot();
+   void addScore();
    void standardMode();
    void endlessMode();
    void survivalMode();
    void nextLevel();
-   void screenLock();
-   void noSound();
    void changeColorScheme();
    void verticalFlip();
    void horizontalFlip();

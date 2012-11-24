@@ -4,7 +4,12 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <exception>
+#include <stdlib.h>
+#include <stdio.h>
+#include <sstream>
+
+#include <QFile>
+#include <QTextStream>
 
 using namespace std;
 
@@ -22,15 +27,21 @@ public:
     string survivalHighScores[5];
     string endlessHighScores[5];
 
+    QFile otherFile;
+    QTextStream stream;
+
     // Variables
     int fileFlag;
+    int standardInts[5];
+    int survivalInts[5];
+    int endlessInts[5];
     string tempString;
 
     // Methods
     void readInHighScores();
     void writeHighScores();
     char* getScore(char*, int);
-    void addHighScore(int);
+    void addHighScore(char*, int);
 };
 
 #endif // HIGHSCORES_H
