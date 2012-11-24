@@ -1215,7 +1215,6 @@ void MainWindow::endlessMode(){
  * @brief   shufflePressed() preserves the blocks' color and any stars but shuffles the blocks randomly.
             The shuffle is performed by randomly swapping pairs of blocks.  The number of swaps performed is quadratic in the area of the board.
             This button is inactive if the game is paused.
- * @param   None
  * @return  Void
  */
 
@@ -1275,7 +1274,6 @@ void MainWindow::quit(){
 /**
  * @brief   horizontalFlip() preserves the blocks' color and any stars but shuffles the blocks so that they get flipped along the horizontal access.
             This button is inactive if the game is paused.
- * @param   None
  * @return  Void
  */
 
@@ -1314,7 +1312,6 @@ void MainWindow::horizontalFlip() {
 /**
  * @brief   rotate() preserves the blocks' color and any stars but rotates the blocks 180 degrees.
             This button is inactive if the game is paused.
- * @param   None
  * @return  Void
  */
 
@@ -1354,7 +1351,6 @@ void MainWindow::rotate() {
  * @brief   verticalFlip() preserves the blocks' color and any stars but shuffles the blocks so that they get flipped along the vertical access.
             This button is inactive if the game is paused.
             This method is not currently in use in the game because it does not offer a strategic benefit the way the other shuffles do.
- * @param   None
  * @return  Void
  */
 

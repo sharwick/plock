@@ -31,7 +31,7 @@ ScoreFrame::ScoreFrame() {
 }
 
 /** @brief      Updates the score board to display current score, formatted with commas.
-  * @param      The input n will be the integer value of the current score.
+  * @param      n The input n will be the integer value of the current score.
   */
 void ScoreFrame::update(int n) {
     QString num = QLocale(QLocale::English).toString((double) n, 'f', 0);
@@ -40,7 +40,6 @@ void ScoreFrame::update(int n) {
 
 
 /** @brief      Resets the score to 0.  This method must be called before the start of a new game.
-  * @param      None
   * @return     Void
   */
 void ScoreFrame::resetScoreBoard() {

@@ -19,8 +19,8 @@ Score::Score() {
 
 
 /** @brief  The score is updated by adding a quartic polynomial of the number of blocks eliminated.
-  * @param  The integer nBlocks is the number of blocks deleted in the last move.
-  * @param  The boolean value speedBonus is not currently in use.  It is intended to allow the score to be incremented if the player makes multiple consecutive moves within a specified timeframe.
+  * @param  nBlocks The integer nBlocks is the number of blocks deleted in the last move.
+  * @param  speedBonus The boolean value speedBonus is not currently in use.  It is intended to allow the score to be incremented if the player makes multiple consecutive moves within a specified timeframe.
   * @return Void
   *
   */
@@ -39,7 +39,6 @@ void Score::updateScore(int nBlocks, bool speedBonus) {
 }
 
 /** @brief  Obtain the current score.
-  * @param  None
   * @return The integer value of the score.
   *
   */
@@ -49,7 +48,6 @@ int Score::getScore() {
 
 
 /** @brief  When a star is eliminated, this method is called to increment the multiplier.
-  * @param  None
   * @return Void
   *
   */
@@ -59,7 +57,6 @@ void Score::incrementMultiplier(){
 
 
 /** @brief  When a new game is started, the score and multiplier must be returned to their initial values (0 and 1).
-  * @param  None
   * @return Void
   *
   */
@@ -70,7 +67,6 @@ void Score::resetScore() {
 
 
 /** @brief  This method obtains the current multiplier. It is necessary to display the current multiplier on the board.
-  * @param  None
   * @return The current integer value of the multiplier.
   *
   */

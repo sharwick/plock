@@ -1,5 +1,5 @@
 /** @author     Shannon Harwick
-  * @Brief      A single color class is called which contains a set of color schemes.
+  * @brief      A single color class is called which contains a set of color schemes.
   *             Color scheme 0 is the default, but the user is free to change to one of
   *             the other color schemes from within the Settings menu.
   *
@@ -13,7 +13,7 @@
 
 #include "Colors.h"
 
-/** @Description    Creates an instance of the Color class and sets the color scheme to the requested scheme.
+/** @brief    Creates an instance of the Color class and sets the color scheme to the requested scheme.
   * @param          The single input parameter is an integer from 0 to 4,
   *                 allowing user to choose a different scheme.
   *                 Color scheme 0 (default is not color-blind safe but shows the most variation in block colors)
