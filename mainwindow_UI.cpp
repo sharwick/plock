@@ -705,7 +705,7 @@ void MainWindow::setupBlocks(){
  *  @param event
  */
 void MainWindow::mousePressEvent(QMouseEvent *event){
-    if(!pauseMenu->isVisible() && !gameOverMenu->isVisible()){    // Only allow clicks when no menu is displayed
+    if(!pauseMenu->isVisible() && !gameOverMenu->isVisible() && !levelClear->isVisible()){    // Only allow clicks when no menu is displayed
 
         // On first press hide start screen & start
         if(startScreen->isVisible()){
@@ -1204,7 +1204,7 @@ void MainWindow::addScore(){
 
 void MainWindow::shufflePressed() {
     // Only shuffles if not paused
-    if(!pauseMenu->isVisible()){
+    if(!pauseMenu->isVisible() && !levelClear->isVisible() && !gameOverMenu->isVisible()){
 
         // perform Nswaps swaps, passing colors/bombs/multipliers
         int Nswaps, i;
@@ -1251,7 +1251,7 @@ void MainWindow::quit(){
 
 void MainWindow::horizontalFlip() {
     // Only flips if not paused
-    if(!pauseMenu->isVisible()){
+    if(!pauseMenu->isVisible() && !gameOverMenu->isVisible() && !levelClear->isVisible()){
 
         int x, y;
 
@@ -1289,7 +1289,7 @@ void MainWindow::horizontalFlip() {
 void MainWindow::rotate() {
 
     // Only flips if not paused
-    if(!pauseMenu->isVisible()){
+    if(!pauseMenu->isVisible() && !levelClear->isVisible() && !gameOverMenu->isVisible()){
 
         int x, y;
 
@@ -1327,7 +1327,7 @@ void MainWindow::rotate() {
 void MainWindow::verticalFlip() {
 
     // Only flips if not paused
-    if(!pauseMenu->isVisible()){
+    if(!pauseMenu->isVisible() && !gameOverMenu->isVisible() && !levelClear->isVisible()){
 
         int x, y;
 
@@ -1766,8 +1766,8 @@ void MainWindow::startGame(){
     gamedone = false;
     bcurrentTime=0;
     btimer->start(333.333);
+    Timefill->setMaximumWidth(Timeclock->width());
     if(stdModeFlag == 1){
-        Timefill->setMaximumWidth(Timeclock->width());
         currentTime = 60;
         timer->start(200);
     }
