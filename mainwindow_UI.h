@@ -128,6 +128,7 @@ private:
 
     void processProgress();
     void generateGraphicObject(int, int);
+    void removeBlocks();
 
     //vector<GraphObject> scoringObjects; //NYI
 

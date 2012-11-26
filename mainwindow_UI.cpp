@@ -158,7 +158,7 @@ void MainWindow::setupWindows(){
     tempFont = QFont();
     tempFont.setPointSize(blockSize/6);
     tempFont.setBold(true);
-    titleLabel = new QLabel("B L O C K S T A R"); labelVector.push_back(titleLabel);
+    titleLabel = new QLabel("B O M B S T A R"); labelVector.push_back(titleLabel);
     titleLabel->setFixedSize(blockSize*4.25, blockSize*2);
     titleLabel->setFont(tempFont);
     mainMenuLayout->addWidget(titleLabel, Qt::AlignHCenter);
@@ -1227,19 +1227,6 @@ void MainWindow::shufflePressed() {
 
             if(gameBoard[r1][c1]->getGraphImage() != gameBoard[r2][c2]->getGraphImage())
                 graphSwap(r1, c1, r2, c2);
-            // TO DO: need to swap bombs/multipler -> add getBomb method to Block
-            /*
-             *At this point, graph objects need to be swapped between rect items
-             *tempGraphObject = rectArray[gameBoard[r1][c1]->getCoordX()][gameBoard[r1][c1]->getCoordY()]->myGraphObject;
-             *rectArray[gameBoard[r1][c1]->getCoordX()][gameBoard[r1][c1]->getCoordY()]->myGraphObject = rectArray[gameBoard[r2][c2]->getCoordX()][gameBoard[r2][c2]->getCoordY()]->myGraphObject;
-             *rectArray[gameBoard[r2][c2]->getCoordX()][gameBoard[r2][c2]->getCoordY()->myGraphObject = tempGraphObject;
-             *
-             *The graph objects were just swapped but they still contain the previous coordinates
-             *rectArray[gameBoard[r1][c1]->getCoordX()][gameBoard[r1][c1]->getCoordY()]->myGraphObject->moved(gameBoard[r2][c2]->getCoordX(), gameBoard[r2][c2]->getCoordY());
-             *rectArray[gameBoard[r2][c2]->getCoordX()][gameBoard[r2][c2]->getCoordY()]->myGraphObject->moved(gameBoard[r1][c1]->getCoordX(), gameBoard[r1][c1]->getCoordY());
-             *
-             *May need to force another painting of these graph objects, but data structure continuity is maintained at this point
-             */
         }
 
     }
@@ -1285,8 +1272,6 @@ void MainWindow::horizontalFlip() {
 
                 if(gameBoard[x1][y1]->getGraphImage() != gameBoard[x2][y2]->getGraphImage())
                     graphSwap(x1, y1, x2, y2);
-                // TO DO: need to swap bombs/multipler -> add getBomb method to Block
-                //Swapping follows similar process commented in shuffle
             }
         }
 
@@ -1324,8 +1309,6 @@ void MainWindow::rotate() {
                 rectArray[gameBoard[x2][y2]->getCoordX()][gameBoard[x2][y2]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x2][y2]->getColor()), Qt::SolidPattern));
                 if(gameBoard[x1][y1]->getGraphImage() != gameBoard[x2][y2]->getGraphImage())
                     graphSwap(x1, y1, x2, y2);
-                // TO DO: need to swap bombs/multipler -> add getBomb method to Block
-                //Swapping follows similar process commented in shuffle
             }
         }
     }
@@ -1523,7 +1506,7 @@ void MainWindow::determineColor(vector<Block*> blockVector)
                 gameBoard[blockVector[i]->getCoordX()][checkY]->setColor(0);
                 rectArray[blockVector[i]->getCoordX()][checkY]->setBrush(QBrush(colorPtr->getQColor(0),Qt::SolidPattern));
                 blockVector.push_back(gameBoard[blockVector[i]->getCoordX()][checkY]); //add block to end of vector
-                if(gameBoard[blockVector[i]->getCoordX()][checkY]->getGraphImage() != 0 || gameBoard[blockVector[i]->getCoordX()][blockVector[i]->getCoordY()]->getGraphImage() != 0)
+                if(gameBoard[blockVector[i]->getCoordX()][checkY]->getGraphImage() != gameBoard[blockVector[i]->getCoordX()][blockVector[i]->getCoordY()]->getGraphImage())
                     graphSwap(blockVector[i]->getCoordX(), blockVector[i]->getCoordY(), blockVector[i]->getCoordX(), checkY);
                 break;
             }
@@ -1777,26 +1760,7 @@ void MainWindow::timeBegin(){
  * @brief MainWindow::startGame
  */
 void MainWindow::startGame(){
-    if(start){
-        for(int i = 0; i < boardSizeX; i++){
-            for(int j = 0; j < boardSizeY; j++){
-                delete gameBoard[i][j];
-                gameBoard[i][j] = 0;
-                //if(rectArray[i][j]->bombPtr != 0)
-                    //rectArray[i][j]->bombPtr->setBrush(QBrush(Qt::yellow));
-                if(rectArray[i][j]->textPtr != 0)
-                    theScene->removeItem(rectArray[i][j]->textPtr);
-                rectArray[i][j]->removeGraphObject(true);
-                //delete rectArray[i][j]->textPtr;
-                theScene->removeItem(rectArray[i][j]);
-                //rectArray[i][j]->setBrush(QBrush(Qt::yellow));
-                delete rectArray[i][j];
-                rectArray[i][j] = 0;
-            }
-        }
-    }
-    else
-        start = true; //start is initialized to false in menu set up
+    removeBlocks();
     setupBlocks();
     bombFill->setMaximumWidth(0);
     gamedone = false;
@@ -1896,6 +1860,29 @@ void MainWindow::graphSwap(int firstX, int firstY, int secondX, int secondY){
         generateGraphicObject(firstX, firstY);
     }
 
+}
+
+void MainWindow::removeBlocks(){
+    if(start){
+        for(int i = 0; i < boardSizeX; i++){
+            for(int j = 0; j < boardSizeY; j++){
+                delete gameBoard[i][j];
+                gameBoard[i][j] = 0;
+                //if(rectArray[i][j]->bombPtr != 0)
+                    //rectArray[i][j]->bombPtr->setBrush(QBrush(Qt::yellow));
+                if(rectArray[i][j]->textPtr != 0)
+                    theScene->removeItem(rectArray[i][j]->textPtr);
+                rectArray[i][j]->removeGraphObject(true);
+                //delete rectArray[i][j]->textPtr;
+                theScene->removeItem(rectArray[i][j]);
+                //rectArray[i][j]->setBrush(QBrush(Qt::yellow));
+                delete rectArray[i][j];
+                rectArray[i][j] = 0;
+            }
+        }
+    }
+    else
+        start = true; //start is initialized to false in menu set up
 }
 
 // End mainwindow_UI.cpp
