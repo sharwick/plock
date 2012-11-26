@@ -2,101 +2,104 @@
  * @copyright Blockstar 2012
  * @class HighScores highScores.h "highScores.h"
  * @brief This is a class used to read & write high scores from the game to a file for record.
- * @bug High Scores do not transfer to mainwindow_UI correctly.
+ * @bug High Scores are not read or written to file correctly.
  *
  * The high scores from the game are stored in a .txt file that is read and wrote to.
- * The top ten scores from each mode is read & wrote to in a specific order to maintain simplicity
+ * The top five scores from each mode is read & wrote to in a specific order to maintain simplicity
  * in the file format.
  * The high scores from each game mode are held in seperate arrays of integers.
  * These scores are used by the score# labels in mainwindow_UI to display the scores to the user.
 */
+
 #include "highScores.h"
 
 /**
  * @brief HighScores::HighScores
  *
- * The default and only constructor. All that happens is that readInHighScores is called which
- * opens the file that the past scores are saved to.
+ * The default and only constructor. It initalizes the QLabels the scores are displayed with.
  */
 HighScores::HighScores()
 {
+    // Create Labels
+    for(int index = 0; index < 5; index++){
+        standardScores[index] = new QLabel("");
+        survivalScores[index] = new QLabel("");
+        endlessScores[index] = new QLabel("");
+    }
     readInHighScores();
 }
 
 /**
  * @brief HighScores::~HighScores
  *
- * The destructor which doesn't really need to unallocate anything.
+ * The Destructor
  */
 HighScores::~HighScores(){
-
+    for(int index = 0; index < 5; index++){
+        delete standardScores[index];
+        delete survivalScores[index];
+        delete endlessScores[index];
+    }
 }
 
 /**
  * @brief HighScores::readInHighScores
  *
- * This method opens the file highscores.txt and reads in its contents. It is formated as a
- * fifteen line text file where each line is a numerical score. The score is read in as both an
- * int and a string. The first five lines are the standard game mode scores. The next five lines
- * are the survival mode high scores, and the last five are the endless mode high scores. If the
- * file doesn't have enough lines to fill out the high scores then the rest of the scores are set
- * to zero.
+ * Opens the file highscores.txt and reads in its contents. It is formated as a
+ * fifteen line text file where each line is a numerical score. The first five lines are the
+ * standard game mode scores. The next five lines are the survival mode high scores, and the
+ * last five are the endless mode high scores. If the file doesn't have enough lines to fill
+ * out the high scores then the rest of the scores are set to zero.
  */
 void HighScores::readInHighScores(){
 
-    theFile.open("highscores.txt", ios::in | ios::out);
+    theFile = new QFile("highscores.txt");
 
     // File failed to open
-    if(!theFile.is_open()){
+    if(!theFile->open(QIODevice::ReadWrite)){
         for(int i=0; i < 5; i++){
-            standardHighScores[i] = "Fail";
+            standardScores[i]->setText("Fail");
             standardInts[i] = -1;
-            survivalHighScores[i] = "Fail";
+            survivalScores[i]->setText("Fail");
             survivalInts[i] = -1;
-            endlessHighScores[i] = "Fail";
+            endlessScores[i]->setText("Fail");
             endlessInts[i] = -1;
         }
     }
-
     else{   // File is open, read in scores
+        char* tempChar = new char();
         int index = 0;
-        tempString = string();
 
-        while(!theFile.eof()){
+        while(theFile->canReadLine()){
+            theFile->readLine(tempChar, 100);
 
-            getline(theFile, tempString);   // read in a line
+            if(index < 5)
+                standardInts[index] = atoi(tempChar);
 
-            if(index < 5){
-                standardHighScores[index] = tempString;
+            else if(index < 10 && index >= 5)
+                survivalInts[index-5] = atoi(tempChar);
 
-            }
-            else if(index < 10 && index >= 5){
-                survivalHighScores[index-5] = tempString;
-            }
-            else if(index >= 10){
-                endlessHighScores[index-10] = tempString;
-            }
+            else if(index >= 10)
+                endlessInts[index-10] = atoi(tempChar);
 
             index++;
         }
 
         while(index < 15){
             if(index < 5){
-                standardHighScores[index] = "0";
                 standardInts[index] = 0;
             }
             else if(index < 10 && index >= 5){
-                survivalHighScores[index-5] = "0";
                 survivalInts[index-5] = 0;
             }
             else if(index >= 10){
-                endlessHighScores[index-10] = "0";
                 endlessInts[index-10] = 0;
             }
             index++;
         }
     }
-    theFile.close();    // Close File
+    loadHighScores();
+    theFile->close();    // Close File
 }
 
 /**
@@ -107,55 +110,42 @@ void HighScores::readInHighScores(){
  * Mode scores, The five Survival Mode scores, and the five Endless Mode scores.
  */
 void HighScores::writeHighScores(){
+    theFile->open(QIODevice::ReadWrite);
 
-}
+    for(int index = 0; index < 15; index++){
+        if(index < 5){
+            theFile->write((char*)standardScores[index]);
+            theFile->write("\n");
+        }
+        else if(index < 10 && index >= 5){
+            theFile->write((char*)survivalScores[index-5]);
+            theFile->write("\n");
+        }
+        else{
+            theFile->write((char*)endlessScores[index-10]);
+            theFile->write("\n");
+        }
+    }
 
-/**
- * @brief HighScores::getScore
- * @param s Index of the score wanted.
- * @return Returns score at the index requested.
- *
- * Given the string and the int sent to the method, it will return the score
- * at the index of the game mode specified.
- */
-char* HighScores::getScore(char* type, int index){
-    char *tempChar;
-
-    if(strcmp(type, "standard") == 0){
-        tempChar = (char*)standardHighScores[index].c_str();
-        return tempChar;
-    }
-    else if(strcmp(type, "survival") == 0){
-        tempChar = (char*)survivalHighScores[index].c_str();
-        return tempChar;
-    }
-    else if(strcmp(type, "endless") == 0){
-        tempChar = (char*)endlessHighScores[index].c_str();
-        return tempChar;
-    }
-    else
-        return 0;
+    theFile->close();
 }
 
 /**
  * @brief HighScores::addHighScore
- * @param score Score that is sorted into the proper array.
+ * @param score The score that is sorted into the proper array.
  *
- * Given the string and the int sent to the method, it will add the score
- * into the index spot of the game mode specified.
+ * Given the string and the int sent to the method, it will sort
+ * the score into the arrays of the top scores of the mode specified.
  */
-void HighScores::addHighScore(char* type, int score){
+void HighScores::addHighScore(QString type, int score){
     int tempScore = 0, index = 0;
-    std::stringstream strStream;
 
-    if(strcmp(type, "standard") == 0){
+    if(type == "standard"){
         while(index < 5){
             if(score >= standardInts[index]){
                 tempScore = standardInts[index];
                 standardInts[index] = score;
-                strStream << standardInts[index];
-                standardHighScores[index] = strStream.str();
-                strStream.flush();
+                standardScores[index]->setText(QString::number(score));
                 index++;
                 return;
             }
@@ -163,24 +153,18 @@ void HighScores::addHighScore(char* type, int score){
         }
         while(index < 4){
             standardInts[index+1] = standardInts[index];
-            strStream << standardInts[index+1];
-            standardHighScores[index+1] = strStream.str();
-            strStream.flush();
+            standardScores[index+1]->setText(QString::number(standardInts[index+1]));
             standardInts[index] = tempScore;
-            strStream << standardInts[index];
-            standardHighScores[index] = strStream.str();
-            strStream.flush();
+            standardScores[index]->setText(QString::number(standardInts[index]));
             index++;
         }
     }
-    else if(strcmp(type, "survival") == 0){
+    else if(type == "survival"){
         while(index < 5){
             if(score >= survivalInts[index]){
                 tempScore = survivalInts[index];
                 survivalInts[index] = score;
-                strStream << survivalInts[index];
-                survivalHighScores[index] = strStream.str();
-                strStream.flush();
+                survivalScores[index]->setText(QString::number(score));
                 index++;
                 return;
             }
@@ -188,24 +172,18 @@ void HighScores::addHighScore(char* type, int score){
         }
         while(index < 4){
             survivalInts[index+1] = survivalInts[index];
-            strStream << survivalInts[index+1];
-            survivalHighScores[index+1] = strStream.str();
-            strStream.flush();
+            survivalScores[index+1]->setText(QString::number(survivalInts[index+1]));
             survivalInts[index] = tempScore;
-            strStream << survivalInts[index];
-            survivalHighScores[index] = strStream.str();
-            strStream.flush();
+            survivalScores[index]->setText(QString::number(survivalInts[index]));
             index++;
         }
     }
-    else if(strcmp(type, "endless") == 0){
+    else if(type == "endless"){
         while(index < 5){
             if(score >= endlessInts[index]){
                 tempScore = endlessInts[index];
                 endlessInts[index] = score;
-                strStream << endlessInts[index];
-                endlessHighScores[index] = strStream.str();
-                strStream.flush();
+                endlessScores[index]->setText(QString::number(score));
                 index++;
                 return;
             }
@@ -213,14 +191,61 @@ void HighScores::addHighScore(char* type, int score){
         }
         while(index < 4){
             endlessInts[index+1] = endlessInts[index];
-            strStream << endlessInts[index+1];
-            endlessHighScores[index+1] = strStream.str();
-            strStream.flush();
+            endlessScores[index+1]->setText(QString::number(endlessInts[index+1]));
             endlessInts[index] = tempScore;
-            strStream << endlessInts[index];
-            endlessHighScores[index] = strStream.str();
-            strStream.flush();
+            endlessScores[index]->setText(QString::number(endlessInts[index]));
             index++;
         }
+    }
+}
+
+/**
+ * @brief HighScores::loadHighScores
+ *
+ * Sets the text of the QLabels that displays the scores from
+ * the int arrays of the scores.
+ */
+void HighScores::loadHighScores(){
+    QString tempString;
+    for(int index = 0; index < 5; index++){
+        tempString = QString::number(index+1);
+        tempString.append(".  ");
+        tempString.append(QString::number(standardInts[index]));
+        standardScores[index]->setText(tempString);
+
+        tempString = QString::number(index+1);
+        tempString.append(".  ");
+        tempString.append(QString::number(survivalInts[index]));
+        survivalScores[index]->setText(tempString);
+
+        tempString = QString::number(index+1);
+        tempString.append(".  ");
+        tempString.append(QString::number(endlessInts[index]));
+        endlessScores[index]->setText(tempString);
+    }
+}
+
+/**
+ * @brief HighScores::getLabel
+ * @param type Game Mode
+ * @param index Score Index
+ * @return Label for the score of the Game Mode given at the index given.
+ *
+ * Returns a pointer to the QLabel that displays the score of the game mode
+ * given at the index given.
+ */
+QLabel* HighScores::getLabel(QString type, int index){
+    QLabel *ptr;
+    if(type == "standard"){
+        ptr = standardScores[index];
+        return ptr;
+    }
+    else if(type == "survival"){
+        ptr = survivalScores[index];
+        return ptr;
+    }
+    else{
+        ptr = endlessScores[index];
+        return ptr;
     }
 }

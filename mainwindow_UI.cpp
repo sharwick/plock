@@ -87,11 +87,7 @@ void MainWindow::showExpanded()
 } // End Necessitas Stuff
 
 
-/** @author Shannon Harwick
- *  @author Daniel Keasler
- *  @author Devin Rusnak
- *  @author Mikael Son
- *  @copyright Blockstar 2012
+/**
  *  @brief MainWindow::setupWindows
  *
  *  This method sets the size of the mainWindow based on the size of
@@ -254,6 +250,8 @@ void MainWindow::setupWindows(){
     /* * * * * * * * * * * * * * * * * * * *
      * Setup High Score Menu and its items *
      * * * * * * * * * * * * * * * * * * * */
+    theHighScores = new HighScores();
+
     // Initalize Widget
     highScoreMenu = new QGroupBox(this);
     highScoreMenu->setFixedSize(screenSizeX, screenSizeY);
@@ -270,36 +268,30 @@ void MainWindow::setupWindows(){
     highScoresLabel = new QLabel("HIGH SCORES"); labelVector.push_back(highScoresLabel);
     highScoresLabel->setFixedSize(blockSize * 4, blockSize);
     highScoresLabel->setFont(tempFont);
-    highScoreLayout->addWidget(highScoresLabel, 0, 1, Qt::AlignHCenter);
+    highScoreLayout->addWidget(highScoresLabel, 0, 0, Qt::AlignLeft);
 
     standardLabel = new QLabel("Standard", this); labelVector.push_back(standardLabel);
-    highScoreLayout->addWidget(standardLabel, 1, 0, Qt::AlignHCenter);
+    highScoreLayout->addWidget(standardLabel, 1, 0, Qt::AlignLeft);
     survivalLabel = new QLabel("Survival", this); labelVector.push_back(survivalLabel);
-    highScoreLayout->addWidget(survivalLabel, 1, 1, Qt::AlignHCenter);
+    highScoreLayout->addWidget(survivalLabel, 7, 0, Qt::AlignLeft);
     endlessLabel = new QLabel("Endless", this); labelVector.push_back(endlessLabel);
-    highScoreLayout->addWidget(endlessLabel, 1, 2, Qt::AlignHCenter);
+    highScoreLayout->addWidget(endlessLabel, 13, 0, Qt::AlignLeft);
 
     for(int index = 0; index < 5; index++){
-        standardScores[index] = new QLabel("", this);
-        standardScores[index]->setFixedSize(blockSize * 3, blockSize); labelVector.push_back(standardScores[index]);
-        highScoreLayout->addWidget(standardScores[index], index+2, 0, Qt::AlignHCenter);
+        labelVector.push_back(theHighScores->getLabel(QString("standard"), index));
+        highScoreLayout->addWidget(theHighScores->getLabel(QString("standard"), index), index+2, 0, Qt::AlignLeft);
 
-        survivalScores[index] = new QLabel("", this);
-        survivalScores[index]->setFixedSize(blockSize * 3, blockSize); labelVector.push_back(survivalScores[index]);
-        highScoreLayout->addWidget(survivalScores[index], index+2, 1, Qt::AlignHCenter);
+        labelVector.push_back(theHighScores->getLabel(QString("survival"), index));
+        highScoreLayout->addWidget(theHighScores->getLabel(QString("survival"), index), index+8, 0, Qt::AlignLeft);
 
-        endlessScores[index] = new QLabel("", this);
-        endlessScores[index]->setFixedSize(blockSize * 3, blockSize); labelVector.push_back(endlessScores[index]);
-        highScoreLayout->addWidget(endlessScores[index], index+2, 2, Qt::AlignHCenter);
+        labelVector.push_back(theHighScores->getLabel(QString("endless"), index));
+        highScoreLayout->addWidget(theHighScores->getLabel(QString("endless"), index), index+14, 0, Qt::AlignLeft);
     }
 
-    theHighScores = new HighScores();
-    loadHighScores();   // Load in High Scores from the HighScores Object
-
     backToMenu4 = new QPushButton("Menu", this); buttonVector.push_back(backToMenu4);
-    backToMenu4->setFixedSize(blockSize * 4, blockSize);
+    backToMenu4->setFixedSize(blockSize * 2, blockSize);
     connect(backToMenu4, SIGNAL(clicked()), this, SLOT(backToMain()) );
-    highScoreLayout->addWidget(backToMenu4, 13, 1, Qt::AlignBottom);
+    highScoreLayout->addWidget(backToMenu4, 0, 1, Qt::AlignRight);
 
 
     /* * * * * * * * * * * * * * * * * * *
@@ -1198,13 +1190,15 @@ void MainWindow::addScore(){
         theHighScores->addHighScore("endless", scorePtr->getScore());
     }
 
-    updateScoreLabels();
+    theHighScores->writeHighScores();
+    theHighScores->loadHighScores();
 }
 
 /**
  * @brief   shufflePressed() preserves the blocks' color and any stars but shuffles the blocks randomly.
             The shuffle is performed by randomly swapping pairs of blocks.  The number of swaps performed is quadratic in the area of the board.
             This button is inactive if the game is paused.
+ * @param   None
  * @return  Void
  */
 
@@ -1264,6 +1258,7 @@ void MainWindow::quit(){
 /**
  * @brief   horizontalFlip() preserves the blocks' color and any stars but shuffles the blocks so that they get flipped along the horizontal access.
             This button is inactive if the game is paused.
+ * @param   None
  * @return  Void
  */
 
@@ -1302,6 +1297,7 @@ void MainWindow::horizontalFlip() {
 /**
  * @brief   rotate() preserves the blocks' color and any stars but rotates the blocks 180 degrees.
             This button is inactive if the game is paused.
+ * @param   None
  * @return  Void
  */
 
@@ -1341,6 +1337,7 @@ void MainWindow::rotate() {
  * @brief   verticalFlip() preserves the blocks' color and any stars but shuffles the blocks so that they get flipped along the vertical access.
             This button is inactive if the game is paused.
             This method is not currently in use in the game because it does not offer a strategic benefit the way the other shuffles do.
+ * @param   None
  * @return  Void
  */
 
@@ -1726,6 +1723,7 @@ void MainWindow::timeSlot(){
 
                 gameOverMenu->show();
                 addScore();
+                theHighScores->writeHighScores();
                 timeOver();
                 btimeOver();
                 //close();
@@ -1836,58 +1834,6 @@ void MainWindow::processProgress(){
 
         gtimer->start();
 
-}
-
-/**
- * @brief MainWindow::loadHighScores
- */
-void MainWindow::loadHighScores(){
-    theHighScores->readInHighScores();
-    QString tempString;
-    char *tempChar;
-    for(int index = 0; index < 5; index++){
-        tempString = QString::number(index+1);
-        tempString.append(".  ");
-        tempChar = theHighScores->getScore("standard", index);
-        tempString.append(tempChar);
-        standardScores[index]->setText(tempString);
-
-        tempString = QString::number(index+1);
-        tempString.append(".  ");
-        tempChar = theHighScores->getScore("survival", index);
-        tempString.append(tempChar);
-        survivalScores[index]->setText(tempString);
-
-        tempString = QString::number(index+1);
-        tempString.append(".  ");
-        tempChar = theHighScores->getScore("endless", index);
-        tempString.append(tempChar);
-        endlessScores[index]->setText(tempString);
-    }
-}
-
-void MainWindow::updateScoreLabels(){
-    QString tempString;
-    char *tempChar;
-    for(int index = 0; index < 5; index++){
-        tempString = QString::number(index+1);
-        tempString.append(".  ");
-        tempChar = theHighScores->getScore("standard", index);
-        tempString.append(tempChar);
-        standardScores[index]->setText(tempString);
-
-        tempString = QString::number(index+1);
-        tempString.append(".  ");
-        tempChar = theHighScores->getScore("survival", index);
-        tempString.append(tempChar);
-        survivalScores[index]->setText(tempString);
-
-        tempString = QString::number(index+1);
-        tempString.append(".  ");
-        tempChar = theHighScores->getScore("endless", index);
-        tempString.append(tempChar);
-        endlessScores[index]->setText(tempString);
-    }
 }
 
 /**

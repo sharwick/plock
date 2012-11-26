@@ -1,15 +1,9 @@
 #ifndef HIGHSCORES_H
 #define HIGHSCORES_H
 
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <stdlib.h>
-#include <stdio.h>
-#include <sstream>
-
 #include <QFile>
 #include <QTextStream>
+#include <QLabel>
 
 using namespace std;
 
@@ -22,26 +16,23 @@ public:
     ~HighScores();
 
     // Objects
-    ifstream theFile;
-    string standardHighScores[5];
-    string survivalHighScores[5];
-    string endlessHighScores[5];
-
-    QFile otherFile;
-    QTextStream stream;
+    QFile *theFile;
+    QLabel *standardScores[5], *survivalScores[5], *endlessScores[5];
 
     // Variables
-    int fileFlag;
     int standardInts[5];
     int survivalInts[5];
     int endlessInts[5];
-    string tempString;
+
 
     // Methods
     void readInHighScores();
     void writeHighScores();
-    char* getScore(char*, int);
-    void addHighScore(char*, int);
+    void loadHighScores();
+    char* getScore(QString, int);
+    void addHighScore(QString, int);
+    QLabel* getLabel(QString, int);
+
 };
 
 #endif // HIGHSCORES_H

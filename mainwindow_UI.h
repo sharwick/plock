@@ -71,7 +71,7 @@ private:
     *standardLabel, *survivalLabel, *endlessLabel, *aboutLabel;
     QTextBrowser *helpText, *highScoreText;
     QSlider *colorSlider;
-    QLabel *tempScore, *tempLevel, *standardScores[5], *survivalScores[5], *endlessScores[5];
+    QLabel *tempScore, *tempLevel;
     myRectItem* rectArray[8][9];
     QTimer *timer, *btimer, *gtimer;
     QString aboutText;
@@ -117,8 +117,7 @@ private:
     void setupGameScreen();
     void setupWindows();
     void startGame();
-    void loadHighScores();
-    void updateScoreLabels();
+    void scoreLabelsUpdate();
 	
 	//Dan Block Functions
     void processMatch(Block*);
