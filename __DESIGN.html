@@ -90,5 +90,62 @@ a more detailed explanation are foundMatch and gatherBlocks, and they will be ex
 markedBool and coloredBool are used in many of these algorithms and will be detailed there as well.
 </p>
 
+<h3>Game Play</h3>
+<p>Game play is started through either selecting a game mode, restarting your current game mode in
+the pause menu, or playing another game after your current game has ended. Selecting a game mode
+will set one of the three game mode flags to 1. Each potential new game started calls the startGame
+function, and some pieces are not started or shown depending on the game mode flags. Endless mode 
+does not show the time bar nor start the time bar. Survival mode displays and starts a slightly 
+modified time bar, a progress bar. More information on these is written in the Timers section. Each new game deletes and nulls the previous board, and then
+dynamically allocates and randomly generates a new board. </p>
+
+<p>The application now waits for a mousePressEvent. The game board itself needs 1 mouse event to
+properly register graphics scene mouse events. This also officially starts the game timer and enables
+interaction with the myRectItems. </p>
+
+<p>Every mouse event after the first has the same process. The game 
+board mouse events are temporarily frozen to process 1 match at a time. The x and y of the event 
+are obtained, which is then used to obtain a Block in the two dimensional array of objects. The code to then check for an initial match was placed in the Block class because the 
+Block Class contained the appropriate references and it was another process we could move out of our
+long MainWindow class. FoundMatch checks that Block objects neighboring Blocks for an equal color 
+value and returns true if it finds one. If it returns true, then processMatch is called and the obtained block is sent as a parameter. 
+The next mouse event still cannot start until after the mouse press event function returns to its caller, so if processMatch is called, 
+mouse press events in the graphics scene will be disabled while processMatch is being executed.</p>
+
+<p>The first thing that happens in processMatch is all of the adjacent and matching blocks are gathered. 
+gatherBlocks takes in a vector<Block*> and continuously expands through recursion as long as the pointer
+reference exists and the color integer value matches. This is a recursive function in the Block Class because the array 
+index access function would have been messier and it allows for more code to be placed outside the 
+applications long main window. markedBool is necessary to avoid endless recursion amongst different directional
+accesses of the same Block object. </p>
+
+<p>Each of the current matching and adjacent blocks are now checked for a star in the checkSpecial function.
+Using the gathered blocks from the previous step, if any Block objects graph image is not 0, a number of
+bookkeeping statements are executed in addition to calling bombCollector to gather blocks from a bomb
+explosion. Because the explosion (collection) is a 3x3 subset of the two dimensional array of blocks centered at the 
+star block, array accesses were the cleanest choice. </p>
+
+<p>Now the blocks are sorted relatively in each column. Assuming similar x values, no 
+Block further down the vector will have a lower y value. Sorting was not optimal
+and very likely not necessary, but the implementation of sorting worked properly with
+the rest of the algorithms. With more time, a better implementation between what sorting was intended to do
+(assure proper re-coloring order) and how determing new colors was implemented (assuming the blocks were sorted).</p>
+
+<p>The conclusion of sorting leaves every single collected block (and the corresponding rectItem) as 
+Black. A timer is placed here to force the game to show the blacking transition. This is discussed more
+in the Timers section.</p>
+
+<p>The score and bomb bar are updated. Scoring is described in the Score Class and the ScoreFrame Class, 
+and the bomb bar (which is similar to the time bar) is described in the Timers section. The progress bar
+is updated if you are playing in survival mode. </p>
+
+<p>Finally the new colors are determined. The algorithm will search upwards in a column for 
+a color that a particular Block can steal. Stars also have to properly be stolen as well. coloredBool is used to determine if a Block needs a 
+color change. We could have also used the black color to check for necessary color changes, but while
+we didn't know how to force transitions a more intelligent method could not be implemented. This is 
+done using array accessing because the code is slightly cleaner to decrement the y index value as 
+searching upwards in a column. </p>
+
+<p>The game now waits for another mouse event. The game ends when the user exits the game or when the time runs out.</p>
 </body>
 </html>
