@@ -872,9 +872,11 @@ void MainWindow::pauseBack(){
  * @brief MainWindow::pausedPressed
  */
 void MainWindow::pausedPressed(){
+    if (!levelClear->isVisible()){
     pauseMenu->show();
     timeOver();
     btimeOver();
+    }
 }
 /**
  * @brief MainWindow::pauseSettingsPressed
@@ -1695,30 +1697,32 @@ void MainWindow::timeSlot(){
     if(x%4==0){
         currentTime--;
     }
-    if(currentTime==-1){
-        int n= scorePtr->getScore();
-        QString num = QLocale(QLocale::English).toString((double) n, 'f', 0);
-        tempScore->setText(num);
+//    if(currentTime==-1){
+//        int n= scorePtr->getScore();
+//        QString num = QLocale(QLocale::English).toString((double) n, 'f', 0);
+//        tempScore->setText(num);
 
-        if (survivalModeFlag==1) {
-            tempLevel->setText(QString::number(level));
-            finalLevelLabel->setText("Your Final Level:");
-        }
-        else {
-            tempLevel->setText("");
-            finalLevelLabel->setText("");
-        }
+//        if (survivalModeFlag==1) {
+//            tempLevel->setText(QString::number(level));
+//            finalLevelLabel->setText("Your Final Level:");
+//        }
+//        else {
+//            tempLevel->setText("");
+//            finalLevelLabel->setText("");
+//        }
 
-        gameOverMenu->show();
-        addScore();
-        timeOver();
-        btimeOver();
-        //close();
-        //return;
-    }
+//        gameOverMenu->show();
+//        addScore();
+//        timeOver();
+//        btimeOver();
+//        //close();
+//        //return;
+//    }
     if(Timefill->maximumWidth() == 0){
                 gamedone = true;
 
+
+                int n= scorePtr->getScore();
                 QString num = QLocale(QLocale::English).toString((double) scorePtr->getScore(), 'f', 0);
                 tempScore->setText(num);
 
@@ -1822,6 +1826,8 @@ void MainWindow::processProgress(){
         level++;//increment level counter (would need to have started at 1 for each survival call)
         //group box with level x incoming, etc
         timerCounter -= (7 * (level-1));//increment timer speed, maybe formula from level counter
+        if (timerCounter == 0 || timerCounter < 0)
+            timerCounter =1;
 //        progressLevel = ((1000 / timerCounter) * 60);
         Timefill->setMaximumWidth(Timeclock->width() / 2);//set timer to 50%
         currentTime = 30;
