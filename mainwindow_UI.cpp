@@ -613,8 +613,6 @@ void MainWindow::setupGameScreen(){
 
     // Time Progress Bar
 
-    start = false;
-
     Timeclock = new QLabel();
     Timefill = new QLabel();
 
@@ -865,7 +863,8 @@ void MainWindow::quitRejectedGameOver(){
  */
 void MainWindow::pauseBack(){
     pauseMenu->hide();
-    timeBegin();
+    if(endlessModeFlag != 1)
+        timeBegin();
     if(bcurrentTime!=0)
         btimeBegin();
 }
@@ -1167,6 +1166,7 @@ void MainWindow::endlessMode(){
     Timefill->hide();
     scorePtr->resetScore();
     sframe->resetScoreBoard();
+    progressLabel->hide();
 
     stdModeFlag = 0;
     endlessModeFlag = 1;
@@ -1792,8 +1792,8 @@ void MainWindow::startGame(){
     bcurrentTime=0;
     btimer->start(333.333);
     Timefill->setMaximumWidth(Timeclock->width());
+    currentTime = 60;
     if(stdModeFlag == 1){
-        currentTime = 60;
         timer->start(200);
     }
     else if(survivalModeFlag == 1){
