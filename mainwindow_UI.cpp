@@ -520,6 +520,10 @@ void MainWindow::setupWindows(){
 
     //Initalize and add Items to the layout
 
+//    levelClearLevel = new QLabel(); labelVector.push_back(levelClearLevel);
+//    levelClearLevel->setText(level);
+//    levelClearLevel->setFont(tempFont);
+//    levelClearLayout->addWidget(levelClearLevel, Qt::AlignHCenter | Qt::AlignTop);
     levelClearLabel = new QLabel(" Level Clear !"); labelVector.push_back(levelClearLabel);
     levelClearLabel->setFont(tempFont);
     levelClearLayout->addWidget(levelClearLabel, Qt::AlignHCenter | Qt::AlignTop);
@@ -1798,7 +1802,11 @@ void MainWindow::processProgress(){
         timeOver();//stop timer
         btimeOver();
         levelClear->show();
+
+        n = QLocale(QLocale::English).toString((double) level, 'f', 0); //QString of an Level Number text
+        levelClearLabel->setText(" Level " + n + " Clear !");  //update Level Clear message with level
         level++;//increment level counter (would need to have started at 1 for each survival call)
+
         //group box with level x incoming, etc
         timerCounter -= (7 * (level-1));//increment timer speed, maybe formula from level counter
         if (timerCounter == 0 || timerCounter < 0)
