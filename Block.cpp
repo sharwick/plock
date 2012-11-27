@@ -87,6 +87,7 @@ Block::Block(int xSpot, int ySpot, int colorChoice){
  * @author Daniel Keasler
  * @param _color int Array Index in Colors.cpp
  * @brief setColor updates graphical color changes with corresponding integer index
+ * @return void
  */
 void Block::setColor(int _color){
     color = _color;
@@ -116,6 +117,7 @@ void Block::setColor(int _color){
  * @author Daniel Keasler
  * @brief Block::assignRight rightward adjacent pointer is assigned
  * @param tempBlock
+ * @return void
  */
 void Block::assignRight(Block *tempBlock){
 	rightBlockPtr = tempBlock;
@@ -124,6 +126,7 @@ void Block::assignRight(Block *tempBlock){
  * @author Daniel Keasler
  * @brief Block::assignUp upward adjacent pointer is assigned
  * @param tempBlock
+ * @return void
  */
 void Block::assignUp(Block *tempBlock){
 	upBlockPtr = tempBlock;
@@ -132,6 +135,7 @@ void Block::assignUp(Block *tempBlock){
  * @author Daniel Keasler
  * @brief Block::assignDown downward adjacent pointer is assigned
  * @param tempBlock
+ * @return void
  */
 void Block::assignDown(Block *tempBlock){
 	downBlockPtr = tempBlock;
@@ -140,6 +144,7 @@ void Block::assignDown(Block *tempBlock){
  * @author Daniel Keasler
  * @brief Block::assignLeft leftward adjacent pointer is assigned
  * @param tempBlock
+ * @return void
  */
 void Block::assignLeft(Block *tempBlock){
 	leftBlockPtr = tempBlock;
@@ -152,8 +157,8 @@ void Block::assignLeft(Block *tempBlock){
  */
 /**
  * @author Daniel Keasler
- * @brief Block::getColor
- * @return int color for easy color comparisons as an integer value
+ * @brief Block::getColor returns color for easy color comparisons as an integer value
+ * @return int
  */
 int Block::getColor(){
 	return color;
@@ -166,7 +171,7 @@ int Block::getColor(){
 /**
  * @author Daniel Keasler
  * @brief Block::getMarkedBool - used to determine if this block was collected for scoring yet
- * @return marked bool value
+ * @return bool
  */
 bool Block::getMarkedBool(){
 	return markedBool;
@@ -174,7 +179,7 @@ bool Block::getMarkedBool(){
 /**
  * @author Daniel Keasler
  * @brief Block::getColoredBool - used to determine if this block needs to be recolored
- * @return colored bool value
+ * @return bool
  */
 bool Block::getColoredBool(){
 	return coloredBool;
@@ -184,6 +189,7 @@ bool Block::getColoredBool(){
  * @brief Block::setMarkedBool
  * @param val
  * @description set to true once particular block is collected for scoring, set to false after all proper blocks have been collected
+ * @return void
  */
 void Block::setMarkedBool(bool val){
 	markedBool = val;
@@ -193,6 +199,7 @@ void Block::setMarkedBool(bool val){
  * @brief Block::setColoredBool
  * @param val
  * @description set to true once particular block needs a color change, set to false after this block has been recolored
+ * @return void
  */
 void Block::setColoredBool(bool val){
 	coloredBool = val;
@@ -205,7 +212,7 @@ void Block::setColoredBool(bool val){
 /**
  * @author Daniel Keasler
  * @brief Block::getCoordX - accessor function for Block's X coordinate
- * @return int x coordinate
+ * @return int
  */
 int Block::getCoordX(){
     return CoordX;
@@ -213,7 +220,7 @@ int Block::getCoordX(){
 /**
  * @author Daniel Keasler
  * @brief Block::getCoordY - accessor function for Block's Y coordinate
- * @return int y coordinate
+ * @return int
  */
 int Block::getCoordY(){
     return CoordY;
@@ -281,10 +288,19 @@ vector<Block*> Block::gatherBlocks(vector<Block*> blockVector){
 /*Next two functions serve as mutator and accessor method for our map
  *  to graphical images. Still a work in progress.
  */
+/**
+ * @author Daniel Keasler
+ * @brief Block::getGraphImage returns value for integer comparison of special graphics objects
+ * @return int
+ */
 int Block::getGraphImage(){
     return graphImage;
 }
-
+/**
+ * @author Daniel Keasler
+ * @brief Block::setGraphImage assign integer value of special graphics objects
+ * @param _graphImage
+ */
 void Block::setGraphImage(int _graphImage){
     graphImage = _graphImage;
     //switch to assign a loaded graphics image? still a work in progress

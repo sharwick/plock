@@ -1382,8 +1382,20 @@ void MainWindow::reset() {
 Start of Block game algorithm functions:
 */
 /**
- * @brief MainWindow::processMatch
+ * @author Daniel Keasler
+ * @author Shannon Harwick
+ * @author Mike Son
+ * @brief MainWindow::processMatch basic game flow from gathering matched blocks to processing scoring and new colors
+ * @description gatherBlocks is called from the matchedBlock to collect all matching adjacent blocks.
+ *      all gathered blocks are checked for stars, more could be added
+ *      all blocks are sorted relative to column height and set to black
+ *      .05 second timer to show noticeable transition
+ *      score is updated
+ *      bomb bar is incremented
+ *      progress bar is incremented if in survival mode
+ *      new colors are assigned
  * @param matchedBlock
+ * @return void
  */
 void MainWindow::processMatch(Block* matchedBlock)
 {
@@ -1431,9 +1443,10 @@ void MainWindow::processMatch(Block* matchedBlock)
  *  overlapping is transitions.
  */
 /**
- * @brief MainWindow::sortVector
+ * @author Daniel Keasler
+ * @brief MainWindow::sortVector all blocks in blockVector are sorted in descending order with respect to y
  * @param blockVector
- * @return
+ * @return vector<Block*>
  */
 vector<Block*> MainWindow::sortVector(vector<Block*> blockVector)
 {
@@ -1485,8 +1498,15 @@ vector<Block*> MainWindow::sortVector(vector<Block*> blockVector)
  */
 
 /**
- * @brief MainWindow::determineColor
+ * @author Daniel Keasler
+ * @brief MainWindow::determineColor swaps color of blocks upwards from the column of the ith block
+ * @description checky is a walker variable upwards in the 2D array of blocks. while checky is still
+ *      in bounds of the array, the algorithm searches for a block that is not also needing a color change.
+ *      The blocks are already sorted based on y so the algorithm will never replace the same blocks color more
+ *      than once. If it steals a color from a block, that block that lost its color is put on the end of the vector.
+ *      If it doesn't find a color to steal, then a new color is randomly determined.
  * @param blockVector
+ * @return void
  */
 void MainWindow::determineColor(vector<Block*> blockVector)
 {
@@ -1537,9 +1557,11 @@ void MainWindow::determineColor(vector<Block*> blockVector)
  */
  
 /**
- * @brief MainWindow::checkSpecials
+ * @author Daniel Keasler
+ * @brief MainWindow::checkSpecials checks every single block for a special star (graph image of 2) and takes care
+ *      of some bookkeeping if it finds one.
  * @param blockVector
- * @return
+ * @return vector<Block*>
  */
 vector<Block*> MainWindow::checkSpecials(vector<Block*> blockVector)
 {
@@ -1597,11 +1619,12 @@ vector<Block*> MainWindow::checkSpecials(vector<Block*> blockVector)
  *  boolean values. Return block back to checkSpecials.
  */
 /**
- * @brief MainWindow::bombCollector
+ * @author Daniel Keasler
+ * @brief MainWindow::bombCollector searches a 3x3 subset of the array (centered at the x and y) for new blocks to collect
  * @param blockVector
  * @param x
  * @param y
- * @return
+ * @return vector<Block*>
  */
 vector<Block*> MainWindow::bombCollector(vector<Block*> blockVector, int x, int y)
 {
@@ -1753,11 +1776,13 @@ void MainWindow::timeBegin(){
  *bomb, so the bomb timer code is used to set it up. If not
  *in endless mode, the timer code is used to set the timer
  *up.
- *
- *NYI: score reset.
  */
 /**
- * @brief MainWindow::startGame
+ * @author Daniel Keasler
+ * @author Mike Son
+ * @author Shannon Harwick
+ * @brief MainWindow::startGame destroys and creates a new board. Also restarts the timers.
+ * @return void
  */
 void MainWindow::startGame(){
     removeBlocks();
@@ -1780,7 +1805,10 @@ void MainWindow::startGame(){
 }
 
 /**
- * @brief MainWindow::processProgress
+ * @author Daniel Keasler
+ * @author Mike Son
+ * @brief MainWindow::processProgress stops previous timers, increments level and new timer speed, starts next timer
+ * @return void
  */
 void MainWindow::processProgress(){
     //this function would be called from the updateProgressTime function
@@ -1801,7 +1829,16 @@ void MainWindow::processProgress(){
 }
 
 /**
- * @brief MainWindow::generateGraphicObject
+ * @author Daniel Keasler
+ * @brief MainWindow::generateGraphicObject creates a Unicode star for either a random location or an assigned location
+ * @description If CoordX is < 0, then I passed -1 to the function to generate a random set of coordinates
+ *      There is also a check for generating a random coordinate pair that already contains a star.
+ *      QGraphicsSimpleTextItem can be used to display unicode characters on a graphics scene.
+ *      0x2605 is a unicode star.
+ *      There is also some centering and scaling.
+ *      Star is added to the scene and stored in the block.
+ * @bug Star is correctly centered and scaled on 3/4 computers.
+ * @return void
  */
 void MainWindow::generateGraphicObject(int CoordX, int CoordY){
     bool randomAssign = false;
@@ -1840,11 +1877,13 @@ void MainWindow::generateGraphicObject(int CoordX, int CoordY){
 
 
 /**
- * @brief MainWindow::graphSwap
+ * @author Daniel Keasler
+ * @brief MainWindow::graphSwap removes and deletes one star, creates a new one to display in the other coordinate pair
  * @param firstX
  * @param firstY
  * @param secondX
  * @param secondY
+ * @return void
  */
 void MainWindow::graphSwap(int firstX, int firstY, int secondX, int secondY){
     if(gameBoard[firstX][firstY]->getGraphImage() == 2){
@@ -1861,7 +1900,11 @@ void MainWindow::graphSwap(int firstX, int firstY, int secondX, int secondY){
     }
 
 }
-
+/**
+ * @author Daniel Keasler
+ * @brief MainWindow::removeBlocks deletes and nulls everything from the previous game board. start decision to avoid segfaults for the first game.
+ * @return void
+ */
 void MainWindow::removeBlocks(){
     if(start){
         for(int i = 0; i < boardSizeX; i++){
