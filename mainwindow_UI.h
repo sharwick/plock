@@ -74,7 +74,7 @@ private:
     QLabel *tempScore, *tempLevel, *newHighScore;
     myRectItem* rectArray[8][9];
     QTimer *timer, *btimer, *gtimer;
-    QString aboutText;
+    QString aboutText, n;
     QFont tempFont;
     Colors *colorPtr;
     Score *scorePtr;
@@ -90,7 +90,6 @@ private:
     int blockSize;
     int xPos, yPos;
     int level;
-    int progressLevel;
     int timerCounter;
     int currentTime;
     int bcurrentTime;
