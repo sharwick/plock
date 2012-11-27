@@ -1148,7 +1148,6 @@ void MainWindow::survivalMode(){
     endlessModeFlag = 0;
     survivalModeFlag = 1;
     level=1;
-    progressLevel= 180;
     timerCounter = 200;
 
     startGame();
@@ -1415,7 +1414,7 @@ void MainWindow::processMatch(Block* matchedBlock)
     QEventLoop loop;
     QTimer::singleShot(50, &loop, SLOT(quit()) );
     loop.exec();
-        //transition period right here, after all blocks have been turned black
+    //transition period right here, after all blocks have been turned black
 
     scorePtr->updateScore((int) gatheredBlocks.size(), false);
     sframe->update(scorePtr->getScore());
@@ -1697,27 +1696,6 @@ void MainWindow::timeSlot(){
     if(x%4==0){
         currentTime--;
     }
-//    if(currentTime==-1){
-//        int n= scorePtr->getScore();
-//        QString num = QLocale(QLocale::English).toString((double) n, 'f', 0);
-//        tempScore->setText(num);
-
-//        if (survivalModeFlag==1) {
-//            tempLevel->setText(QString::number(level));
-//            finalLevelLabel->setText("Your Final Level:");
-//        }
-//        else {
-//            tempLevel->setText("");
-//            finalLevelLabel->setText("");
-//        }
-
-//        gameOverMenu->show();
-//        addScore();
-//        timeOver();
-//        btimeOver();
-//        //close();
-//        //return;
-//    }
     if(Timefill->maximumWidth() == 0){
                 gamedone = true;
 
@@ -1740,8 +1718,6 @@ void MainWindow::timeSlot(){
                 theHighScores->writeHighScores();
                 timeOver();
                 btimeOver();
-                //close();
-                //return;
     }
     Timefill->setMaximumWidth(Timefill->maximumWidth()-(Timeclock->width()/150));
 }
@@ -1819,7 +1795,7 @@ void MainWindow::startGame(){
  * @return void
  */
 void MainWindow::processProgress(){
-    //this function would be called from the updateProgressTime function
+        //this function would be called from the updateProgressTime function
         timeOver();//stop timer
         btimeOver();
         levelClear->show();
@@ -1828,14 +1804,10 @@ void MainWindow::processProgress(){
         timerCounter -= (7 * (level-1));//increment timer speed, maybe formula from level counter
         if (timerCounter == 0 || timerCounter < 0)
             timerCounter =1;
-//        progressLevel = ((1000 / timerCounter) * 60);
         Timefill->setMaximumWidth(Timeclock->width() / 2);//set timer to 50%
         currentTime = 30;
 
-//        connect(gtimer, SIGNAL(timeout()), this, SLOT(gtimeSlot()));
-
         gtimer->start();
-
 }
 
 /**
