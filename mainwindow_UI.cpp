@@ -873,9 +873,11 @@ void MainWindow::pauseBack(){
  * @brief MainWindow::pausedPressed
  */
 void MainWindow::pausedPressed(){
+    if (!levelClear->isVisible()){
     pauseMenu->show();
     timeOver();
     btimeOver();
+    }
 }
 /**
  * @brief MainWindow::pauseSettingsPressed
