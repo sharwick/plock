@@ -71,7 +71,7 @@ private:
     *standardLabel, *survivalLabel, *endlessLabel, *aboutLabel;
     QTextBrowser *helpText, *highScoreText;
     QSlider *colorSlider;
-    QLabel *tempScore, *tempLevel;
+    QLabel *tempScore, *tempLevel, *newHighScore;
     myRectItem* rectArray[8][9];
     QTimer *timer, *btimer, *gtimer;
     QString aboutText;
@@ -79,9 +79,6 @@ private:
     Colors *colorPtr;
     Score *scorePtr;
     ScoreFrame *sframe;
-    int level;
-    int progressLevel;
-    int timerCounter;
     QGraphicsEllipseItem *myEllipse;
     HighScores *theHighScores;
     vector<QLabel*> labelVector;
@@ -92,6 +89,9 @@ private:
     int boardSizeX, boardSizeY;
     int blockSize;
     int xPos, yPos;
+    int level;
+    int progressLevel;
+    int timerCounter;
     int currentTime;
     int bcurrentTime;
     int gCount;

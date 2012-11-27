@@ -425,26 +425,27 @@ void MainWindow::setupWindows(){
     // Initalize Widget
     confirmMenu = new QGroupBox(this);
     confirmMenu->setAutoFillBackground(true);
-    confirmMenu->setGeometry( (screenSizeX/2) - ((screenSizeX * 0.6) / 2), (screenSizeY/2) - ((screenSizeY * 0.2) / 2),
-                            screenSizeX * 0.6 , screenSizeY * 0.2 );
+    confirmMenu->setGeometry( (screenSizeX/2) - ((screenSizeX * 0.7) / 2), (screenSizeY/2) - ((screenSizeY * 0.2) / 2),
+                            screenSizeX * 0.7 , screenSizeY * 0.2 );
     // Create Menu's layout
     confirmLayout = new QGridLayout(this);
     confirmLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
-    confirmLayout->setSpacing(20);
+    confirmLayout->setSpacing(10);
     confirmMenu->setLayout(confirmLayout);
     confirmMenu->hide();
 
     // Initialize Items and add them to the layout
     quitLabel = new QLabel("Quit?"); labelVector.push_back(quitLabel);
+    quitLabel->setFont(tempFont);
     confirmLayout->addWidget(quitLabel, 0, 1, Qt::AlignHCenter);
     confirmAcceptButton = new QPushButton("Yes", this); buttonVector.push_back(confirmAcceptButton);
     confirmAcceptButton->setFixedSize(blockSize * 1.5, blockSize * 0.8);
     connect(confirmAcceptButton, SIGNAL(clicked()), this, SLOT(menuPressed()) );
-    confirmLayout->addWidget(confirmAcceptButton, 2, 0, Qt::AlignLeft);
+    confirmLayout->addWidget(confirmAcceptButton, 2, 0, Qt::AlignHCenter);
     confirmRejectButton = new QPushButton("No", this); buttonVector.push_back(confirmRejectButton);
     confirmRejectButton->setFixedSize(blockSize * 1.5, blockSize * 0.8);
     connect(confirmRejectButton, SIGNAL(clicked()), this, SLOT(quitRejected()) );
-    confirmLayout->addWidget(confirmRejectButton, 2, 2, Qt::AlignRight);
+    confirmLayout->addWidget(confirmRejectButton, 2, 2, Qt::AlignHCenter);
 
 
 
@@ -454,17 +455,21 @@ void MainWindow::setupWindows(){
     // Initalize Widget
     gameOverMenu = new QGroupBox(this);
     gameOverMenu->setAutoFillBackground(true);
-    gameOverMenu->setGeometry( (screenSizeX/2) - ((screenSizeX * 0.8) / 2), (screenSizeY/2) - ((screenSizeY * 0.4) / 2),
+    gameOverMenu->setGeometry( (screenSizeX/2) - ((screenSizeX * 0.8) / 2), (screenSizeY/2) - ((screenSizeY * 0.5) / 2),
                             screenSizeX * 0.8 , screenSizeY * 0.5 );
     // Create Menu's Layout
     gameOverLayout = new QVBoxLayout(this);
-    gameOverLayout->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
+    gameOverLayout->setAlignment(Qt::AlignHCenter);
     gameOverLayout->setSpacing(10);
     gameOverMenu->setLayout(gameOverLayout);
     gameOverMenu->hide();
 
     // Initalize and add Items to the layout
     scorePtr = new Score(); // Moved
+    newHighScore = new QLabel("New High Score!");
+    tempFont.setPointSize(blockSize/8);
+    newHighScore->setFont(tempFont);
+    gameOverLayout->addWidget(newHighScore, Qt::AlignHCenter);
     finalScoreLabel = new QLabel("Your Final Score:", this); labelVector.push_back(finalScoreLabel);
     gameOverLayout->addWidget(finalScoreLabel);
     tempScore = new QLabel(this); labelVector.push_back(tempScore);
@@ -503,8 +508,8 @@ void MainWindow::setupWindows(){
      * * * * * * * * * * * * * * * * * * * */
     levelClear = new QGroupBox(this);
     levelClear->setAutoFillBackground(true);
-    levelClear->setGeometry( (screenSizeX/2) - ((screenSizeX * 0.8) / 2), (screenSizeY/2) - ((screenSizeY * 0.4) / 2),
-                             screenSizeX * 0.8 , screenSizeY * 0.4 );
+    levelClear->setGeometry( (screenSizeX/2) - ((screenSizeX * 0.7) / 2), (screenSizeY/2) - ((screenSizeY * 0.2) / 2),
+                             screenSizeX * 0.7 , screenSizeY * 0.2 );
 
     // create layout
     levelClearLayout = new QVBoxLayout(this);
@@ -516,12 +521,13 @@ void MainWindow::setupWindows(){
     //Initalize and add Items to the layout
 
     levelClearLabel = new QLabel(" Level Clear !"); labelVector.push_back(levelClearLabel);
+    levelClearLabel->setFont(tempFont);
     levelClearLayout->addWidget(levelClearLabel, Qt::AlignHCenter | Qt::AlignTop);
     levelNext = new QPushButton("Next Level", this); buttonVector.push_back(levelNext);
     //    levelQuit = new QPushButton("Quit", this); buttonVector.push_back(levelQuit);
-    levelNext->setFixedSize(blockSize * 3, blockSize);
+    levelNext->setFixedSize(blockSize * 2.7, blockSize);
     //    levelQuit->setFixedSize(blockSize * 3, blockSize);
-    levelClearLayout->addWidget(levelNext, Qt::AlignTop);
+    levelClearLayout->addWidget(levelNext, Qt::AlignHCenter);
     //    levelClearLayout->addWidget(levelQuit, Qt::AlignVCenter);
     connect(levelNext, SIGNAL(clicked()), this, SLOT(nextLevel()) );
     //    connect(levelQuit, SIGNAL(clicked()), this, SLOT(confirmQuit()) );
@@ -529,10 +535,7 @@ void MainWindow::setupWindows(){
 } // End setupWindow()
 
 
-/** @author Shannon Harwick
- *  @author Daniel Keasler
- *  @author Devin Rusnak
- *  @author Mikael Son
+/**
  *  @brief MainWindow::setupGameScreen
  */
 void MainWindow::setupGameScreen(){
@@ -657,8 +660,7 @@ void MainWindow::setupGameScreen(){
     */
 } // End setupInterface()
 
-/** @author Daniel Keasler
- *  @author Devin Rusnak
+/**
  *  @brief MainWindow::setupBlocks
  *
  */
@@ -695,10 +697,7 @@ void MainWindow::setupBlocks(){
 
 } // End setupBlocks()
 
-/** @author Shannon Harwick
- *  @author Daniel Keasler
- *  @author Devin Rusnak
- *  @author Mikael Son
+/**
  *  @brief MainWindow::mousePressEvent
  *  @param event
  */
@@ -873,11 +872,9 @@ void MainWindow::pauseBack(){
  * @brief MainWindow::pausedPressed
  */
 void MainWindow::pausedPressed(){
-    if (!levelClear->isVisible()){
     pauseMenu->show();
     timeOver();
     btimeOver();
-    }
 }
 /**
  * @brief MainWindow::pauseSettingsPressed
@@ -1084,6 +1081,7 @@ void MainWindow::backToGameOver(){
  * @brief MainWindow::standardMode
  */
 void MainWindow::standardMode(){
+    newHighScore->hide();
     gameModeMenu->hide();
     startScreen->show();
     shuffleButton->hide();
@@ -1130,6 +1128,7 @@ void MainWindow::nextLevel(){
  * @brief MainWindow::survivalMode
  */
 void MainWindow::survivalMode(){
+    newHighScore->hide();
     gameModeMenu->hide();
     startScreen->show();
     shuffleButton->hide();
@@ -1157,6 +1156,7 @@ void MainWindow::survivalMode(){
  * @brief MainWindow::endlessMode
  */
 void MainWindow::endlessMode(){
+    newHighScore->hide();
     gameModeMenu->hide();
     startScreen->show();
     shuffleButton->hide();
@@ -1183,13 +1183,15 @@ void MainWindow::endlessMode(){
 void MainWindow::addScore(){
     menuButton->hide();
     if(stdModeFlag == 1){
-        theHighScores->addHighScore("standard", scorePtr->getScore());
+        if(theHighScores->addHighScore("standard", scorePtr->getScore(), 0) == 1)
+            newHighScore->show();
     }
     else if(survivalModeFlag == 1){
-        theHighScores->addHighScore("survival", scorePtr->getScore());
+        if(theHighScores->addHighScore("survival", scorePtr->getScore(), level) == 1)
+            newHighScore->show();
     }
     else if(endlessModeFlag == 1){
-        theHighScores->addHighScore("endless", scorePtr->getScore());
+        theHighScores->addHighScore("endless", scorePtr->getScore(), 0);
     }
 
     theHighScores->writeHighScores();
