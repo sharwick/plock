@@ -2,7 +2,7 @@
  * @copyright Blockstar 2012
  * @class HighScores highScores.h "highScores.h"
  * @brief This is a class used to read & write high scores from the game to a file for record.
- * @bug High Scores are not read or written to file correctly.
+ * @bug High Scores are not read from the file correctly.
  *
  * The high scores from the game are stored in a .txt file that is read and wrote to.
  * The top five scores from each mode is read & wrote to in a specific order to maintain simplicity
@@ -44,6 +44,7 @@ HighScores::~HighScores(){
 
 /**
  * @brief HighScores::readInHighScores
+ * @bug The file gets opened but nothing is read from it.
  *
  * Opens the file highscores.txt and reads in its contents. It is formated as a
  * fifteen line text file where each line is a numerical score. The first five lines are the
@@ -138,7 +139,7 @@ void HighScores::writeHighScores(){
  * the score into the arrays of the top scores of the mode specified.
  */
 void HighScores::addHighScore(QString type, int score){
-    int tempScore = 0, index = 0;
+    int tempScore = 0, tempScore2 = 0, index = 0;
 
     if(type == "standard"){
         while(index < 5){
@@ -147,15 +148,20 @@ void HighScores::addHighScore(QString type, int score){
                 standardInts[index] = score;
                 standardScores[index]->setText(QString::number(score));
                 index++;
-                return;
+                break;  // Leave while loop
             }
             index++;
         }
-        while(index < 4){
-            standardInts[index+1] = standardInts[index];
-            standardScores[index+1]->setText(QString::number(standardInts[index+1]));
-            standardInts[index] = tempScore;
-            standardScores[index]->setText(QString::number(standardInts[index]));
+        // Move other scores down
+        while(index < 5){
+            if(tempScore >= standardInts[index]){
+                tempScore2 = standardInts[index];
+                standardInts[index] = tempScore;
+                standardScores[index]->setText(QString::number(tempScore));
+                tempScore = tempScore2;
+                if(index < 4)
+                    standardScores[index+1]->setText(QString::number(tempScore2));
+            }
             index++;
         }
     }
@@ -166,15 +172,19 @@ void HighScores::addHighScore(QString type, int score){
                 survivalInts[index] = score;
                 survivalScores[index]->setText(QString::number(score));
                 index++;
-                return;
+                break;
             }
             index++;
         }
-        while(index < 4){
-            survivalInts[index+1] = survivalInts[index];
-            survivalScores[index+1]->setText(QString::number(survivalInts[index+1]));
-            survivalInts[index] = tempScore;
-            survivalScores[index]->setText(QString::number(survivalInts[index]));
+        while(index < 5){
+            if(tempScore >= survivalInts[index]){
+                tempScore2 = survivalInts[index];
+                survivalInts[index] = tempScore;
+                survivalScores[index]->setText(QString::number(tempScore));
+                tempScore = tempScore2;
+                if(index < 4)
+                    survivalScores[index+1]->setText(QString::number(tempScore2));
+            }
             index++;
         }
     }
@@ -185,15 +195,19 @@ void HighScores::addHighScore(QString type, int score){
                 endlessInts[index] = score;
                 endlessScores[index]->setText(QString::number(score));
                 index++;
-                return;
+                break;
             }
             index++;
         }
-        while(index < 4){
-            endlessInts[index+1] = endlessInts[index];
-            endlessScores[index+1]->setText(QString::number(endlessInts[index+1]));
-            endlessInts[index] = tempScore;
-            endlessScores[index]->setText(QString::number(endlessInts[index]));
+        while(index < 5){
+            if(tempScore >= endlessInts[index]){
+                tempScore2 = endlessInts[index];
+                endlessInts[index] = tempScore;
+                endlessScores[index]->setText(QString::number(tempScore));
+                tempScore = tempScore2;
+                if(index < 4)
+                    endlessScores[index+1]->setText(QString::number(tempScore2));
+            }
             index++;
         }
     }
