@@ -25,6 +25,7 @@ HighScores::HighScores()
         standardScores[index] = new QLabel("");
         survivalScores[index] = new QLabel("");
         endlessScores[index] = new QLabel("");
+        survivalLevels[index] = 0;
     }
     readInHighScores();
 }
@@ -39,6 +40,7 @@ HighScores::~HighScores(){
         delete standardScores[index];
         delete survivalScores[index];
         delete endlessScores[index];
+        delete theFile;
     }
 }
 
@@ -63,6 +65,7 @@ void HighScores::readInHighScores(){
             standardInts[i] = -1;
             survivalScores[i]->setText("Fail");
             survivalInts[i] = -1;
+            survivalLevels[i] = 0;
             endlessScores[i]->setText("Fail");
             endlessInts[i] = -1;
         }
@@ -98,7 +101,9 @@ void HighScores::readInHighScores(){
             }
             index++;
         }
+            delete tempChar;
     }
+
     loadHighScores();
     theFile->close();    // Close File
 }
@@ -138,15 +143,16 @@ void HighScores::writeHighScores(){
  * Given the string and the int sent to the method, it will sort
  * the score into the arrays of the top scores of the mode specified.
  */
-void HighScores::addHighScore(QString type, int score){
-    int tempScore = 0, tempScore2 = 0, index = 0;
+int HighScores::addHighScore(QString type, int score, int level){
+    int tempScore = 0, tempScore2 = 0, index = 0,
+            tempLevel = 0, tempLevel2 = 0, rtn = 0;
 
     if(type == "standard"){
         while(index < 5){
             if(score >= standardInts[index]){
                 tempScore = standardInts[index];
                 standardInts[index] = score;
-                standardScores[index]->setText(QString::number(score));
+                rtn = 1;
                 index++;
                 break;  // Leave while loop
             }
@@ -157,20 +163,20 @@ void HighScores::addHighScore(QString type, int score){
             if(tempScore >= standardInts[index]){
                 tempScore2 = standardInts[index];
                 standardInts[index] = tempScore;
-                standardScores[index]->setText(QString::number(tempScore));
                 tempScore = tempScore2;
-                if(index < 4)
-                    standardScores[index+1]->setText(QString::number(tempScore2));
             }
             index++;
         }
     }
     else if(type == "survival"){
+       QString tempString("");
         while(index < 5){
             if(score >= survivalInts[index]){
                 tempScore = survivalInts[index];
+                tempLevel = survivalLevels[index];
                 survivalInts[index] = score;
-                survivalScores[index]->setText(QString::number(score));
+                survivalLevels[index] = level;
+                rtn = 1;
                 index++;
                 break;
             }
@@ -179,11 +185,11 @@ void HighScores::addHighScore(QString type, int score){
         while(index < 5){
             if(tempScore >= survivalInts[index]){
                 tempScore2 = survivalInts[index];
+                tempLevel2 = survivalLevels[index];
                 survivalInts[index] = tempScore;
-                survivalScores[index]->setText(QString::number(tempScore));
+                survivalLevels[index] = tempLevel;
                 tempScore = tempScore2;
-                if(index < 4)
-                    survivalScores[index+1]->setText(QString::number(tempScore2));
+                tempLevel = tempLevel2;
             }
             index++;
         }
@@ -193,7 +199,7 @@ void HighScores::addHighScore(QString type, int score){
             if(score >= endlessInts[index]){
                 tempScore = endlessInts[index];
                 endlessInts[index] = score;
-                endlessScores[index]->setText(QString::number(score));
+                rtn = 1;
                 index++;
                 break;
             }
@@ -203,14 +209,12 @@ void HighScores::addHighScore(QString type, int score){
             if(tempScore >= endlessInts[index]){
                 tempScore2 = endlessInts[index];
                 endlessInts[index] = tempScore;
-                endlessScores[index]->setText(QString::number(tempScore));
                 tempScore = tempScore2;
-                if(index < 4)
-                    endlessScores[index+1]->setText(QString::number(tempScore2));
             }
             index++;
         }
     }
+    return rtn;
 }
 
 /**
@@ -220,7 +224,7 @@ void HighScores::addHighScore(QString type, int score){
  * the int arrays of the scores.
  */
 void HighScores::loadHighScores(){
-    QString tempString;
+    QString tempString("");
     for(int index = 0; index < 5; index++){
         tempString = QString::number(index+1);
         tempString.append(".  ");
@@ -228,7 +232,9 @@ void HighScores::loadHighScores(){
         standardScores[index]->setText(tempString);
 
         tempString = QString::number(index+1);
-        tempString.append(".  ");
+        tempString.append(". <Lvl: ");
+        tempString.append(QString::number(survivalLevels[index]));
+        tempString.append("> ");
         tempString.append(QString::number(survivalInts[index]));
         survivalScores[index]->setText(tempString);
 

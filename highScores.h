@@ -22,6 +22,7 @@ public:
     // Variables
     int standardInts[5];
     int survivalInts[5];
+    int survivalLevels[5];
     int endlessInts[5];
 
 
@@ -29,8 +30,7 @@ public:
     void readInHighScores();
     void writeHighScores();
     void loadHighScores();
-    char* getScore(QString, int);
-    void addHighScore(QString, int);
+    int addHighScore(QString, int, int);
     QLabel* getLabel(QString, int);
 
 };
