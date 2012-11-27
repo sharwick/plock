@@ -721,7 +721,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
             else if(survivalModeFlag == 1){
                 Timefill->setMaximumWidth(Timeclock->width() / 2);
                 currentTime = 30;
-//                timer->start(timerCounter);
+                timer->start(timerCounter);
             }
         }
 
@@ -1669,7 +1669,6 @@ if(gCount==-1){
     nextLevel();
     gtimer->stop();
 }
-//bombFill->setMaximumWidth(bombFill->maximumWidth()-(bombLayer->width()/120));
 }
 
 
@@ -1777,14 +1776,14 @@ void MainWindow::startGame(){
     btimer->start(333.333);
     Timefill->setMaximumWidth(Timeclock->width());
     currentTime = 60;
-    if(stdModeFlag == 1){
-        timer->start(200);
-    }
-    else if(survivalModeFlag == 1){
-        Timefill->setMaximumWidth(Timeclock->width() / 2);
-        currentTime = 30;
-        timer->start(200);
-    }
+//    if(stdModeFlag == 1){
+//        timer->start(200);
+//    }
+//    else if(survivalModeFlag == 1){
+//        Timefill->setMaximumWidth(Timeclock->width() / 2);
+//        currentTime = 30;
+//        timer->start(200);
+//    }
     scoreLabel->setText("Score: x1");
 }
 
