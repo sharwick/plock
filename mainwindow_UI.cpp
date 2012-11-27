@@ -520,21 +520,13 @@ void MainWindow::setupWindows(){
 
     //Initalize and add Items to the layout
 
-//    levelClearLevel = new QLabel(); labelVector.push_back(levelClearLevel);
-//    levelClearLevel->setText(level);
-//    levelClearLevel->setFont(tempFont);
-//    levelClearLayout->addWidget(levelClearLevel, Qt::AlignHCenter | Qt::AlignTop);
     levelClearLabel = new QLabel(" Level Clear !"); labelVector.push_back(levelClearLabel);
     levelClearLabel->setFont(tempFont);
     levelClearLayout->addWidget(levelClearLabel, Qt::AlignHCenter | Qt::AlignTop);
     levelNext = new QPushButton("Next Level", this); buttonVector.push_back(levelNext);
-    //    levelQuit = new QPushButton("Quit", this); buttonVector.push_back(levelQuit);
     levelNext->setFixedSize(blockSize * 2.7, blockSize);
-    //    levelQuit->setFixedSize(blockSize * 3, blockSize);
     levelClearLayout->addWidget(levelNext, Qt::AlignHCenter);
-    //    levelClearLayout->addWidget(levelQuit, Qt::AlignVCenter);
     connect(levelNext, SIGNAL(clicked()), this, SLOT(nextLevel()) );
-    //    connect(levelQuit, SIGNAL(clicked()), this, SLOT(confirmQuit()) );
 
 } // End setupWindow()
 
@@ -754,7 +746,6 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
 void MainWindow::updateBomb(int nBlocks){
 
     int updateVal;
-//    updateVal = (nBlocks-1)*(nBlocks-1);
     updateVal = nBlocks * 8;
 
     if ((bombFill->maximumWidth()+updateVal) < bombLayer->maximumWidth()){
