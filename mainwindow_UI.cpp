@@ -1544,6 +1544,7 @@ void MainWindow::determineColor(vector<Block*> blockVector)
     }
 }
 
+
 /*
  *Author: Daniel Keasler
  *      Plock Team

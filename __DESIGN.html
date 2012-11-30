@@ -55,8 +55,9 @@
 </div><!-- contents -->
 
 <h3>Block Class</h3>
+<b>Primary Author: Daniel Keasler</b>
 
-<p>The block class was intended to be the underlying data structure of our BombStar game. 
+<p>The block class was intended to be the data structure of our BombStar game. 
 Our application's MainWindow would have a two dimensional array of Block objects, corresponding 
 to the game board with the same number of elements in each. Each individual Block object would
 contain pointer references to four adjacent Blocks. For example, if a Block could be accessed in
@@ -68,22 +69,25 @@ Block level. In many cases, many Blocks will be contained in a vector<Block*>, a
 time access to that Block's neighbors in MainWindow, the coordinates of the Block needed to be 
 easily obtained. </p>
 
-<p>The block class itself was not implemented with a graphical representation. Because we were 
-using two dimensional arrays as well as a multi-directional list at the Block level, we wanted 
-to establish the Block objects and swap values for bookkeeping instead of removing and creating
-new Blocks every single time a collection of Blocks was graphically removed and needing to re-establish the Block data structures. After we switched 
-to the 8x9 game board, the block class was changed to only include numerical values instead of 
-graphical representations and the myRectItem class would contain all of the graphical implementations. </p>
+<p>The block class later was changed to inherit from QGraphicsRectItem. By doing this, we could reimplement
+the mouse press event for game play interaction and the blocks could be displayed on a QGraphicsScene. </p>
 
-<p>Along with separating the data structures and the graphical representation, we devised a system
+<p>Along with inheriting from QGraphicsRectItem, we devised a system 
 that mapped an integer value to a QColor. More on this is written in the Colors Class, but the 
 Block Class only contains an integer value for easy color comparisons. The same integer value between
 Blocks means those Blocks have the same color. This was also applied to representing stars on the 
 Blocks as well. A graphImage of 0 meant that no star was being graphically represented on that particular
-Block, a graphImage of 2 meant that a star was represented on that Block. The intent was to include
-bombs (now stars), as well as arrows but there wasn't enough time to properly implement arrows. 
+Block, a graphImage of 2 meant that a star was represented on that Block. This numbering was originally intended for 
+bombs (now stars) as well as arrows but there wasn't enough time to properly implement arrows. 
 The extra arrows would have had graphImage values of 3 and 4 for vertical and horizontal, and potentially
 5 for all four directions. </p>
+
+<p>The stars are made from QGraphicsSimpleTextItems with unicode character 0x2605 and are members of the Block class. 
+Each star is created when the Block is created, and then a pointer is assigned to that Block's star pointer (textPtr) when a star is generated.
+The function that generates coordinates for the new star can also take in known coordinates for relocation; and in any case that a star is removed
+from a location, that star is nulled and removed from the scene even if it is being redrawn at another location. 
+And then a new star is created and assigned to the proper location. A smarter and faster system could
+have been implemented had there been more time. </p>
 
 <p>Most of the Block functions are simple accessor or mutator functions. The only functions needing 
 a more detailed explanation are foundMatch and gatherBlocks, and they will be explained in Game Play.
@@ -91,6 +95,8 @@ markedBool and coloredBool are used in many of these algorithms and will be deta
 </p>
 
 <h3>Game Play</h3>
+<b>Primary Author: Daniel Keasler</b>
+
 <p>Game play is started through either selecting a game mode, restarting your current game mode in
 the pause menu, or playing another game after your current game has ended. Selecting a game mode
 will set one of the three game mode flags to 1. Each potential new game started calls the startGame
@@ -101,7 +107,7 @@ dynamically allocates and randomly generates a new board. </p>
 
 <p>The application now waits for a mousePressEvent. The game board itself needs 1 mouse event to
 properly register graphics scene mouse events. This also officially starts the game timer and enables
-interaction with the myRectItems. </p>
+interaction with Blocks. </p>
 
 <p>Every mouse event after the first has the same process. The game 
 board mouse events are temporarily frozen to process 1 match at a time. The x and y of the event 
@@ -131,7 +137,7 @@ and very likely not necessary, but the implementation of sorting worked properly
 the rest of the algorithms. With more time, a better implementation between what sorting was intended to do
 (assure proper re-coloring order) and how determing new colors was implemented (assuming the blocks were sorted).</p>
 
-<p>The conclusion of sorting leaves every single collected block (and the corresponding rectItem) as 
+<p>The conclusion of sorting leaves every single collected block as 
 Black. A timer is placed here to force the game to show the blacking transition. This is discussed more
 in the Timers section.</p>
 
@@ -168,16 +174,21 @@ searching upwards in a column. </p>
 
 
 <h3>Game Modes</h3>
-<b>Primary author: Daniel/Mike</b>
+<b>Primary author: Daniel/Mike/Devin</b>
 [[TO BE COMPLETED]]
 
 <h3>User Feedback</h3>
-<b>Primary author: Daniel</b>
-[[TO BE COMPLETED]]
+<b>Primary author: Daniel Keasler</b>
+<p>In the last month of the project we had a playable game that we showed to family and friends and they gave us excellent feedback.
+We were first asked to show your score after the game ended, which resulted in displaying a game over menu that showed your score.
+We had multiple complaints about colors. So we implemented color schemes the user could choose through the settings menu. This is
+discussed more in the color schemes section. Another observation from others playing the game was that spam clicking was more 
+successful. Since our application is intended for a phone and we never tested it on a phone, we can't assume anything for 
+finger presses but we did incentivize scoring to make it worth more for thinking about what blocks you were clearing. This 
+is discussed in the Scoring section. </p>
 
 <h3>Unresolved Issues</h3>
 <b>Primary author: All</b>
-[[TO BE COMPLETED]]
 
 
 

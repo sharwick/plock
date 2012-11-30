@@ -7,6 +7,7 @@
  *Block.h
  *
  *Author: Daniel Keasler
+ *        Devin Rusnak
  *      Plock Team
  *Version 2.3
  * 

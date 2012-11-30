@@ -14,6 +14,7 @@
  *
  *Version 2.3
  *Author: Daniel Keasler
+ *        Devin Rusnak
  *      Plock Team
  *
  *Constructor only needs push button, and push button should
@@ -54,7 +55,8 @@ using namespace std;
  * @param xSpot int X Coordinate on game board, also array index
  * @param ySpot int Y Coordinate on game board, also array index
  * @param colorChoice Array Index of QColor in Colors.cpp, also used for adjacent color comparisons
- * @brief Constructor assigns adjacent pointers to 0, bools to false, params to Coords, graph image to 0, and sends colorChoice to setColor
+ * @brief Constructor assigns adjacent pointers to 0, bools to false, params to Coords,
+ *          graph image to 0, creates a new textPtr, and sends color to setColor
  */
 Block::Block(int xSpot, int ySpot, int colorChoice, QColor colorChosen){
     rightBlockPtr = 0;
@@ -69,20 +71,34 @@ Block::Block(int xSpot, int ySpot, int colorChoice, QColor colorChosen){
     setColor(colorChoice, colorChosen);
     textPtr = new QGraphicsSimpleTextItem();
 }
-
+/**
+ * @brief Block::mousePressEvent
+ */
 void Block::mousePressEvent(QGraphicsSceneMouseEvent *){
     this->grabMouse();
 }
-
+/**
+ * @brief Block::mouseMoveEvent
+ */
 void Block::mouseMoveEvent(QGraphicsSceneMouseEvent *){
     //this->grabMouse();
 }
-
+/**
+ * @author Daniel Keasler
+ * @brief Block::setTextItem sets graph image and assigns pointer reference to textPtr
+ * @param paramBomb
+ * @return void
+ */
 void Block::setTextItem(QGraphicsSimpleTextItem *paramBomb){
     setGraphImage(2);
     textPtr = paramBomb;
 }
-
+/**
+ * @author Daniel Keasler
+ * @brief Block::removeGraphObject sets graph image and nulls / deletes pointer
+ * @param endGame
+ * @return void
+ */
 void Block::removeGraphObject(bool endGame){
     setGraphImage(0);
     if(textPtr != 0){

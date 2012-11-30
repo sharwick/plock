@@ -41,7 +41,7 @@ void Score::updateScore(int nBlocks, bool speedBonus) {
     if (updateValue<upperBound && score<=upperBound)
         score += updateValue;
 
-    if (score>upperBound)
+    if (score>upperBound || updateValue > upperBound)
         score=upperBound;
 
 }
