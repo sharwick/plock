@@ -1,5 +1,6 @@
 /**
  * @author Daniel Keasler
+ * @author Devin Rusnak
  * @copyright Blockstar
  * @class block block.h "block.h"
  * @brief Underlying data structures and algorithms for game play.
