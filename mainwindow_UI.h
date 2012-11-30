@@ -72,7 +72,7 @@ private:
     QTextBrowser *helpText, *highScoreText;
     QSlider *colorSlider;
     QLabel *tempScore, *tempLevel, *newHighScore;
-    myRectItem* rectArray[8][9];
+    //myRectItem* rectArray[8][9];
     QTimer *timer, *btimer, *gtimer;
     QString aboutText, n;
     QFont tempFont;

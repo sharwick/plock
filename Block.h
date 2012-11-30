@@ -43,13 +43,16 @@
 #define BLOCK
 
 #include <vector>
+#include <QGraphicsRectItem>
+#include <QGraphicsSimpleTextItem>
+#include <QBrush>
 
 using namespace std;
 
-class Block{
+class Block : public QGraphicsRectItem{
 public:
-    Block(int, int, int); 
-    void setColor(int); 
+    Block(int, int, int, QColor);
+    void setColor(int, QColor);
     int getColor(); 
     bool getColoredBool();
     bool getMarkedBool();
@@ -70,6 +73,10 @@ public:
     vector<Block*> downCollector(vector<Block*>);
     vector<Block*> leftCollector(vector<Block*>);
 
+    QGraphicsSimpleTextItem* textPtr;
+    void setTextItem(QGraphicsSimpleTextItem*);
+    void removeGraphObject(bool);
+
 private:
     bool markedBool;
     bool coloredBool;
@@ -81,6 +88,11 @@ private:
     int CoordX;
     int CoordY;
     int graphImage; //may change based on implementation of graph Image
+
+protected:
+    void mousePressEvent(QGraphicsSceneMouseEvent *);
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *);
+
 };
 	
 #endif

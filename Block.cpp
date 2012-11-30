@@ -55,7 +55,7 @@ using namespace std;
  * @param colorChoice Array Index of QColor in Colors.cpp, also used for adjacent color comparisons
  * @brief Constructor assigns adjacent pointers to 0, bools to false, params to Coords, graph image to 0, and sends colorChoice to setColor
  */
-Block::Block(int xSpot, int ySpot, int colorChoice){
+Block::Block(int xSpot, int ySpot, int colorChoice, QColor colorChosen){
     rightBlockPtr = 0;
     upBlockPtr = 0;
     leftBlockPtr = 0;
@@ -65,7 +65,31 @@ Block::Block(int xSpot, int ySpot, int colorChoice){
     CoordX = xSpot;
     CoordY = ySpot;
     graphImage = 0;
-    setColor(colorChoice);
+    setColor(colorChoice, colorChosen);
+    textPtr = new QGraphicsSimpleTextItem();
+}
+
+void Block::mousePressEvent(QGraphicsSceneMouseEvent *){
+    this->grabMouse();
+}
+
+void Block::mouseMoveEvent(QGraphicsSceneMouseEvent *){
+    //this->grabMouse();
+}
+
+void Block::setTextItem(QGraphicsSimpleTextItem *paramBomb){
+    setGraphImage(2);
+    textPtr = paramBomb;
+}
+
+void Block::removeGraphObject(bool endGame){
+    setGraphImage(0);
+    if(textPtr != 0){
+        if(endGame)
+            delete textPtr;
+        textPtr = 0;
+        //bombPtr->setBrush(QBrush(Qt::yellow));
+    }
 }
 /*
  *setColor takes in an int value and immediately assigns that
@@ -89,8 +113,9 @@ Block::Block(int xSpot, int ySpot, int colorChoice){
  * @brief setColor updates graphical color changes with corresponding integer index
  * @return void
  */
-void Block::setColor(int _color){
+void Block::setColor(int _color, QColor colorChosen){
     color = _color;
+    setBrush(QBrush(colorChosen, Qt::SolidPattern));
     //QPixmap newMap(31, 31);
     //newMap.fill(firstColor);
 

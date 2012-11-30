@@ -666,13 +666,13 @@ void MainWindow::setupBlocks(){
         for(int x = 0; x < boardSizeX; x++){
 			//Dan Block Updates:
             temp = (rand() % 6) + 1;
-			gameBoard[x][y] = new Block(x, y, temp); 
+            gameBoard[x][y] = new Block(x, y, temp, colorPtr->getQColor(temp));
 			//End of my loop stuff
 			//now would use temp as accessor in color class to send color to rectItem Bruch
-            rectArray[x][y] = new myRectItem();
-            rectArray[x][y]->setRect(blockSize * x, blockSize * y, blockSize, blockSize);
-            rectArray[x][y]->setBrush(QBrush(colorPtr->getQColor(temp), Qt::SolidPattern));
-            theScene->addItem(rectArray[x][y]);
+            //rectArray[x][y] = new myRectItem();
+            gameBoard[x][y]->setRect(blockSize * x, blockSize * y, blockSize, blockSize);
+            //rectArray[x][y]->setBrush(QBrush(colorPtr->getQColor(temp), Qt::SolidPattern));
+            theScene->addItem(gameBoard[x][y]);
         }
     }
 
@@ -1012,7 +1012,7 @@ void MainWindow::changeColorScheme(){
     if (start) {
         for (int x=0; x<boardSizeX; x++) {
             for (int y=0; y<boardSizeY; y++) {
-                rectArray[x][y]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x][y]->getColor()), Qt::SolidPattern));
+                gameBoard[x][y]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x][y]->getColor()), Qt::SolidPattern));
             }
         }
     }
@@ -1219,11 +1219,11 @@ void MainWindow::shufflePressed() {
 
             tempColor = gameBoard[r1][c1]->getColor();
             //now uses QColor with setColor function
-            gameBoard[r1][c1]->setColor( gameBoard[r2][c2]->getColor() );
-            gameBoard[r2][c2]->setColor(tempColor);
+            gameBoard[r1][c1]->setColor( gameBoard[r2][c2]->getColor(), colorPtr->getQColor(gameBoard[r2][c2]->getColor()) );
+            gameBoard[r2][c2]->setColor(tempColor, colorPtr->getQColor(tempColor));
 
-            rectArray[gameBoard[r1][c1]->getCoordX()][gameBoard[r1][c1]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[r1][c1]->getColor()), Qt::SolidPattern));
-            rectArray[gameBoard[r2][c2]->getCoordX()][gameBoard[r2][c2]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[r2][c2]->getColor()), Qt::SolidPattern));
+            //rectArray[gameBoard[r1][c1]->getCoordX()][gameBoard[r1][c1]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[r1][c1]->getColor()), Qt::SolidPattern));
+            //rectArray[gameBoard[r2][c2]->getCoordX()][gameBoard[r2][c2]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[r2][c2]->getColor()), Qt::SolidPattern));
 
             if(gameBoard[r1][c1]->getGraphImage() != gameBoard[r2][c2]->getGraphImage())
                 graphSwap(r1, c1, r2, c2);
@@ -1264,11 +1264,11 @@ void MainWindow::horizontalFlip() {
                 y2=boardSizeY-1-y;
 
                 tempColor = gameBoard[x1][y1]->getColor();
-                gameBoard[x1][y1]->setColor( gameBoard[x2][y2]->getColor() );
-                gameBoard[x2][y2]->setColor(tempColor);
+                gameBoard[x1][y1]->setColor( gameBoard[x2][y2]->getColor(), colorPtr->getQColor(gameBoard[x2][y2]->getColor()) );
+                gameBoard[x2][y2]->setColor(tempColor, colorPtr->getQColor(tempColor));
 
-                rectArray[gameBoard[x1][y1]->getCoordX()][gameBoard[x1][y1]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x1][y1]->getColor()), Qt::SolidPattern));
-                rectArray[gameBoard[x2][y2]->getCoordX()][gameBoard[x2][y2]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x2][y2]->getColor()), Qt::SolidPattern));
+                //rectArray[gameBoard[x1][y1]->getCoordX()][gameBoard[x1][y1]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x1][y1]->getColor()), Qt::SolidPattern));
+                //rectArray[gameBoard[x2][y2]->getCoordX()][gameBoard[x2][y2]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x2][y2]->getColor()), Qt::SolidPattern));
 
                 if(gameBoard[x1][y1]->getGraphImage() != gameBoard[x2][y2]->getGraphImage())
                     graphSwap(x1, y1, x2, y2);
@@ -1302,11 +1302,11 @@ void MainWindow::rotate() {
                 y2=boardSizeY-1-y;;
 
                 tempColor = gameBoard[x1][y1]->getColor();
-                gameBoard[x1][y1]->setColor( gameBoard[x2][y2]->getColor() );
-                gameBoard[x2][y2]->setColor(tempColor);
+                gameBoard[x1][y1]->setColor( gameBoard[x2][y2]->getColor(), colorPtr->getQColor(gameBoard[x2][y2]->getColor()) );
+                gameBoard[x2][y2]->setColor(tempColor, colorPtr->getQColor(tempColor));
 
-                rectArray[gameBoard[x1][y1]->getCoordX()][gameBoard[x1][y1]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x1][y1]->getColor()), Qt::SolidPattern));
-                rectArray[gameBoard[x2][y2]->getCoordX()][gameBoard[x2][y2]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x2][y2]->getColor()), Qt::SolidPattern));
+                //rectArray[gameBoard[x1][y1]->getCoordX()][gameBoard[x1][y1]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x1][y1]->getColor()), Qt::SolidPattern));
+                //rectArray[gameBoard[x2][y2]->getCoordX()][gameBoard[x2][y2]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x2][y2]->getColor()), Qt::SolidPattern));
                 if(gameBoard[x1][y1]->getGraphImage() != gameBoard[x2][y2]->getGraphImage())
                     graphSwap(x1, y1, x2, y2);
             }
@@ -1340,11 +1340,11 @@ void MainWindow::verticalFlip() {
                 y2=y;
 
                 tempColor = gameBoard[x1][y1]->getColor();
-                gameBoard[x1][y1]->setColor( gameBoard[x2][y2]->getColor() );
-                gameBoard[x2][y2]->setColor(tempColor);
+                gameBoard[x1][y1]->setColor( gameBoard[x2][y2]->getColor(), colorPtr->getQColor(gameBoard[x2][y2]->getColor()) );
+                gameBoard[x2][y2]->setColor(tempColor, colorPtr->getQColor(tempColor));
 
-                rectArray[gameBoard[x1][y1]->getCoordX()][gameBoard[x1][y1]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x1][y1]->getColor()), Qt::SolidPattern));
-                rectArray[gameBoard[x2][y2]->getCoordX()][gameBoard[x2][y2]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x2][y2]->getColor()), Qt::SolidPattern));
+                //rectArray[gameBoard[x1][y1]->getCoordX()][gameBoard[x1][y1]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x1][y1]->getColor()), Qt::SolidPattern));
+                //rectArray[gameBoard[x2][y2]->getCoordX()][gameBoard[x2][y2]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x2][y2]->getColor()), Qt::SolidPattern));
                 if(gameBoard[x1][y1]->getGraphImage() != gameBoard[x2][y2]->getGraphImage())
                     graphSwap(x1, y1, x2, y2);
             }
@@ -1367,7 +1367,7 @@ void MainWindow::reset() {
         for (c=0; c<boardSizeY; c++) {
             int tempColor;
             tempColor = (rand() % 6) + 1;
-            gameBoard[r][c]->setColor(tempColor);
+            gameBoard[r][c]->setColor(tempColor, colorPtr->getQColor(tempColor));
         }
     }
 
@@ -1465,9 +1465,9 @@ vector<Block*> MainWindow::sortVector(vector<Block*> blockVector)
             blockVector[t] = tempPtr;
         } 
 		//This line may not be needed in general transntions
-        blockVector[i]->setColor(0);
+        blockVector[i]->setColor(0, Qt::black);
         blockVector[i]->setMarkedBool(false);
-        rectArray[blockVector[i]->getCoordX()][blockVector[i]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(0), Qt::SolidPattern));
+        //rectArray[blockVector[i]->getCoordX()][blockVector[i]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(0), Qt::SolidPattern));
     }
     return blockVector;
 }
@@ -1518,13 +1518,13 @@ void MainWindow::determineColor(vector<Block*> blockVector)
             if(!gameBoard[blockVector[i]->getCoordX()][checkY]->getColoredBool())
             {
 				//steal the color from other block onto ith block...
-                blockVector[i]->setColor(gameBoard[blockVector[i]->getCoordX()][checkY]->getColor());
+                blockVector[i]->setColor(gameBoard[blockVector[i]->getCoordX()][checkY]->getColor(), colorPtr->getQColor(gameBoard[blockVector[i]->getCoordX()][checkY]->getColor()));
                 blockVector[i]->setColoredBool(false);
-                rectArray[blockVector[i]->getCoordX()][blockVector[i]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(blockVector[i]->getColor()), Qt::SolidPattern));
+                //rectArray[blockVector[i]->getCoordX()][blockVector[i]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(blockVector[i]->getColor()), Qt::SolidPattern));
 				//..and set the other block for a color change (including transition)
                 gameBoard[blockVector[i]->getCoordX()][checkY]->setColoredBool(true); //block needs to be changed later
-                gameBoard[blockVector[i]->getCoordX()][checkY]->setColor(0);
-                rectArray[blockVector[i]->getCoordX()][checkY]->setBrush(QBrush(colorPtr->getQColor(0),Qt::SolidPattern));
+                gameBoard[blockVector[i]->getCoordX()][checkY]->setColor(0, Qt::black);
+                //rectArray[blockVector[i]->getCoordX()][checkY]->setBrush(QBrush(colorPtr->getQColor(0),Qt::SolidPattern));
                 blockVector.push_back(gameBoard[blockVector[i]->getCoordX()][checkY]); //add block to end of vector
                 if(gameBoard[blockVector[i]->getCoordX()][checkY]->getGraphImage() != gameBoard[blockVector[i]->getCoordX()][blockVector[i]->getCoordY()]->getGraphImage())
                     graphSwap(blockVector[i]->getCoordX(), blockVector[i]->getCoordY(), blockVector[i]->getCoordX(), checkY);
@@ -1537,9 +1537,9 @@ void MainWindow::determineColor(vector<Block*> blockVector)
         {
             int tempColor;
             tempColor = (rand() % 6) + 1;
-            blockVector[i]->setColor(tempColor); 
+            blockVector[i]->setColor(tempColor, colorPtr->getQColor(tempColor));
             blockVector[i]->setColoredBool(false);
-            rectArray[blockVector[i]->getCoordX()][blockVector[i]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(tempColor), Qt::SolidPattern));
+            //rectArray[blockVector[i]->getCoordX()][blockVector[i]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(tempColor), Qt::SolidPattern));
         }
     }
 }
@@ -1599,9 +1599,9 @@ vector<Block*> MainWindow::checkSpecials(vector<Block*> blockVector)
             scoreLabel->setText("Score: x" + m);
 
             blockVector = bombCollector(blockVector, blockVector[i]->getCoordX(), blockVector[i]->getCoordY());
-            blockVector[i]->setGraphImage(0);
-            theScene->removeItem(rectArray[blockVector[i]->getCoordX()][blockVector[i]->getCoordY()]->textPtr);
-            rectArray[blockVector[i]->getCoordX()][blockVector[i]->getCoordY()]->removeGraphObject(false);
+            //blockVector[i]->setGraphImage(0);
+            theScene->removeItem(blockVector[i]->textPtr);
+            blockVector[i]->removeGraphObject(false);
             //zero pointer in myRectItem->myGraphObject
             //clear image from myRectItem
         }
@@ -1694,7 +1694,7 @@ void MainWindow::timeSlot(){
                 gamedone = true;
 
 
-                int n= scorePtr->getScore();
+                //int n= scorePtr->getScore();
                 QString num = QLocale(QLocale::English).toString((double) scorePtr->getScore(), 'f', 0);
                 tempScore->setText(num);
 
@@ -1849,8 +1849,8 @@ void MainWindow::generateGraphicObject(int CoordX, int CoordY){
     myTextItem->setY((CoordY * blockSize) - 4);
     myTextItem->setScale(3);
     myTextItem->setBrush(QBrush(Qt::black, Qt::SolidPattern));
-    rectArray[CoordX][CoordY]->setTextItem(myTextItem);
-    gameBoard[CoordX][CoordY]->setGraphImage(2);
+    gameBoard[CoordX][CoordY]->setTextItem(myTextItem);
+    //gameBoard[CoordX][CoordY]->setGraphImage(2);
     theScene->addItem(myTextItem);
 
 }
@@ -1867,15 +1867,15 @@ void MainWindow::generateGraphicObject(int CoordX, int CoordY){
  */
 void MainWindow::graphSwap(int firstX, int firstY, int secondX, int secondY){
     if(gameBoard[firstX][firstY]->getGraphImage() == 2){
-        theScene->removeItem(rectArray[firstX][firstY]->textPtr);
-        rectArray[firstX][firstY]->removeGraphObject(false);
-        gameBoard[firstX][firstY]->setGraphImage(0);
+        theScene->removeItem(gameBoard[firstX][firstY]->textPtr);
+        gameBoard[firstX][firstY]->removeGraphObject(false);
+        //gameBoard[firstX][firstY]->setGraphImage(0);
         generateGraphicObject(secondX, secondY);
     }
     else{
-        theScene->removeItem(rectArray[secondX][secondY]->textPtr);
-        rectArray[secondX][secondY]->removeGraphObject(false);
-        gameBoard[secondX][secondY]->setGraphImage(0);
+        theScene->removeItem(gameBoard[secondX][secondY]->textPtr);
+        gameBoard[secondX][secondY]->removeGraphObject(false);
+        //gameBoard[secondX][secondY]->setGraphImage(0);
         generateGraphicObject(firstX, firstY);
     }
 
@@ -1889,18 +1889,18 @@ void MainWindow::removeBlocks(){
     if(start){
         for(int i = 0; i < boardSizeX; i++){
             for(int j = 0; j < boardSizeY; j++){
+                if(gameBoard[i][j]->textPtr != 0)
+                    theScene->removeItem(gameBoard[i][j]->textPtr);
+                theScene->removeItem(gameBoard[i][j]);
+                gameBoard[i][j]->removeGraphObject(true);
                 delete gameBoard[i][j];
                 gameBoard[i][j] = 0;
                 //if(rectArray[i][j]->bombPtr != 0)
                     //rectArray[i][j]->bombPtr->setBrush(QBrush(Qt::yellow));
-                if(rectArray[i][j]->textPtr != 0)
-                    theScene->removeItem(rectArray[i][j]->textPtr);
-                rectArray[i][j]->removeGraphObject(true);
                 //delete rectArray[i][j]->textPtr;
-                theScene->removeItem(rectArray[i][j]);
                 //rectArray[i][j]->setBrush(QBrush(Qt::yellow));
-                delete rectArray[i][j];
-                rectArray[i][j] = 0;
+                //delete rectArray[i][j];
+                //rectArray[i][j] = 0;
             }
         }
     }
