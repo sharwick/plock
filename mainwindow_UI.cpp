@@ -359,14 +359,14 @@ void MainWindow::setupWindows(){
                         "\n"
                         "How to Play: \n"
                         "The goal of the game is to match similar colored blocks. "
-                        "As the blocks are cleared new blocks fill in from the top of the board. "
-                        "As you score points, your bomb bar grows and when it is full a random "
-                        "bomb is placed on the board in the form of a star. When you click on them "
-                        "an area around them are cleared out. "
+                        "As the blocks are cleared, new blocks fill in from the top of the board. "
+                        "As you score points, your bomb bar grows, and when it is full a random "
+                        "bomb is placed on the board in the form of a star. When you click on it "
+                        "an area around the bomb is cleared out. "
                         "There are three game modes to choose from. First is Standard Mode, which "
                         "is a sixty second game where you have to score as high as possible. "
-                        "Next is Survival Mode where you have a certian amount of time to accumulate "
-                        "a certian score, which changes with each level. Last there is Endless Mode "
+                        "Next is Survival Mode where you have a certain amount of time to fill up "
+                        "the progress bar, which restarts with each level. Last there is Endless Mode "
                         " where you have an unlimited amount of time to play.");
     helpText->setText(aboutText);
     helpMenuLayout->addWidget(helpText, Qt::AlignTop);

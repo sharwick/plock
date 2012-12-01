@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>BombStar: Main Page</title>
+<title>BombStar: Readme</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -64,15 +64,62 @@
 <div class="contents">
 </div><!-- contents -->
 
-
-
-<ul> <b><u>Important links</u></b>
-<li><a href="https://www.dropbox.com/sh/nlyzlll9b6yylx8/Tc5delkC3G">Dropbox Folder</a></li>
-<li><a href="http://code.google.com/p/plock/">Google Code</a></li>
+<h3><u>Authors</u></h3>
+<ul>
+<li><a href="http://lore.com/Shannon.Harwick">Shannon Harwick</a></li>
+<li><a href="http://lore.com/Daniel.Keasler">Daniel Keasler</a></li>
+<li><a href="http://lore.com/Mikael.Son">Mikael Son</a></li>
+<li><a href="http://lore.com/Devin.Rusnak">Devin Rusnak</a></li>
 </ul>
 
+<h3><u>Goal of Project</u></h3>
+<p>
+To create a puzzle game inspired by <a href="http://www.metrogames.com/games/plock">Plock</a>, but with improved game play. 
 
-<ol><b><u>Guide to Setting Up Project</u></b>
+We take the fundamental structure of our game from Plock but modify the game so that it 
+rewards players who think over those who mindlessly click. 
+</p>
+
+<p>
+How to Play:                         
+The basic goal of the game is to match similar colored blocks. 
+As the blocks are cleared new blocks fill in from the top of the board.
+As you score points, your bomb bar grows and when it is full a  
+bomb is placed on the board in the form of a star. When you click on the
+bomb, an area around it is cleared out and any new blocks cleared will
+be worth even more points.
+</p>
+
+Our Design document explains how we:
+<ul>
+<li>Re-created and improved upon the fundamental game dynamics of Plock</li>
+<li>Created a customizable, versatile user interface including high scores and settings</li>
+<li>Designed 3 distinct game modes</li>
+<li>Incorporated user feedback to alter the scoring and shuffling mechanisms to allow 
+for more exciting game play</li>
+</ul>
+
+<h3><u>Important links</u></h3>
+<ul> 
+<li><a href="https://www.dropbox.com/sh/nlyzlll9b6yylx8/Tc5delkC3G">Dropbox Folder</a></li>
+	<ul>
+	<li>/.../code/: Contains the source code.</li>
+	<li>/.../html/: Contains the documentation.</li>
+	</ul>
+<li><a href="http://code.google.com/p/plock/">Google Code</a></li>
+	<ul>
+	<li><a href="http://code.google.com/p/plock/w/list">Wiki</a></li>
+	<li><a href="http://code.google.com/p/plock/issues/list">Issues</a></li>
+	<li><a href="http://code.google.com/p/plock/source/list">Source Code (includes all committed changes)</a></li>	
+	</ul>
+<li><a href="http://www.metrogames.com/games/plock">Plock</a></li>
+	<ul>
+	<li>The website for our inspiration for this project.
+	</ul>
+</ul>
+
+<h3><u>Guide to Setting Up Project</u></h3>
+<ol><p>The following describes a tested set of steps to create a workable project. The project has been tested on APIs 10, 15, and 16.</p>
 <li> 	Download files from the BombStar.zip file at the following link.
 		<a href="https://www.dropbox.com/sh/nlyzlll9b6yylx8/Tc5delkC3G">Link to Dropbox folder.</a></li>
 <li>Create a Qt project named BombStar with the following properties:</li>
