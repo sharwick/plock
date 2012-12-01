@@ -54,6 +54,13 @@
 <div class="contents">
 </div><!-- contents -->
 
+<h3>Introduction</h3>
+
+
+
+
+
+
 <h3>Block Class</h3>
 <b>Primary Author: Daniel Keasler</b>
 
@@ -161,12 +168,103 @@ searching upwards in a column. </p>
 <h3>Timers</h3>
 <b>Primary author: Mikael Son</b>
 
+
+<div>
 <h3>Shuffling</h3>
 <b>Primary author: Shannon Harwick</b>
 
+<br>
+<i>Shuffle Design</i>
+
+<p>
+A key fault with the original Plock game is that its only shuffling mechanism (Random Shuffle)
+did not provide much reward for those players who attempted to eliminate blockS strategically
+rather than by spam-clicking.
+
+The penalty to shuffling is the time it requires to analyze a new board.  This penalty is not 
+felt by spam clickers but can be a major obstacle for strategists.  
+
+The rewards are also unbalanced. 
+The Random Shuffle rewards the spam-clicker by easily opening up new clickable paths.
+The strategists's board, on the other hand, may be destroyed because a major block group
+could be split into smaller pieces that cannot be easily connected.  Again, the spammer 
+does not suffer this consequence.  
+
+We incorporated this feature in our own game because it makes the game more exciting by 
+allowing the user to recover from a board with few options.  However, we added two more
+shuffling mechanism that offer better rewards to players who think.
+</p>
+
+<p>
+The first new shuffle method we implement is the Flip.  This simply flips the board
+along the central horizontal axis.  The top row and the bottom row swap places, 
+as do the 2nd and the 2nd-to-last rows, etc.  Note that this method is reversible
+by simply calling it twice.
+
+This method won't give any benefit to the
+spammer, but it allows the strategist to maintain a large group of blocks but change
+the side on which new blocks will fall.  The cost is minimal since the structure of the
+board is simply a reflection of the board the user was just looking at.  At one point,
+we implemented a similar flip around the vertical axis.  However, this opens up no new options
+to the player, so we removed it.
+</p>
+The second new shuffle method is the Rotate, which rotates the board 180 degrees around 
+the board's center.  Thus the top left corner of the board rotates to become the bottom 
+right corner.  This method, like Flip, is easily reversible and provides benefits only
+to a strategist.
+</p>
+
+
+<i>Shuffle Implementation</i>
+<p>
+Each shuffling strategy is performed via its own method: shufflePressed(), rotate(), and horizontalFlip().
+In each case, the colors and bombs are traded pairwise for a number of pairs of blocks.
+After swapping, the blocks are repainted.  
+The swaps are as follows:
+<ul>
+<li>For Random Shuffle, 5,184 (= the square of the area of the game board) random trades occur.</li>
+<li>For Rotate, all the blocks on the left side of the board are traded with their appropriate 
+match on the right side of the board (e.g., top left corner and bottom right corner).</li>
+<li>For Flip, all the blocks on the top half of the board are traded with their appropriate 
+match on the bottom half of the board (e.g., top left corner and bottom left corner).</li>
+</ul>
+</p>
+</div>
+
+
+
 <h3>Scoring</h3>
 <b>Primary author: Shannon Harwick</b>
+
+<br><i>Score Design</i>
+<p>
+The score is designed to reward a player for thinking rather than random clicking.  A
+thoughtful player must manipulate the board to create opportunities to eliminate 
+very large groups of blocks.  In Plock, scoring is quadratic based on the number of
+blocks eliminated in one click.  This does make larger groups worth more points per
+block than smaller groups, but our user testing indicates that
+the gain does not compensate for the loss in quantity due to spam-clicking.  
+
+We considered various mechanisms to push the player away from spam-clicking:
+<ul>
+<li>Subtract points for clicking single blocks</li>
+<li>Decrease the bomb bar for clicking single blocks</li>
+<li>Decrease the time bar for clicking single blocks</li>
+<li>Increase the degree of the polynomial in the scoring equation</li>
+</ul>
+
+We ultimately chose the last because it offers the player a reward for good behavior 
+rather than punishment for bad.  The final score equation is: 
+<br><br>
+Score = (n-1)^4
+<br>where n = # of eliminated blocks
+<br><br>
+</p>
+
+<i>Score Implementation</i>
+<p>
 [[TO BE COMPLETED]]
+</p>
 
 <h3>Color Schemes</h3>
 <b>Primary author: Shannon Harwick</b>
