@@ -268,8 +268,33 @@ Score = (n-1)^4
 
 <h3>Color Schemes</h3>
 <b>Primary author: Shannon Harwick</b>
-[[TO BE COMPLETED]]
 
+<i>Color Scheme Design</i>
+<p>
+In response to feedback from our presentations and from our test users, we 
+decided to implement multiple color schemes and to include a Setting menu where a user
+can choose the color scheme that most appeals to him or her.  Of the 5 color schemes,
+four are colorblindness-safe.  We included one scheme that is not color-blind safe because 
+some of the users who do <i>not</i> suffer from colorblindness found some of the colors 
+too similar in the safe schemes.  The source for the color schemes is: 
+<a href="http://colorbrewer2.org">Colorbrewer</a>.  Note that the background for all 
+color schemes was chosen to be the most extreme shade of black.  
+This is necessary since our game is quite color-intensive and thus requires a strong 
+contrast.  
+</p>
+
+
+
+<i>Color Scheme Implementation</i>
+<p>
+All 5 color schemes were placed into a single Color object.  Each color scheme is 
+represented by an integer value from 0 to 4 (int colorScheme).  The active color scheme 
+is contained in an array (QColor colorArray[7]) and is used to create 
+a QPalette that is used to paint all objects.  When the user changes the Color Scheme 
+setting, this is implemented by changing the integer in the Color object, updating the colorArray, updating the 
+QPalette, and repainting all existing objects.  This is completed by attaching a slot
+to the QSlider used by the player to adjust the setting.
+</p>
 
 <h3>Game Modes</h3>
 <b>Primary author: Daniel/Mike/Devin</b>
