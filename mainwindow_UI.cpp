@@ -2,7 +2,7 @@
  *  @author Daniel Keasler
  *  @author Devin Rusnak
  *  @author Mikael Son
- *  @copyright Blockstar 2012
+ *  @copyright BOMBSTAR 2012
  *  @class mainwindow_UI mainwindow_UI.h "mainwindow_UI.h"
  *  @extends QMainWindow
  *  @brief The main class of the program where all the interface items and most of the calculations are handled.
@@ -344,7 +344,7 @@ void MainWindow::setupWindows(){
     helpMenu->setLayout(helpMenuLayout);
 
     // Initialize and add Items to the layout
-    aboutLabel = new QLabel("About Blockstar", this); labelVector.push_back(aboutLabel);
+    aboutLabel = new QLabel("About BOMBSTAR", this); labelVector.push_back(aboutLabel);
     aboutLabel->setFont(tempFont);
     helpMenuLayout->addWidget(aboutLabel, Qt::AlignHCenter);
 

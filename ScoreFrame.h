@@ -1,4 +1,4 @@
-/** @author     Shannon Harwick/Plock Team
+/** @author     Shannon Harwick/BOMBSTAR
   * @purpose    Create a frame to display the score object
   */
 
