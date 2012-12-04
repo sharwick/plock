@@ -21,7 +21,6 @@
 #include <QDialogButtonBox>
 #include <QMouseEvent>
 #include <QTextBrowser>
-#include <myRectItem.h>
 #include <QTimer>
 #include <Colors.h>
 #include <Score.h>
