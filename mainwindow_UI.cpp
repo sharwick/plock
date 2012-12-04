@@ -979,6 +979,7 @@ void MainWindow::gameOverRestartSlot(){
 }
 
 /**
+ * @author     Shannon Harwick
  * @brief   changeColorScheme() creates a new palette based on the users input on the slider provided in the Settings menu.  A new palette is created and then all QLabels and QPushButtons are reassigned to this palette.
  *          The update affects QPushButtons, QLabels, and the timers (both time and bomb).
  * @bug     On 3 of 4 computers used in this group, no way could be found to update the color scheme of the QPushButtons.  On 1 computer, we were successful in updating the QPushButtons using both style sheets and palettes, but neither method worked on the other machines.
@@ -1195,11 +1196,12 @@ void MainWindow::addScore(){
 }
 
 /**
- * @brief   shufflePressed() preserves the blocks' color and any stars but shuffles the blocks randomly.
+ *  @author     Shannon Harwick
+    @brief   shufflePressed() preserves the blocks' color and any stars but shuffles the blocks randomly.
             The shuffle is performed by randomly swapping pairs of blocks.  The number of swaps performed is quadratic in the area of the board.
             This button is inactive if the game is paused.
- * @param   None
- * @return  Void
+ *  @param   None
+ *  @return  Void
  */
 
 void MainWindow::shufflePressed() {
@@ -1243,6 +1245,7 @@ void MainWindow::quit(){
 
 
 /**
+ * @author     Shannon Harwick
  * @brief   horizontalFlip() preserves the blocks' color and any stars but shuffles the blocks so that they get flipped along the horizontal access.
             This button is inactive if the game is paused.
  * @param   None
@@ -1280,6 +1283,7 @@ void MainWindow::horizontalFlip() {
 
 
 /**
+ * @author     Shannon Harwick
  * @brief   rotate() preserves the blocks' color and any stars but rotates the blocks 180 degrees.
             This button is inactive if the game is paused.
  * @param   None
@@ -1317,6 +1321,7 @@ void MainWindow::rotate() {
 
 
 /**
+ * @author     Shannon Harwick
  * @brief   verticalFlip() preserves the blocks' color and any stars but shuffles the blocks so that they get flipped along the vertical access.
             This button is inactive if the game is paused.
             This method is not currently in use in the game because it does not offer a strategic benefit the way the other shuffles do.

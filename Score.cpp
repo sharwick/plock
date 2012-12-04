@@ -9,7 +9,8 @@
 using namespace std;
 
 
-/** @brief  The constructor initializes the score to 0 and the multiplier to 1.
+/** @author     Shannon Harwick
+  * @brief  The constructor initializes the score to 0 and the multiplier to 1.
   *
   */
 Score::Score() {
@@ -18,7 +19,8 @@ Score::Score() {
 }
 
 
-/** @brief  The score is updated by adding a quartic polynomial of the number of blocks eliminated.
+/** @author     Shannon Harwick
+  * @brief  The score is updated by adding a quartic polynomial of the number of blocks eliminated.
   *         An upper bound of 100,000,000 is set on the score.
   * @param  nBlocks The integer nBlocks is the number of blocks deleted in the last move.
   * @param  speedBonus The boolean value speedBonus is not currently in use.  It is intended to allow the score to be incremented if the player makes multiple consecutive moves within a specified timeframe.
@@ -46,7 +48,8 @@ void Score::updateScore(int nBlocks, bool speedBonus) {
 
 }
 
-/** @brief  Obtain the current score.
+/** @author     Shannon Harwick
+  * @brief  Obtain the current score.
   * @return The integer value of the score.
   *
   */
@@ -55,7 +58,8 @@ int Score::getScore() {
 }
 
 
-/** @brief  When a star is eliminated, this method is called to increment the multiplier.
+/** @author     Shannon Harwick
+  * @brief  When a star is eliminated, this method is called to increment the multiplier.
   *         An upper bound of 50 is set on the multiplier.
   * @return Void
   *
@@ -66,7 +70,8 @@ void Score::incrementMultiplier(){
 }
 
 
-/** @brief  When a new game is started, the score and multiplier must be returned to their initial values (0 and 1).
+/** @author     Shannon Harwick
+  * @brief  When a new game is started, the score and multiplier must be returned to their initial values (0 and 1).
   * @return Void
   *
   */
@@ -76,7 +81,8 @@ void Score::resetScore() {
 }
 
 
-/** @brief  This method obtains the current multiplier. It is necessary to display the current multiplier on the board.
+/** @author     Shannon Harwick
+  * @brief  This method obtains the current multiplier. It is necessary to display the current multiplier on the board.
   * @return The current integer value of the multiplier.
   *
   */

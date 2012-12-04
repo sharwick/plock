@@ -13,7 +13,8 @@
 
 using namespace std;
 
-/** @brief      Initiate the score board.  As the palette changes, the colors will be overwritten.
+/** @author     Shannon Harwick
+  * @brief      Initiate the score board.  As the palette changes, the colors will be overwritten.
   */
 ScoreFrame::ScoreFrame() {
     text = new QLabel("0",0,0);
@@ -30,7 +31,8 @@ ScoreFrame::ScoreFrame() {
 
 }
 
-/** @brief      Updates the score board to display current score, formatted with commas.
+/** @author     Shannon Harwick
+  * @brief      Updates the score board to display current score, formatted with commas.
   * @param      n The input n will be the integer value of the current score.
   */
 void ScoreFrame::update(int n) {
@@ -39,7 +41,8 @@ void ScoreFrame::update(int n) {
 }
 
 
-/** @brief      Resets the score to 0.  This method must be called before the start of a new game.
+/** @author     Shannon Harwick
+  * @brief      Resets the score to 0.  This method must be called before the start of a new game.
   * @return     Void
   */
 void ScoreFrame::resetScoreBoard() {

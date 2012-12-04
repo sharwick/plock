@@ -13,7 +13,8 @@
 
 #include "Colors.h"
 
-/** @brief    Creates an instance of the Color class and sets the color scheme to the requested scheme.
+/** @author     Shannon Harwick
+  * @brief    Creates an instance of the Color class and sets the color scheme to the requested scheme.
   * @param          The single input parameter is an integer from 0 to 4,
   *                 allowing user to choose a different scheme.
   *                 Color scheme 0 (default is not color-blind safe but shows the most variation in block colors)
@@ -24,7 +25,8 @@ Colors::Colors(int scheme) {
     setScheme(scheme);
 }
 
-/** @brief  This method is called by the constructor.  Each scheme is represented by an integer (ranging from 0 to 4).
+/** @author     Shannon Harwick
+  * @brief  This method is called by the constructor.  Each scheme is represented by an integer (ranging from 0 to 4).
   *         The colors are stored in a single colorArray.  Each call to the setScheme() method updates this array.
   * @param  Input parameter n is an integer from 0 to 4, representing a unique color palette.
   * @return Void
@@ -94,7 +96,8 @@ void Colors::setScheme(int n) {
 }
 
 
-/** @brief  Determines the current color scheme being used.
+/** @author     Shannon Harwick
+  * @brief  Determines the current color scheme being used.
   * @param  No input variable required.
   * @return An integer from 0 to 4, identifying the current color scheme being used.
   */
@@ -104,7 +107,8 @@ int Colors::getScheme() {
 
 
 
-/** @brief  This method takes an integer from 0 to 6 and obtains the relevant QColor of that index in the array of QColors defined by setScheme().
+/** @author     Shannon Harwick
+  * @brief  This method takes an integer from 0 to 6 and obtains the relevant QColor of that index in the array of QColors defined by setScheme().
   * @param  Input parameter index is an integer from 0 to 6.  It identifies an index of the colorArray.
   * @return QColor
   */
