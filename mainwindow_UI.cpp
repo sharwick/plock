@@ -1116,7 +1116,7 @@ void MainWindow::nextLevel(){
     k=0;
 
     shufflePressed();//shuffles blocks / graph objects
-//    timer->start(timerCounter);//start timer with new incremented timer speed
+
     timer->start(timerCounter);
     btimeBegin();
 }
@@ -1404,164 +1404,31 @@ Start of Block game algorithm functions:
  */
 void MainWindow::processMatch(Block* matchedBlock)
 {
-    // SHupdate - rearranged by Dan for order
     vector<Block*> gatheredBlocks;
+    //recursively gather all matching blocks
     gatheredBlocks = matchedBlock->gatherBlocks(gatheredBlocks);
-	//NIY; will test when graphical images are loaded on top
+    //check for stars
     gatheredBlocks = checkSpecials(gatheredBlocks);
+    //sort the blocks in descending order of y (if in the same column)
     gatheredBlocks = sortVector(gatheredBlocks);
 
     QEventLoop loop;
+    //force a .05 second wait
     QTimer::singleShot(50, &loop, SLOT(quit()) );
     loop.exec();
-    //transition period right here, after all blocks have been turned black
 
+    //update score and score label
     scorePtr->updateScore((int) gatheredBlocks.size(), false);
     sframe->update(scorePtr->getScore());
+    //update bomb bar and if in survival mode, progress bar
     updateBomb((int) gatheredBlocks.size());
     if(survivalModeFlag == 1)
         updateProgress((int) gatheredBlocks.size());
-    //blockTimerCounter = 0;
-    //while(blockTimerCounter <= 1){
-
-    //}
+    //repaint all of the blocks
     determineColor(gatheredBlocks);
 }
 
-/*
- *Author: Daniel Keasler
- *      Plock Team
- *
- *Outer loop eventually checks every element in the vector. T, initialized to i, is used to keep track
- *  of the maximum (max index, lowest push button on widget) so that if no block is a max over t, then
- *  there won't be a switch. Because j goes to the end of the vector in each inner loop, any Block
- *  swapping will be the max and the next nested iteration can skip that Block for order assuring. For
- *  a swap, both blocks must be in the same row and the ColY must be higher, meaning further down in
- *  the widget representation as well as the the array structure.
- *
- *  Late add: markedBool and setColor(black or 0) are called here as a logical place to process these
- *  intermediate changes in the blocks.
- *
- *  CHANGED: setColor now includes QColor parameter - NOW REMOVED
- *
- *  NOTE: May be unnecessary. determineColor can be extended extra overlaps, and only consideration
- *  overlapping is transitions.
- */
-/**
- * @author Daniel Keasler
- * @brief MainWindow::sortVector all blocks in blockVector are sorted in descending order with respect to y
- * @param blockVector
- * @return vector<Block*>
- */
-vector<Block*> MainWindow::sortVector(vector<Block*> blockVector)
-{
-    for(int i = 0; (unsigned)i < blockVector.size(); i++)
-    {
-        int t = i;
-        for(int j = i + 1; (unsigned)j < blockVector.size(); j++)
-        {
-            if(blockVector[j]->getCoordX() == blockVector[t]->getCoordX() && blockVector[j]->getCoordY() > blockVector[t]->getCoordY())
-                t = j;
-        }
-        if(t != i)
-        {
-            Block *tempPtr = blockVector[i];
-            blockVector[i] = blockVector[t];
-            blockVector[t] = tempPtr;
-        } 
-		//This line may not be needed in general transntions
-        blockVector[i]->setColor(0, Qt::black);
-        blockVector[i]->setMarkedBool(false);
-        //rectArray[blockVector[i]->getCoordX()][blockVector[i]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(0), Qt::SolidPattern));
-    }
-    return blockVector;
-}
 
-/*
- *Author: Daniel Keasler
- *      Plock Team
- *
- *Gives each Block in the vector the proper color. Because color drops
- *  from top to bottom (high indices to low indices), the first proper
- *  color is chosen from the adjacent Block up from the current ith
- *  Block. CheckY, along with the ith Block's RowX, is used to find the
- *  next appropriate color above in the correct column. The only other
- *  factor for the same color in the 2D array is that the color it could
- *  be inheriting is not already scheduled for a color change, which is
- *  what the coloredBool value is for. If the condition for "inheriting"
- *  another color is met, then the Block inheriting the color is sent
- *  the new color and the coloredBool value is set to false (no longer
- *  needs a color change) and the Block that lost the color now also
- *  needs a color change. The color of this available block is set to
- *  Black for a noticeable transition, the coloredBool value is set to
- *  true because the Block needs a color change and its color should not
- *  be taken, and it is added to the end of the blockVector. In the case
- *  of no matches in a column with the ith block, a new random color will
- *  be assigned and the appropriate coloredBool flag is set to false.
- *
- *  CHANGED: setColor now includes QColor - NOW REMOVED
- */
-
-/**
- * @author Daniel Keasler
- * @brief MainWindow::determineColor swaps color of blocks upwards from the column of the ith block
- * @description checky is a walker variable upwards in the 2D array of blocks. while checky is still
- *      in bounds of the array, the algorithm searches for a block that is not also needing a color change.
- *      The blocks are already sorted based on y so the algorithm will never replace the same blocks color more
- *      than once. If it steals a color from a block, that block that lost its color is put on the end of the vector.
- *      If it doesn't find a color to steal, then a new color is randomly determined.
- * @param blockVector
- * @return void
- */
-void MainWindow::determineColor(vector<Block*> blockVector)
-{
-    for(int i = 0; (unsigned)i < blockVector.size(); i++)
-    {
-        int checkY = blockVector[i]->getCoordY() - 1;
-        while(checkY >= 0)
-        {
-            if(!gameBoard[blockVector[i]->getCoordX()][checkY]->getColoredBool())
-            {
-				//steal the color from other block onto ith block...
-                blockVector[i]->setColor(gameBoard[blockVector[i]->getCoordX()][checkY]->getColor(), colorPtr->getQColor(gameBoard[blockVector[i]->getCoordX()][checkY]->getColor()));
-                blockVector[i]->setColoredBool(false);
-                //rectArray[blockVector[i]->getCoordX()][blockVector[i]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(blockVector[i]->getColor()), Qt::SolidPattern));
-				//..and set the other block for a color change (including transition)
-                gameBoard[blockVector[i]->getCoordX()][checkY]->setColoredBool(true); //block needs to be changed later
-                gameBoard[blockVector[i]->getCoordX()][checkY]->setColor(0, Qt::black);
-                //rectArray[blockVector[i]->getCoordX()][checkY]->setBrush(QBrush(colorPtr->getQColor(0),Qt::SolidPattern));
-                blockVector.push_back(gameBoard[blockVector[i]->getCoordX()][checkY]); //add block to end of vector
-                if(gameBoard[blockVector[i]->getCoordX()][checkY]->getGraphImage() != gameBoard[blockVector[i]->getCoordX()][blockVector[i]->getCoordY()]->getGraphImage())
-                    graphSwap(blockVector[i]->getCoordX(), blockVector[i]->getCoordY(), blockVector[i]->getCoordX(), checkY);
-                break;
-            }
-            else
-                checkY--;
-        }
-        if(checkY < 0)
-        {
-            int tempColor;
-            tempColor = (rand() % 6) + 1;
-            blockVector[i]->setColor(tempColor, colorPtr->getQColor(tempColor));
-            blockVector[i]->setColoredBool(false);
-            //rectArray[blockVector[i]->getCoordX()][blockVector[i]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(tempColor), Qt::SolidPattern));
-        }
-    }
-}
-
-
-/*
- *Author: Daniel Keasler
- *      Plock Team
- *
- *Outer for loop scans every block in blockVector. If statement checks
- *  for 0 first to avoid redundancy of case 0 : break; and overwriting 0
- *  with 0. Relavant cases call for mapped collector methods, assignment
- *  back to blockVector. One statement for all 5 cases to setGraphImage
- *  (and the graphical image itself) to 0 at end. Return blockVector to
- *  processMatches.
- */
- 
 /**
  * @author Daniel Keasler
  * @brief MainWindow::checkSpecials checks every single block for a special star (graph image of 2) and takes care
@@ -1571,10 +1438,13 @@ void MainWindow::determineColor(vector<Block*> blockVector)
  */
 vector<Block*> MainWindow::checkSpecials(vector<Block*> blockVector)
 {
+    //check every block in blockVector
     for(int i = 0; (unsigned)i < blockVector.size(); i++)
     {
+        //graphImage of 2 corresponds to a star
         if(blockVector[i]->getGraphImage() == 2)
         {
+            //NOTE: This part below was never completely implemented and currently a more direct approach is used
          //           switch(blockVector[i]->getGraphImage()){
 
          //           case 1 : //score case
@@ -1600,30 +1470,22 @@ vector<Block*> MainWindow::checkSpecials(vector<Block*> blockVector)
          //               blockVector = blockVector[i]->leftCollector(blockVector);
          //               break;
          //           }
+            //increment score multiplier and update score label
             scorePtr->incrementMultiplier();
             QString m = QLocale(QLocale::English).toString((double) scorePtr->getMultiplier(), 'f', 0);
             scoreLabel->setText("Score: x" + m);
 
+            //collect blocks surrounding the star block
             blockVector = bombCollector(blockVector, blockVector[i]->getCoordX(), blockVector[i]->getCoordY());
-            //blockVector[i]->setGraphImage(0);
+            //remove the star from the graphics scene
             theScene->removeItem(blockVector[i]->textPtr);
+            //remove the star pointer from the block
             blockVector[i]->removeGraphObject(false);
-            //zero pointer in myRectItem->myGraphObject
-            //clear image from myRectItem
         }
     }
     return blockVector;
 }
 
-/*
- *Author: Daniel Keasler
- *      Plock Team
- *
- *Outer for loop goes from x - 1 to x + 1, bounds checking prevents errors.
- *  Inner loop goes from y - 1 to y + 1, bounds checking prevents errors.
- *  if block hasn't been marked yet, same process to add block and change
- *  boolean values. Return block back to checkSpecials.
- */
 /**
  * @author Daniel Keasler
  * @brief MainWindow::bombCollector searches a 3x3 subset of the array (centered at the x and y) for new blocks to collect
@@ -1634,16 +1496,21 @@ vector<Block*> MainWindow::checkSpecials(vector<Block*> blockVector)
  */
 vector<Block*> MainWindow::bombCollector(vector<Block*> blockVector, int x, int y)
 {
+    //check 3 sets of x indices
     for(int i = (x - 1); i < (x + 2); i++)
     {
-        if(i > (boardSizeX - 1)) //needs to be changed for 7x9
+        //bounds checking
+        if(i > (boardSizeX - 1))
             break;
         if(i < 0)
             continue;
+        //check 3 sets of y indices
         for(int j = (y - 1); j < (y + 2); j++)
         {
-            if(j > (boardSizeY-1) || j < 0) //needs to be changed for 7x9
+            //bounds checking
+            if(j > (boardSizeY-1) || j < 0)
                 continue;
+            //if its not yet added to blockVector, add it
             if(!gameBoard[i][j]->getMarkedBool())
             {
                 gameBoard[i][j]->setColoredBool(true);
@@ -1654,7 +1521,91 @@ vector<Block*> MainWindow::bombCollector(vector<Block*> blockVector, int x, int 
     }
     return blockVector;
 }
+/**
+ * @author Daniel Keasler
+ * @brief MainWindow::sortVector all blocks in blockVector are sorted in descending order with respect to y
+ * @param blockVector
+ * @return vector<Block*>
+ */
+vector<Block*> MainWindow::sortVector(vector<Block*> blockVector)
+{
+    //checks every block in blockVector
+    for(int i = 0; (unsigned)i < blockVector.size(); i++)
+    {
+        //checks every block further along in blockVector
+        int t = i;
+        for(int j = i + 1; (unsigned)j < blockVector.size(); j++)
+        {
+            //if in same column and in ascending order of y, update running index of lowest y value
+            if(blockVector[j]->getCoordX() == blockVector[t]->getCoordX() && blockVector[j]->getCoordY() > blockVector[t]->getCoordY())
+                t = j;
+        }
+        //swap if a max was found
+        if(t != i)
+        {
+            Block *tempPtr = blockVector[i];
+            blockVector[i] = blockVector[t];
+            blockVector[t] = tempPtr;
+        }
+        //color it black and minor bookkeeping
+        blockVector[i]->setColor(0, Qt::black);
+        blockVector[i]->setMarkedBool(false);
+    }
+    return blockVector;
+}
 
+/**
+ * @author Daniel Keasler
+ * @brief MainWindow::determineColor swaps color of blocks upwards from the column of the ith block
+ * @description checky is a walker variable upwards in the 2D array of blocks. while checky is still
+ *      in bounds of the array, the algorithm searches for a block that is not also needing a color change.
+ *      The blocks are already sorted based on y so the algorithm will never replace the same blocks color more
+ *      than once. If it steals a color from a block, that block that lost its color is put on the end of the vector.
+ *      If it doesn't find a color to steal, then a new color is randomly determined.
+ * @param blockVector
+ * @return void
+ */
+void MainWindow::determineColor(vector<Block*> blockVector)
+{
+    //check every block in blockVector
+    for(int i = 0; (unsigned)i < blockVector.size(); i++)
+    {
+        //check upwards in the column from the ith block
+        int checkY = blockVector[i]->getCoordY() - 1;
+        while(checkY >= 0)
+        {
+            if(!gameBoard[blockVector[i]->getCoordX()][checkY]->getColoredBool())
+            {
+                //steal the color from other block onto ith block...
+                blockVector[i]->setColor(gameBoard[blockVector[i]->getCoordX()][checkY]->getColor(), colorPtr->getQColor(gameBoard[blockVector[i]->getCoordX()][checkY]->getColor()));
+                blockVector[i]->setColoredBool(false);
+
+                //..and set the other block for a color change (including transition)
+                gameBoard[blockVector[i]->getCoordX()][checkY]->setColoredBool(true); //block needs to be changed later
+                gameBoard[blockVector[i]->getCoordX()][checkY]->setColor(0, Qt::black);
+
+                //add the block that had its color stolen to the back of the vector
+                blockVector.push_back(gameBoard[blockVector[i]->getCoordX()][checkY]);
+
+                //if the blocks don't both have stars or nothing represented, swap them
+                if(gameBoard[blockVector[i]->getCoordX()][checkY]->getGraphImage() != gameBoard[blockVector[i]->getCoordX()][blockVector[i]->getCoordY()]->getGraphImage())
+                    graphSwap(blockVector[i]->getCoordX(), blockVector[i]->getCoordY(), blockVector[i]->getCoordX(), checkY);
+                break;
+            }
+            //otherwise decrement and check next block upwards
+            else
+                checkY--;
+        }
+        //if checkyY went out of array bounds, never found a color to steal and a random color is generated
+        if(checkY < 0)
+        {
+            int tempColor;
+            tempColor = (rand() % 6) + 1;
+            blockVector[i]->setColor(tempColor, colorPtr->getQColor(tempColor));
+            blockVector[i]->setColoredBool(false);
+        }
+    }
+}
 //END Dan Block Functions
 
 
@@ -1753,14 +1704,6 @@ void MainWindow::timeBegin(){
     timer->start();
 }
 
-/*
- *This function is called in each game mode. First, the old
- *pointer references are nulled. Then setupBlocks is called
- *to generate a new board. All of our game modes include a
- *bomb, so the bomb timer code is used to set it up. If not
- *in endless mode, the timer code is used to set the timer
- *up.
- */
 /**
  * @author Daniel Keasler
  * @author Mike Son
@@ -1769,22 +1712,18 @@ void MainWindow::timeBegin(){
  * @return void
  */
 void MainWindow::startGame(){
+    //delete and null all previous block pointers
     removeBlocks();
+    //create new block pointers
     setupBlocks();
+    //reset and start timers
     bombFill->setMaximumWidth(0);
     gamedone = false;
     bcurrentTime=0;
     btimer->start(333.333);
     Timefill->setMaximumWidth(Timeclock->width());
     currentTime = 60;
-//    if(stdModeFlag == 1){
-//        timer->start(200);
-//    }
-//    else if(survivalModeFlag == 1){
-//        Timefill->setMaximumWidth(Timeclock->width() / 2);
-//        currentTime = 30;
-//        timer->start(200);
-//    }
+    //reset score label
     scoreLabel->setText("Score: x1");
 }
 
@@ -1795,22 +1734,23 @@ void MainWindow::startGame(){
  * @return void
  */
 void MainWindow::processProgress(){
-        //this function would be called from the updateProgressTime function
-        timeOver();//stop timer
+        //stop timers
+        timeOver();
         btimeOver();
+        //show level clear window
         levelClear->show();
 
         n = QLocale(QLocale::English).toString((double) level, 'f', 0); //QString of an Level Number text
         levelClearLabel->setText(" Level " + n + " Clear !");  //update Level Clear message with level
-        level++;//increment level counter (would need to have started at 1 for each survival call)
+        level++;//increment level counter
 
-        //group box with level x incoming, etc
+
         timerCounter -= (7 * (level-1));//increment timer speed, maybe formula from level counter
         if (timerCounter == 0 || timerCounter < 0)
             timerCounter =1;
         Timefill->setMaximumWidth(Timeclock->width() / 2);//set timer to 50%
         currentTime = 30;
-
+        //start timer for level clear window
         gtimer->start();
 }
 
@@ -1828,39 +1768,35 @@ void MainWindow::processProgress(){
  */
 void MainWindow::generateGraphicObject(int CoordX, int CoordY){
     bool randomAssign = false;
+    //negative coordinates are passed for random assignment, checks for negative coordinates
     if(CoordX < 0)
     {
         CoordX = rand() % 8;
         CoordY = rand() % 9;
         randomAssign = true;
     }
+    //makes sure that if randomAssign, can place a star on that block
     while(randomAssign && gameBoard[CoordX][CoordY]->getGraphImage() == 2)
     {
         CoordX = rand() % 8;
         CoordY = rand() % 9;
     }
 
-    //QGraphicsEllipseItem *myEllipse = new QGraphicsEllipseItem();
-    //myEllipse->setRect((blockSize * CoordX) + 5, (blockSize * CoordY) + 5, blockSize - 10, blockSize - 10);
-    //myEllipse->setBrush(QBrush(Qt::black, Qt::SolidPattern));
-    //rectArray[CoordX][CoordY]->setEllipse(myEllipse);
-    //delete myEllipse;
-    //gameBoard[CoordX][CoordY]->setGraphImage(2);
-    //theScene->addItem(myEllipse);
-
+    //create a QGraphicsSimpleTestItem with star unicode character
     QGraphicsSimpleTextItem *myTextItem = new QGraphicsSimpleTextItem();
     QString myString(QChar(0x2605));
     myTextItem->setText(myString);
+    //approximate centering and scaling
     myTextItem->setX((CoordX * blockSize) + 4.5);
     myTextItem->setY((CoordY * blockSize) - 4);
     myTextItem->setScale(3);
+    //color it black
     myTextItem->setBrush(QBrush(Qt::black, Qt::SolidPattern));
+    //add reference to specific block class
     gameBoard[CoordX][CoordY]->setTextItem(myTextItem);
-    //gameBoard[CoordX][CoordY]->setGraphImage(2);
+    //add it to the scene
     theScene->addItem(myTextItem);
-
 }
-
 
 /**
  * @author Daniel Keasler
@@ -1872,46 +1808,51 @@ void MainWindow::generateGraphicObject(int CoordX, int CoordY){
  * @return void
  */
 void MainWindow::graphSwap(int firstX, int firstY, int secondX, int secondY){
+    //if first block has star, know to swap it to other block
     if(gameBoard[firstX][firstY]->getGraphImage() == 2){
+        //remove star from the scene
         theScene->removeItem(gameBoard[firstX][firstY]->textPtr);
+        //remove pointer reference at that block
         gameBoard[firstX][firstY]->removeGraphObject(false);
-        //gameBoard[firstX][firstY]->setGraphImage(0);
+        //create new star for second block
         generateGraphicObject(secondX, secondY);
     }
+    //other block has star
     else{
+        //process is same but removes star from second and creates one in first
         theScene->removeItem(gameBoard[secondX][secondY]->textPtr);
         gameBoard[secondX][secondY]->removeGraphObject(false);
-        //gameBoard[secondX][secondY]->setGraphImage(0);
         generateGraphicObject(firstX, firstY);
     }
-
 }
+
 /**
  * @author Daniel Keasler
  * @brief MainWindow::removeBlocks deletes and nulls everything from the previous game board. start decision to avoid segfaults for the first game.
  * @return void
  */
 void MainWindow::removeBlocks(){
+    //if a game has already been started, there are pointers to delete
     if(start){
+        //reaches every block in the game board
         for(int i = 0; i < boardSizeX; i++){
             for(int j = 0; j < boardSizeY; j++){
+                //if there is a star at this block, remove it from scene
                 if(gameBoard[i][j]->textPtr != 0)
                     theScene->removeItem(gameBoard[i][j]->textPtr);
+                //remove block from the scene
                 theScene->removeItem(gameBoard[i][j]);
+                //delete memory allocation of star
                 gameBoard[i][j]->removeGraphObject(true);
+                //delete and null block
                 delete gameBoard[i][j];
                 gameBoard[i][j] = 0;
-                //if(rectArray[i][j]->bombPtr != 0)
-                    //rectArray[i][j]->bombPtr->setBrush(QBrush(Qt::yellow));
-                //delete rectArray[i][j]->textPtr;
-                //rectArray[i][j]->setBrush(QBrush(Qt::yellow));
-                //delete rectArray[i][j];
-                //rectArray[i][j] = 0;
             }
         }
     }
     else
-        start = true; //start is initialized to false in menu set up
+        //start is true for each game after first
+        start = true;
 }
 
 // End mainwindow_UI.cpp

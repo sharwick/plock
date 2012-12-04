@@ -55,51 +55,12 @@
 </div><!-- contents -->
 
 <h3>Introduction</h3>
+<p>Below we have included all of the important components as listed above. Each
+section has at least one author describing the relavant components. </p>
 
 
 
 
-
-
-<h3>Block Class</h3>
-<b>Primary Author: Daniel Keasler</b>
-
-<p>The block class was intended to be the data structure of our BOMBSTAR game. 
-Our application's MainWindow would have a two dimensional array of Block objects, corresponding 
-to the game board with the same number of elements in each. Each individual Block object would
-contain pointer references to four adjacent Blocks. For example, if a Block could be accessed in
-the main window with indexes x and y, the Block would contain the pointer references of the Blocks 
-at indexes (x+1,y) (x-1,y) (x, y+1) (x, y-1). This allows some of our functions to be recursive 
-functions at the Block level instead of adding more to our main window through accessing arrays. 
-The Block also contained a CoordX and CoordY value. These were the same accessing indexes at the
-Block level. In many cases, many Blocks will be contained in a vector<Block*>, and to have constant
-time access to that Block's neighbors in MainWindow, the coordinates of the Block needed to be 
-easily obtained. </p>
-
-<p>The block class later was changed to inherit from QGraphicsRectItem. By doing this, we could reimplement
-the mouse press event for game play interaction and the blocks could be displayed on a QGraphicsScene. </p>
-
-<p>Along with inheriting from QGraphicsRectItem, we devised a system 
-that mapped an integer value to a QColor. More on this is written in the Colors Class, but the 
-Block Class only contains an integer value for easy color comparisons. The same integer value between
-Blocks means those Blocks have the same color. This was also applied to representing stars on the 
-Blocks as well. A graphImage of 0 meant that no star was being graphically represented on that particular
-Block, a graphImage of 2 meant that a star was represented on that Block. This numbering was originally intended for 
-bombs (now stars) as well as arrows but there wasn't enough time to properly implement arrows. 
-The extra arrows would have had graphImage values of 3 and 4 for vertical and horizontal, and potentially
-5 for all four directions. </p>
-
-<p>The stars are made from QGraphicsSimpleTextItems with unicode character 0x2605 and are members of the Block class. 
-Each star is created when the Block is created, and then a pointer is assigned to that Block's star pointer (textPtr) when a star is generated.
-The function that generates coordinates for the new star can also take in known coordinates for relocation; and in any case that a star is removed
-from a location, that star is nulled and removed from the scene even if it is being redrawn at another location. 
-And then a new star is created and assigned to the proper location. A smarter and faster system could
-have been implemented had there been more time. </p>
-
-<p>Most of the Block functions are simple accessor or mutator functions. The only functions needing 
-a more detailed explanation are foundMatch and gatherBlocks, and they will be explained in Game Play.
-markedBool and coloredBool are used in many of these algorithms and will be detailed there as well.
-</p>
 
 <h3>Game Play</h3>
 <b>Primary Author: Daniel Keasler</b>
@@ -114,7 +75,7 @@ dynamically allocates and randomly generates a new board. </p>
 
 <p>The application now waits for a mousePressEvent. The game board itself needs 1 mouse event to
 properly register graphics scene mouse events. This also officially starts the game timer and enables
-interaction with Blocks. </p>
+interaction with Blocks. All game play events are executed from MainWindow_UI.cpp unless stated otherwise. </p>
 
 <p>Every mouse event after the first has the same process. The game 
 board mouse events are temporarily frozen to process 1 match at a time. The x and y of the event 
@@ -160,6 +121,50 @@ done using array accessing because the code is slightly cleaner to decrement the
 searching upwards in a column. </p>
 
 <p>The game now waits for another mouse event. The game ends when the user exits the game or when the time runs out.</p>
+
+<h3>Block Class</h3>
+<b>Primary Author: Daniel Keasler</b>
+
+<br><br>
+<img src="./UML Diagrams/Block.jpg" alt="Block Object">
+<br>
+
+<p>The block class was intended to be the data structure of our BOMBSTAR game. 
+Our application's MainWindow would have a two dimensional array of Block objects, corresponding 
+to the game board with the same number of elements in each. Each individual Block object would
+contain pointer references to four adjacent Blocks. For example, if a Block could be accessed in
+the main window with indexes x and y, the Block would contain the pointer references of the Blocks 
+at indexes (x+1,y) (x-1,y) (x, y+1) (x, y-1). This allows some of our functions to be recursive 
+functions at the Block level instead of adding more to our main window through accessing arrays. 
+The Block also contained a CoordX and CoordY value. These were the same accessing indexes at the
+Block level. In many cases, many Blocks will be contained in a vector<Block*>, and to have constant
+time access to that Block's neighbors in MainWindow, the coordinates of the Block needed to be 
+easily obtained. </p>
+
+<p>The block class later was changed to inherit from QGraphicsRectItem. By doing this, we could reimplement
+the mouse press event for game play interaction and the blocks could be displayed on a QGraphicsScene. </p>
+
+<p>Along with inheriting from QGraphicsRectItem, we devised a system 
+that mapped an integer value to a QColor. More on this is written in the Colors Schemes, but the 
+Block Class only contains an integer value for easy color comparisons. The same integer value between
+Blocks means those Blocks have the same color. This was also applied to representing stars on the 
+Blocks as well. A graphImage of 0 meant that no star was being graphically represented on that particular
+Block, a graphImage of 2 meant that a star was represented on that Block. This numbering was originally intended for 
+bombs (now stars) as well as arrows but there wasn't enough time to properly implement arrows. 
+The extra arrows would have had graphImage values of 3 and 4 for vertical and horizontal, and potentially
+5 for all four directions. </p>
+
+<p>The stars are made from QGraphicsSimpleTextItems with unicode character 0x2605 and are members of the Block class. 
+Each star is created when the Block is created, and then a pointer is assigned to that Block's star pointer (textPtr) when a star is generated.
+The function that generates coordinates for the new star can also take in known coordinates for relocation; and in any case that a star is removed
+from a location, that star is nulled and removed from the scene even if it is being redrawn at another location. 
+And then a new star is created and assigned to the proper location. A smarter and faster system could
+have been implemented had there been more time. </p>
+
+<p>Most of the Block functions are simple accessor or mutator functions. The only functions needing 
+a more detailed explanation are foundMatch and gatherBlocks, and they will be explained in Game Play.
+markedBool and coloredBool are used in many of these algorithms and will be detailed there as well.
+</p>
 
 <h3>User Interface</h3>
 <b>Primary author: Devin Rusnak</b>

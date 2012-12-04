@@ -6,48 +6,8 @@
  * @brief Underlying data structures and algorithms for game play.
  * @description The Block class contains integers and a series of "adjacent" pointers for easy comparisons used in the game play algorithms
  */
-/*
- *One line added; no real changes
- * One line added to show Mike git
- *One line change to show Devin git
- *Block.cpp
- *
- *Version 2.3
- *Author: Daniel Keasler
- *        Devin Rusnak
- *      Plock Team
- *
- *Constructor only needs push button, and push button should
- *  be instantiated at this point. 4 adjacent Blocks set to
- *  null to be assigned later. (rand() % 6) + 1 should return
- *  1 to 6 for color. Bool values are used to quickly check
- *  in the game algorithms for blocks already set for a color
- *  change and for blocks already marked in scoring count.
- *
- *  ADDED: Adjacent Blocks were changed to represent the changed
- *  simpler names. Also, coloredBool and markedBool were added
- *  for game algorithm purposes in scoring and coloring. RowX
- *  and ColY are the array indices from the 2D array. By having
- *  them as members of the Block class, the block vector can
- *  check for matches in a particular column from the actual
- *  block.
- *
- *  CHANGED: minor mutator function changes to directional
- *  blocks, setGraphImage / getGraphImage, 4 directional
- *  block collectors from special blocks
- *
- *  ADDED: graphImage = 0;
- *
- *  CHANGED: setColor only contains int value for comparisons
- *
- *  CHANGED: push butons have been removed from Blocks 
- *  (constructor, algorithms don't have push button)
- *
- *  ADDED: foundMatch to process initial matching. 
- */
 
 #include "Block.h"
-//#include "Colors.h"
 
 using namespace std;
 /**
@@ -105,56 +65,20 @@ void Block::removeGraphObject(bool endGame){
         if(endGame)
             delete textPtr;
         textPtr = 0;
-        //bombPtr->setBrush(QBrush(Qt::yellow));
     }
 }
-/*
- *setColor takes in an int value and immediately assigns that
- *  to the Blocks color. QIcon can be used to show an icon on
- *  the push buttons, and QPixmap can create a push button
- *  sized map of a certain color, which can be used to create
- *  a QIcon. Qt::(insert color here) did not have orange and
- *  purple, to do later is fully create the color scheme and
- *  I can change these values to either RGB or actual locally
- *  stored Icons.
- *
- *  CHANGED: No switch needed. Color int is index in colorArray,
- *  QColor is color at that index.
- *
- *  CHANGED: setColor only sets integer value for color 
- *  comparisons
- */
+
 /**
  * @author Daniel Keasler
  * @param _color int Array Index in Colors.cpp
- * @brief setColor updates graphical color changes with corresponding integer index
+ * @brief setColor updates graphical color changes with QColor and color integer
  * @return void
  */
 void Block::setColor(int _color, QColor colorChosen){
     color = _color;
     setBrush(QBrush(colorChosen, Qt::SolidPattern));
-    //QPixmap newMap(31, 31);
-    //newMap.fill(firstColor);
-
-    // SH Update: TO DO: Move this outside the Block class (source= Color Brewer)
-    //should be complete
-    //int transparency=255;  // Alternatively: 127
-	//QIcon newIcon(newMap);
-    //pushButtonPtr->setIcon(newIcon);
 }
 
-/*
- *These next 4 functions take in pointers to Blocks and
- *  assign each to the appropriate adjacent Block pointer.
- *  A for loop will be needed after the entire 2D Block
- *  array has been initialized to ensure these pointers
- *  are not accidentally set to a NULL Block Pointer.
- *
- *  CHANGED: Pointer names were changed to a simpler format.
- *
- *  CHANGED: function names were changed to assign (from set)
- *  because setDown was a QPushButton function
- */
 /**
  * @author Daniel Keasler
  * @brief Block::assignRight rightward adjacent pointer is assigned
@@ -192,11 +116,6 @@ void Block::assignLeft(Block *tempBlock){
 	leftBlockPtr = tempBlock;
 }
 
-/*
- *Accessor function is a short cut to an equals method for color. Every color
- *  will have an associated number and similar colors will also have similar
- *  numbers in the color field.
- */
 /**
  * @author Daniel Keasler
  * @brief Block::getColor returns color for easy color comparisons as an integer value
@@ -206,10 +125,6 @@ int Block::getColor(){
 	return color;
 }
 
-/*
- *The following 4 methods are basic mutator and accessor functions for boolean values.
- *  These values are used to assure proper scoring and coloring.
- */
 /**
  * @author Daniel Keasler
  * @brief Block::getMarkedBool - used to determine if this block was collected for scoring yet
@@ -247,10 +162,6 @@ void Block::setColoredBool(bool val){
 	coloredBool = val;
 }
 
-/*
- *Both of the following are simple accessor functions used to have array index
- *  through Block access.
- */
 /**
  * @author Daniel Keasler
  * @brief Block::getCoordX - accessor function for Block's X coordinate
@@ -267,12 +178,7 @@ int Block::getCoordX(){
 int Block::getCoordY(){
     return CoordY;
 }
-/*
- *This function (in all 4 directions) checks if the neighbor is not 0,
- *  and then if their color value matches the calling Block's color 
- *  value. If so, it returns true. Otherwise false is returned at the
- *  end. 
- */
+
 /**
  * @author Daniel Keasler
  * @brief Block::foundMatch - detects if adjacent block matches color
@@ -291,19 +197,6 @@ bool Block::foundMatch(){
     return false;
 }
 
-/*
- *setMarkedBool and setColoredBool assure, respectively, that this particular
- *  Block does not call the gatherBlocks method in another part of the
- *  recursion and that it is colored properly. Blocks are added to vector to
- *  access later for total score and proper coloring, and these 3 statements
- *  occur first to avoid useless or unending recursion. The 4 if statements
- *  first check that each adjacent Block is not null, then check if the color
- *  matches the adjacent color, and then check to make sure the Blocks have
- *  not yet been selected in the recursion. If it passes those conditions,
- *  a new match is found and that Block needs to check its adjacent blocks.
- *  Block vector is returned through recursion to have access to all tiles
- *  found in the current match.
- */
 /**
  * @author Daniel Keasler
  * @brief Block::gatherBlocks - recursive function collecting matching adjacent blocks
@@ -313,9 +206,14 @@ bool Block::foundMatch(){
  *  then if neighbor exists, is not marked, and has same color, recursion expands to that block
  */
 vector<Block*> Block::gatherBlocks(vector<Block*> blockVector){
+    //bookkeeping for other game play algorithms
     setMarkedBool(true);
     setColoredBool(true);
+    //add calling block to vector
     blockVector.push_back(this);
+    //check 4 adjacent pointer references
+    //if reference isn't null, and the color integers are equal, and the block hasn't been added yet,
+    //  recursively expand to that block
     if(upBlockPtr != 0 && upBlockPtr->getColor() == color && !upBlockPtr->getMarkedBool())
 		blockVector = upBlockPtr->gatherBlocks(blockVector);
     if(rightBlockPtr != 0 && rightBlockPtr->getColor() == color && !rightBlockPtr->getMarkedBool())
@@ -327,9 +225,6 @@ vector<Block*> Block::gatherBlocks(vector<Block*> blockVector){
 	return blockVector;
 }
 
-/*Next two functions serve as mutator and accessor method for our map
- *  to graphical images. Still a work in progress.
- */
 /**
  * @author Daniel Keasler
  * @brief Block::getGraphImage returns value for integer comparison of special graphics objects
@@ -348,12 +243,6 @@ void Block::setGraphImage(int _graphImage){
     //switch to assign a loaded graphics image? still a work in progress
 }
 
-/*Next four functions are recursive in respective direction.
- *  They keep going until relavant neighbor is null. Add block
- *  if !getMarkedBool(), or if block hasnt been marked. Same
- *  process to add and change bool flags. Return and pass
- *  blockVector through recursion.
- */
 /**
  * @author Daniel Keasler
  * @brief Block::downCollector
