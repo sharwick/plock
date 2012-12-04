@@ -171,7 +171,7 @@ searching upwards in a column. </p>
 
 <div>
 <h3>Shuffling</h3>
-<b>Primary author: Shannon Harwick</b>
+<b>Primary author: Shannon Harwick</b><br>
 
 <br>
 <i>Shuffle Design</i>
@@ -208,6 +208,7 @@ board is simply a reflection of the board the user was just looking at.  At one 
 we implemented a similar flip around the vertical axis.  However, this opens up no new options
 to the player, so we removed it.
 </p>
+<p>
 The second new shuffle method is the Rotate, which rotates the board 180 degrees around 
 the board's center.  Thus the top left corner of the board rotates to become the bottom 
 right corner.  This method, like Flip, is easily reversible and provides benefits only
@@ -215,6 +216,7 @@ to a strategist.
 </p>
 
 
+<br>
 <i>Shuffle Implementation</i>
 <p>
 Each shuffling strategy is performed via its own method: shufflePressed(), rotate(), and horizontalFlip().
@@ -229,6 +231,17 @@ match on the right side of the board (e.g., top left corner and bottom right cor
 match on the bottom half of the board (e.g., top left corner and bottom left corner).</li>
 </ul>
 </p>
+
+
+<ul> 
+<i><a href="../code/mainwindow_ui.cpp">Click here for code.</a></i>
+<br>Search for the following terms to find relevant section of code.
+<li>void MainWindow::horizontalFlip()</li>
+<li>void MainWindow::rotate()</li>
+<li>void MainWindow::shufflePressed()</li>
+</ul>
+
+
 </div>
 
 
@@ -242,7 +255,7 @@ The score is designed to reward a player for thinking rather than random clickin
 thoughtful player must manipulate the board to create opportunities to eliminate 
 very large groups of blocks.  In Plock, scoring is quadratic based on the number of
 blocks eliminated in one click.  This does make larger groups worth more points per
-block than smaller groups, but our user testing indicates that
+block than smaller groups, but our user testing revealed that
 the gain does not compensate for the loss in quantity due to spam-clicking.  
 
 We considered various mechanisms to push the player away from spam-clicking:
@@ -256,9 +269,19 @@ We considered various mechanisms to push the player away from spam-clicking:
 We ultimately chose the last because it offers the player a reward for good behavior 
 rather than punishment for bad.  The final score equation is: 
 <br><br>
-Score = (n-1)^4
+<ul>Score = Multiplier * (n-1)^4
 <br>where n = # of eliminated blocks
-<br><br>
+</ul><br>
+</p>
+
+<p>
+We have implemented an endless mode, but sadly, we can't give an infinite number of points.
+In order to handle very large scores and multipliers, we implemented a score cap of 
+100,000,000 and a multiplier cap of 50.  Once a player reaches these scores, he or she 
+may continue to play, but no further points or multiplier levels may be attained.  We
+considered changing the score variable to a long long type in order to allow even 
+higher scores, but we decided this would require changes to the user interface that would
+not be visually appealing.  
 </p>
 
 <i>Score Implementation</i>
@@ -272,9 +295,39 @@ Score = (n-1)^4
 <br><br>
 <img src="./UML Diagrams/ScoreFrame.jpg" alt="Score Frame Object">
 <br>
+
+<br><i><a href="../code/Score.cpp">Click here for Score code.</a></i><br>
+<br><i><a href="../code/ScoreFrame.cpp">Click here for ScoreFrame code.</a></i><br>
+
 <p>
-[[TO BE COMPLETED]]
+The score is stored in a Score object as an integer.  Every time blocks are eliminated, 
+updateScore() is called to increment the current score value with the value of the 
+new blocks eliminated.  Originally the plan was to incorporate a speed bonus (i.e., 
+the player would get extra points for multiple successful moves in a short time period).  
+We ultimately chose not to implement this, as it offers a benefit to spam-clickers.  
+Thus, in our current implementation, the speedBonus input is always set to false.  
 </p>
+
+<p>
+The Score object also contains the current multiplier.  The multiplier reflects the 
+number of bombs that have been eliminated.  Eliminate more bombs to get a higher multiplier.
+Once a certain multiplier has been reached, all subsequent points earned are multiplied
+by that value before adding to the score.  The multiplier begins the game at 1 and is 
+incremented every time a bomb is eliminated.  
+</p>
+
+<p>
+When a new game is started, resetScore() is called to reset the multiplier to 1 and 
+the current score to 0.  
+</p>
+
+<p>
+A separate item, ScoreFrame, is created for the score board.  After the score has been
+updated, this change must be reflected on the score board viewed by the player.  The 
+update() method makes this update.  When the game is reset, resetScoreBoard() sets the 
+score board back to 0.  
+</p>
+
 
 <h3>Color Schemes</h3>
 <b>Primary author: Shannon Harwick</b>
@@ -300,17 +353,33 @@ contrast.
 <br><br>
 <img src="./UML Diagrams/Colors.jpg" alt="Color Object">
 <br>
+
+<br><i><a href="../code/Colors.cpp">Click here for Color code.</a></i><br>
+
 <p>
 All 5 color schemes were placed into a single Color object.  Each color scheme is 
 represented by an integer value from 0 to 4 (int colorScheme).  The active color scheme 
 is contained in an array (QColor colorArray[7]) and is used to create 
-a QPalette that is used to paint all objects.  When the user changes the Color Scheme 
+a QPalette that is used to paint all objects.  
+</p>
+<p>
+When the user changes the Color Scheme 
 setting, this is implemented by changing the integer in the Color object, updating the colorArray, updating the 
-QPalette, and repainting all existing objects.  This is completed by attaching a slot
-to the QSlider used by the player to adjust the setting.
+QPalette, and repainting all existing objects.  This is completed by attaching a slot 
+(changeColorScheme) to the QSlider used by the player to adjust the setting.  
+The QPalette is updated in MainWindow::changeColorScheme().  After the palette is created,
+the gameboard, all QPushButtons, and all QLabels are repainted.  The QPushButtons and 
+QLabels are stored in their own vectors (labelVector and buttonVector) to facilitate this
+process.  
 </p>
 
 
+<i>Bug</i><br><br>
+One bug remains outstanding here.  QPushButtons do not respond to color changes 
+on all machines/AVDs (Only 1 of our 4 computers shows the changes in the QPushButtons).  
+This is true regardless of whether color changes are implemented 
+using style sheets or QPalette (both techniques work correctly on the 1 computer).  
+The other objects change color as expected.  
 
 <h3>Game Modes</h3>
 <b>Primary author: Daniel/Mike/Devin</b>
