@@ -262,6 +262,16 @@ Score = (n-1)^4
 </p>
 
 <i>Score Implementation</i>
+
+
+<br><br>
+<img src="./UML Diagrams/Score.jpg" alt="Score Object">
+<br>
+
+
+<br><br>
+<img src="./UML Diagrams/ScoreFrame.jpg" alt="Score Frame Object">
+<br>
 <p>
 [[TO BE COMPLETED]]
 </p>
@@ -269,7 +279,7 @@ Score = (n-1)^4
 <h3>Color Schemes</h3>
 <b>Primary author: Shannon Harwick</b>
 
-<i>Color Scheme Design</i>
+<br><br><i>Color Scheme Design</i>
 <p>
 In response to feedback from our presentations and from our test users, we 
 decided to implement multiple color schemes and to include a Setting menu where a user
@@ -286,6 +296,10 @@ contrast.
 
 
 <i>Color Scheme Implementation</i>
+
+<br><br>
+<img src="./UML Diagrams/Colors.jpg" alt="Color Object">
+<br>
 <p>
 All 5 color schemes were placed into a single Color object.  Each color scheme is 
 represented by an integer value from 0 to 4 (int colorScheme).  The active color scheme 
@@ -295,6 +309,8 @@ setting, this is implemented by changing the integer in the Color object, updati
 QPalette, and repainting all existing objects.  This is completed by attaching a slot
 to the QSlider used by the player to adjust the setting.
 </p>
+
+
 
 <h3>Game Modes</h3>
 <b>Primary author: Daniel/Mike/Devin</b>
