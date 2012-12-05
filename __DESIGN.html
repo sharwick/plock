@@ -186,16 +186,31 @@ if the menu had to be, say 80% of the horizontal and 60% of the vertical.
 </p>
 
 <i>The Game Board</i>
+<ul> <i><a href="../code/mainwindow_UI.cpp">Click here for code.</a></i>
+<br>Search for the following terms to find relevant section of code:
+<li>"MainWindow::setupWindows"</li>
+<li>"MainWindow::mousePressEvent"</li>
+</ul>
 <p>The game board is the main feature of the user interface. It is essentially the entire game, everything else just allows the user to get the game board setup or has some other axillary function. The game board itself is a QGraphicsView with a QGraphicsScene, which allows the blocks (QGrapicsRectItem) to be displayed. The original idea was to have the blocks "fall" down as the ones below are cleared and this implementation would support that. We also wanted to have the ability to rotate the phone and have the blocks dropping down from the new "top" of the board. These two features didn't end up getting implemented due to time constraints, but the structure is there to support them. Another reason for using QGraphicsItems was so that we could display our different bombs on them. This proved to be much more difficult than orginally thought and used up a fair amount of time. Thus we only have one bomb that is a unicode star. The score frame is a custom object that both updates and displays the score nicely. The bomb and time bars are stacked colored QLabels that are updated to reflect the time remaining or bomb amount gained. The buttons at the bottom of the screen rotates, flips, or shuffles the board, or brings up the pause menu. Due to issues with the QGridLayout it was difficult to get the game board in the layout and have the buttons positioned nicely below it. Thus they are not placed in the layout but are placed based on the know sizes of the items above them and the screen size.
 <br></br>
 When the user clicks on a block the mousePressEvent is triggered and propagated. When the first click occurs they block that is clicked calls grabMouse() which allows the event to be propagated to its parent, which is the centralWidget. The centralWidget's parent is the mainwindow class and the event gets past to it. In the mainwindow_UI the mousePressEvent is overwritten and get the (x,y) position of the mouse event. All it takes is some simple math to figure out the array coordinates for the block pressed. That block's function to check for matches is called and if it finds one, processMatch is called with the block clicked as a parameter.
 </p>
 
 <i>Game Modes</i> 
+<ul> <i><a href="../code/mainwindow_UI.cpp">Click here for code.</a></i>
+<br>Search for the following slots to find relevant section of code:
+<li>"MainWindow::standardMode"</li>
+<li>"MainWindow::survivalMode"</li>
+<li>"MainWindow::endlessMode"</li>
+</ul>
 <p>For the different game modes certain interface features need to be changed. Standard Mode is the base mode and has all the items visible. When in Survival Mode the timer bar becomes the progress bar and its label is changed accordingly. It starts with it displaying the bar half full and the user loses once it gets to zero. When the user fills the progress bar completely the level complete menu is displayed which informs the user which level they have completed. For Endless Mode the progress bar and label are simply hidden and the user gets to play forever, which is not possible so we capped the score at one hundred million points. A kill screen was thought of to go here in true arcade fashion, but as it is <i>Endless Mode</i> the user can still play past this point, the score is just no longer updated. This score cap also applies to Survival Mode but would be very difficult to achieve, and is simply impossible to achieve in sixty seconds for Standard Mode.
 </p>
 
 <i>The Menus</i>
+<ul> <i><a href="../code/mainwindow_UI.cpp">Click here for code.</a></i>
+<br>Search for the following terms to find relevant section of code:
+<li>"MainWindow::setupGameScreen"</li>
+</ul>
 <p>The menus act as the main state control mechanism when the user is not currently playing a game. The menus can be thought of as existing on 
 two different layers. The bottom layer is the defualt centralWidget which the game board is placed. The rest of the menus can be thought to exist on a top layer over the game board. The menus are QGroupBoxes which fill the screen and are displayed over the base layer. The menus are:
 <ul> 
@@ -384,16 +399,19 @@ score board back to 0.
 
 <h3>High Scores</h3>
 <b>Primary author: Devin Rusnak</b>
-<br></br>
-<i>Implementation</i>
 <p>As this is an arcade game a high score list is a must have feature. The HighScores object does four things:
 <ul>
 <li>Stores the top five high scores for each game mode in integer arrays.</li>
 <li>Sorts new high scores into said arrays when they are achieved.</li>
 <li>Reads/Writes high scores to a text file to be saved and used.</li>
 <li>Maintains the QLabels that display the scores in the high scores menu.</li>
-</ul>
-When the game starts the file is opened and the scores are read in and stored into the integer arrays. The file is formated so that each line contains one score and the scores are in order starting with the top five standard mode scores, then the top five survival mode scores with the level obtained, and then the top five endless mode scores. In standard and survival modes when the game ends the score is sent to the addScore function which sorts the score into the proper array based on the game mode. If the score is in the top five the function returns one which in mainwindow_UI shows a label saying the user got a high score. It also then writes the new list of high scores to the same text file. The QLabels that are used to display the scores in mainwindow_UI are part of this object class so that they can be updated easily. When a new high score is added the score can be converted to a nicely formatted QString and the corresponding QLabel's text can be set to it. Originally more than just the top five scores were going to be saved but there were two issues. First since the score was capped at one hundred million only one score could fit on a line. Second having more than five scores would cause the list to go off of the screen and create a scroll screen situation. Having just the five scores for each mode fits quite nicely on the screen so it was left at that.
+</ul></p>
+<i>Implementation</i>
+<br></br>
+<img src="./UML Diagrams/highScores.jpg" alt="High Score Object">
+<br></br>
+<i><a href="../code/highScores.cpp">Click here for code.</a></i>
+<p>When the game starts the file is opened and the scores are read in and stored into the integer arrays. The file is formated so that each line contains one score and the scores are in order starting with the top five standard mode scores, then the top five survival mode scores with the level obtained, and then the top five endless mode scores. In standard and survival modes when the game ends the score is sent to the addScore function which sorts the score into the proper array based on the game mode. If the score is in the top five the function returns one which in mainwindow_UI shows a label saying the user got a high score. It also then writes the new list of high scores to the same text file. The QLabels that are used to display the scores in mainwindow_UI are part of this object class so that they can be updated easily. When a new high score is added the score can be converted to a nicely formatted QString and the corresponding QLabel's text can be set to it. Originally more than just the top five scores were going to be saved but there were two issues. First since the score was capped at one hundred million only one score could fit on a line. Second having more than five scores would cause the list to go off of the screen and create a scroll screen situation. Having just the five scores for each mode fits quite nicely on the screen so it was left at that.
 </p>
 <i>Issue</i>
 <p>The text file is not opened correctly. Several different methods were tried, QFile, QFile and QDataStream, C++ STL streams, but none of them worked. Since this was one of the last things implemented there was not enough time to get it fully functional. The top scores from the current session are stored, sorted, and displayed correctly in the high score menu. They are just not saved between game launches.
