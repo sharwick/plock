@@ -59,51 +59,12 @@
 <img src="./Images/DesignB.png" alt="Design B">
 
 <h3>Introduction</h3>
+<p>Below we have included all of the important components as listed above. Each
+section has at least one author describing the relavant components. </p>
 
 
 
 
-
-
-<h3>Block Class</h3>
-<b>Primary Author: Daniel Keasler</b>
-
-<p>The block class was intended to be the data structure of our BOMBSTAR game. 
-Our application's MainWindow would have a two dimensional array of Block objects, corresponding 
-to the game board with the same number of elements in each. Each individual Block object would
-contain pointer references to four adjacent Blocks. For example, if a Block could be accessed in
-the main window with indexes x and y, the Block would contain the pointer references of the Blocks 
-at indexes (x+1,y) (x-1,y) (x, y+1) (x, y-1). This allows some of our functions to be recursive 
-functions at the Block level instead of adding more to our main window through accessing arrays. 
-The Block also contained a CoordX and CoordY value. These were the same accessing indexes at the
-Block level. In many cases, many Blocks will be contained in a vector<Block*>, and to have constant
-time access to that Block's neighbors in MainWindow, the coordinates of the Block needed to be 
-easily obtained. </p>
-
-<p>The block class later was changed to inherit from QGraphicsRectItem. By doing this, we could reimplement
-the mouse press event for game play interaction and the blocks could be displayed on a QGraphicsScene. </p>
-
-<p>Along with inheriting from QGraphicsRectItem, we devised a system 
-that mapped an integer value to a QColor. More on this is written in the Colors Class, but the 
-Block Class only contains an integer value for easy color comparisons. The same integer value between
-Blocks means those Blocks have the same color. This was also applied to representing stars on the 
-Blocks as well. A graphImage of 0 meant that no star was being graphically represented on that particular
-Block, a graphImage of 2 meant that a star was represented on that Block. This numbering was originally intended for 
-bombs (now stars) as well as arrows but there wasn't enough time to properly implement arrows. 
-The extra arrows would have had graphImage values of 3 and 4 for vertical and horizontal, and potentially
-5 for all four directions. </p>
-
-<p>The stars are made from QGraphicsSimpleTextItems with unicode character 0x2605 and are members of the Block class. 
-Each star is created when the Block is created, and then a pointer is assigned to that Block's star pointer (textPtr) when a star is generated.
-The function that generates coordinates for the new star can also take in known coordinates for relocation; and in any case that a star is removed
-from a location, that star is nulled and removed from the scene even if it is being redrawn at another location. 
-And then a new star is created and assigned to the proper location. A smarter and faster system could
-have been implemented had there been more time. </p>
-
-<p>Most of the Block functions are simple accessor or mutator functions. The only functions needing 
-a more detailed explanation are foundMatch and gatherBlocks, and they will be explained in Game Play.
-markedBool and coloredBool are used in many of these algorithms and will be detailed there as well.
-</p>
 
 <h3>Game Play</h3>
 <b>Primary Author: Daniel Keasler</b>
@@ -118,7 +79,7 @@ dynamically allocates and randomly generates a new board. </p>
 
 <p>The application now waits for a mousePressEvent. The game board itself needs 1 mouse event to
 properly register graphics scene mouse events. This also officially starts the game timer and enables
-interaction with Blocks. </p>
+interaction with Blocks. All game play events are executed from MainWindow_UI.cpp unless stated otherwise. </p>
 
 <p>Every mouse event after the first has the same process. The game 
 board mouse events are temporarily frozen to process 1 match at a time. The x and y of the event 
@@ -165,9 +126,98 @@ searching upwards in a column. </p>
 
 <p>The game now waits for another mouse event. The game ends when the user exits the game or when the time runs out.</p>
 
+<h3>Block Class</h3>
+<b>Primary Author: Daniel Keasler</b>
+
+<br><br>
+<img src="./UML Diagrams/Block.jpg" alt="Block Object">
+<br>
+
+<p>The block class was intended to be the data structure of our BOMBSTAR game. 
+Our application's MainWindow would have a two dimensional array of Block objects, corresponding 
+to the game board with the same number of elements in each. Each individual Block object would
+contain pointer references to four adjacent Blocks. For example, if a Block could be accessed in
+the main window with indexes x and y, the Block would contain the pointer references of the Blocks 
+at indexes (x+1,y) (x-1,y) (x, y+1) (x, y-1). This allows some of our functions to be recursive 
+functions at the Block level instead of adding more to our main window through accessing arrays. 
+The Block also contained a CoordX and CoordY value. These were the same accessing indexes at the
+Block level. In many cases, many Blocks will be contained in a vector<Block*>, and to have constant
+time access to that Block's neighbors in MainWindow, the coordinates of the Block needed to be 
+easily obtained. </p>
+
+<p>The block class later was changed to inherit from QGraphicsRectItem. By doing this, we could reimplement
+the mouse press event for game play interaction and the blocks could be displayed on a QGraphicsScene. </p>
+
+<p>Along with inheriting from QGraphicsRectItem, we devised a system 
+that mapped an integer value to a QColor. More on this is written in the Colors Schemes, but the 
+Block Class only contains an integer value for easy color comparisons. The same integer value between
+Blocks means those Blocks have the same color. This was also applied to representing stars on the 
+Blocks as well. A graphImage of 0 meant that no star was being graphically represented on that particular
+Block, a graphImage of 2 meant that a star was represented on that Block. This numbering was originally intended for 
+bombs (now stars) as well as arrows but there wasn't enough time to properly implement arrows. 
+The extra arrows would have had graphImage values of 3 and 4 for vertical and horizontal, and potentially
+5 for all four directions. </p>
+
+<p>The stars are made from QGraphicsSimpleTextItems with unicode character 0x2605 and are members of the Block class. 
+Each star is created when the bomb bar fills up, and then that pointer is assigned to that Block's star pointer.
+The function that generates coordinates for the new star can also take in known coordinates for relocation, and in any case that a star is removed
+from a location, that star is nulled, deleted and removed from the scene even if it is being redrawn at another location. 
+And then a new star is created and assigned to the proper location. A smarter and faster system could
+have been implemented had there been more time. </p>
+
+<p>Most of the Block functions are simple accessor or mutator functions. The only functions needing 
+a more detailed explanation are foundMatch and gatherBlocks, and they will be explained in Game Play.
+markedBool and coloredBool are used in many of these algorithms and will be detailed there as well.
+</p>
+
 <h3>User Interface</h3>
 <b>Primary author: Devin Rusnak</b>
 
+<p>The user interface is all custom written, we made no use of the aweful mainwindow.ui form. Aside from letting it create the centralWidget which we use as the base layer widget.
+</p>
+
+<i>Scalability</i>
+<p>First and foremost this game is ment to be played on a phone, which come in endless varieties these days. So scalability of the 
+user interface was paramount when it was designed. The idea for the implementation came from focusing on the game board. Since it is the main
+piece of the interface it's crucial that it gets displayed correctly. One of the first things done when the user interface is being setup, is that the phone screen size is examined. Besides being used to make sure all the widgets take up the entire screen, the size is used to determine the best square size to make the game blocks so that the game board doesn't extend beyond the phone screen. This determined size is stored as 
+the blockSize, and each piece of the interface is sized based on it. There are no fixed sizes for any of the interface items, they all are 
+sized based on some arithmetic based on the blockSize. Most of the menus though are just based on the screensize as it is an easier operation
+if the menu had to be, say 80% of the horizontal and 60% of the vertical.
+</p>
+
+<i>The Game Board</i>
+<p>The game board is the main feature of the user interface. It is essentially the entire game, everything else just allows the user to get the game board setup or has some other axillary function. The game board itself is a QGraphicsView with a QGraphicsScene, which allows the blocks (QGrapicsRectItem) to be displayed. The original idea was to have the blocks "fall" down as the ones below are cleared and this implementation would support that. We also wanted to have the ability to rotate the phone and have the blocks dropping down from the new "top" of the board. These two features didn't end up getting implemented due to time constraints, but the structure is there to support them. Another reason for using QGraphicsItems was so that we could display our different bombs on them. This proved to be much more difficult than orginally thought and used up a fair amount of time. Thus we only have one bomb that is a unicode star. The score frame is a custom object that both updates and displays the score nicely. The bomb and time bars are stacked colored QLabels that are updated to reflect the time remaining or bomb amount gained. The buttons at the bottom of the screen rotates, flips, or shuffles the board, or brings up the pause menu. Due to issues with the QGridLayout it was difficult to get the game board in the layout and have the buttons positioned nicely below it. Thus they are not placed in the layout but are placed based on the know sizes of the items above them and the screen size.
+<br></br>
+When the user clicks on a block the mousePressEvent is triggered and propagated. When the first click occurs they block that is clicked calls grabMouse() which allows the event to be propagated to its parent, which is the centralWidget. The centralWidget's parent is the mainwindow class and the event gets past to it. In the mainwindow_UI the mousePressEvent is overwritten and get the (x,y) position of the mouse event. All it takes is some simple math to figure out the array coordinates for the block pressed. That block's function to check for matches is called and if it finds one, processMatch is called with the block clicked as a parameter.
+</p>
+
+<i>Game Modes</i> 
+<p>For the different game modes certain interface features need to be changed. Standard Mode is the base mode and has all the items visible. When in Survival Mode the timer bar becomes the progress bar and its label is changed accordingly. It starts with it displaying the bar half full and the user loses once it gets to zero. When the user fills the progress bar completely the level complete menu is displayed which informs the user which level they have completed. For Endless Mode the progress bar and label are simply hidden and the user gets to play forever, which is not possible so we capped the score at one hundred million points. A kill screen was thought of to go here in true arcade fashion, but as it is <i>Endless Mode</i> the user can still play past this point, the score is just no longer updated. This score cap also applies to Survival Mode but would be very difficult to achieve, and is simply impossible to achieve in sixty seconds for Standard Mode.
+</p>
+
+<i>The Menus</i>
+<p>The menus act as the main state control mechanism when the user is not currently playing a game. The menus can be thought of as existing on 
+two different layers. The bottom layer is the defualt centralWidget which the game board is placed. The rest of the menus can be thought to exist on a top layer over the game board. The menus are QGroupBoxes which fill the screen and are displayed over the base layer. The menus are:
+<ul> 
+<li><b>Main</b> - Inital menu from which rest of game is accessed.</li>
+<li><b>Game Mode Selection</b> - Allows user to select a game mode.</li>
+<li><b>High Scores</b> - Displays the top 5 scores for each game mode.</li>
+<li><b>Settings</b> - Allows user to select from preset color palletes.</li>
+<li><b>About</b> - Authors info and how-to play the game.</li>
+</ul>
+Once the user has selected a game mode and starts playing the game there are three menus that the user can interact with. They are:
+<ul>
+<li><b>Pause</b> - Stops timers and allows user to access the high score & settings menus or quit the game.</li>
+<li><b>Level Complete</b> - Displays on Survival Mode when the user fills the progress bar.</li>
+<li><b>Game Over</b> - Displays the final score and allows user to restart game, access high scores, or quit the game.</li>
+<li><b>Confirm Quit</b> - When the user wants to quit the game this menu confirms that choice.</li>
+</ul>
+</p>
+
+<i>Performance</i>
+<p>The menus have several items each and the transitions between the menus needs to be quick and easy. They are also the main thing the 
+user interacts with, so they need to look nice. Both of these objectives are achived by the use of QGroupBoxes and QLayouts. By giving each QGroupBox a QLayout the items for each menu can be simply added to the layout. The layouts keep the items organized and lined up nicely, plus they are then associated with the QGroupBox the layout is added to. This means that only the box needs to be shown or hidden for all the items associated with the menu to be shown or hidden as well. This feature allows the code needed for transitions between menus to be minimal.The buttons in the menus are the means through which the game transitions from state to state. The transitions are handled by custom slots created in mainwindow_UI. By connecting the buttons to these slots it helps to keep the code for the transitions organized. Since the items are created with some scale of the blockSize, all the items have similar scales, and thus look aesthetically pleasing.
+</p>
 
 <h3>Timers</h3>
 <b>Primary author: Mikael Son</b>
@@ -332,6 +382,22 @@ update() method makes this update.  When the game is reset, resetScoreBoard() se
 score board back to 0.  
 </p>
 
+<h3>High Scores</h3>
+<b>Primary author: Devin Rusnak</b>
+<br></br>
+<i>Implementation</i>
+<p>As this is an arcade game a high score list is a must have feature. The HighScores object does four things:
+<ul>
+<li>Stores the top five high scores for each game mode in integer arrays.</li>
+<li>Sorts new high scores into said arrays when they are achieved.</li>
+<li>Reads/Writes high scores to a text file to be saved and used.</li>
+<li>Maintains the QLabels that display the scores in the high scores menu.</li>
+</ul>
+When the game starts the file is opened and the scores are read in and stored into the integer arrays. The file is formated so that each line contains one score and the scores are in order starting with the top five standard mode scores, then the top five survival mode scores with the level obtained, and then the top five endless mode scores. In standard and survival modes when the game ends the score is sent to the addScore function which sorts the score into the proper array based on the game mode. If the score is in the top five the function returns one which in mainwindow_UI shows a label saying the user got a high score. It also then writes the new list of high scores to the same text file. The QLabels that are used to display the scores in mainwindow_UI are part of this object class so that they can be updated easily. When a new high score is added the score can be converted to a nicely formatted QString and the corresponding QLabel's text can be set to it. Originally more than just the top five scores were going to be saved but there were two issues. First since the score was capped at one hundred million only one score could fit on a line. Second having more than five scores would cause the list to go off of the screen and create a scroll screen situation. Having just the five scores for each mode fits quite nicely on the screen so it was left at that.
+</p>
+<i>Issue</i>
+<p>The text file is not opened correctly. Several different methods were tried, QFile, QFile and QDataStream, C++ STL streams, but none of them worked. Since this was one of the last things implemented there was not enough time to get it fully functional. The top scores from the current session are stored, sorted, and displayed correctly in the high score menu. They are just not saved between game launches.
+</p>
 
 <h3>Color Schemes</h3>
 <b>Primary author: Shannon Harwick</b>
