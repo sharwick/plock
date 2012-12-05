@@ -155,9 +155,9 @@ The extra arrows would have had graphImage values of 3 and 4 for vertical and ho
 5 for all four directions. </p>
 
 <p>The stars are made from QGraphicsSimpleTextItems with unicode character 0x2605 and are members of the Block class. 
-Each star is created when the Block is created, and then a pointer is assigned to that Block's star pointer (textPtr) when a star is generated.
-The function that generates coordinates for the new star can also take in known coordinates for relocation; and in any case that a star is removed
-from a location, that star is nulled and removed from the scene even if it is being redrawn at another location. 
+Each star is created when the bomb bar fills up, and then that pointer is assigned to that Block's star pointer.
+The function that generates coordinates for the new star can also take in known coordinates for relocation, and in any case that a star is removed
+from a location, that star is nulled, deleted and removed from the scene even if it is being redrawn at another location. 
 And then a new star is created and assigned to the proper location. A smarter and faster system could
 have been implemented had there been more time. </p>
 

@@ -29,7 +29,6 @@ Block::Block(int xSpot, int ySpot, int colorChoice, QColor colorChosen){
     CoordY = ySpot;
     graphImage = 0;
     setColor(colorChoice, colorChosen);
-    textPtr = new QGraphicsSimpleTextItem();
 }
 /**
  * @brief Block::mousePressEvent
@@ -61,9 +60,9 @@ void Block::setTextItem(QGraphicsSimpleTextItem *paramBomb){
  */
 void Block::removeGraphObject(bool endGame){
     setGraphImage(0);
+    //if not null, null and delete it
     if(textPtr != 0){
-        if(endGame)
-            delete textPtr;
+        delete textPtr;
         textPtr = 0;
     }
 }
@@ -240,7 +239,6 @@ int Block::getGraphImage(){
  */
 void Block::setGraphImage(int _graphImage){
     graphImage = _graphImage;
-    //switch to assign a loaded graphics image? still a work in progress
 }
 
 /**

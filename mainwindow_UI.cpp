@@ -1840,10 +1840,10 @@ void MainWindow::removeBlocks(){
                 //if there is a star at this block, remove it from scene
                 if(gameBoard[i][j]->textPtr != 0)
                     theScene->removeItem(gameBoard[i][j]->textPtr);
-                //remove block from the scene
-                theScene->removeItem(gameBoard[i][j]);
                 //delete memory allocation of star
                 gameBoard[i][j]->removeGraphObject(true);
+                //remove block from the scene
+                theScene->removeItem(gameBoard[i][j]);
                 //delete and null block
                 delete gameBoard[i][j];
                 gameBoard[i][j] = 0;
