@@ -158,7 +158,6 @@ private slots:
    void rotate();
    void confirmQuit();
    void quitRejected();
-   void quitRejectedGameOver();
    void quit();
 };
 

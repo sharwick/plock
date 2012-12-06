@@ -3,7 +3,6 @@
  *  @author Devin Rusnak
  *  @author Mikael Son
  *  @copyright BOMBSTAR 2012
- *  @class mainwindow_UI mainwindow_UI.h "mainwindow_UI.h"
  *  @extends QMainWindow
  *  @brief The main class of the program where all the interface items and most of the calculations are handled.
  *
@@ -180,6 +179,7 @@ void MainWindow::showExpanded()
 
 
 /**
+ *  @author Devin Rusnak
  *  @brief MainWindow::setupWindows
  *
  *  This method sets the size of the mainWindow based on the size of
@@ -518,7 +518,7 @@ void MainWindow::setupWindows(){
     confirmMenu = new QGroupBox(this);
     confirmMenu->setAutoFillBackground(true);
     confirmMenu->setGeometry( (screenSizeX/2) - ((screenSizeX * 0.7) / 2), (screenSizeY/2) - ((screenSizeY * 0.2) / 2),
-                            screenSizeX * 0.7 , screenSizeY * 0.2 );
+                              screenSizeX * 0.7 , screenSizeY * 0.2 );
     // Create Menu's layout
     confirmLayout = new QGridLayout(this);
     confirmLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
@@ -548,7 +548,7 @@ void MainWindow::setupWindows(){
     gameOverMenu = new QGroupBox(this);
     gameOverMenu->setAutoFillBackground(true);
     gameOverMenu->setGeometry( (screenSizeX/2) - ((screenSizeX * 0.8) / 2), (screenSizeY/2) - ((screenSizeY * 0.5) / 2),
-                            screenSizeX * 0.8 , screenSizeY * 0.5 );
+                               screenSizeX * 0.8 , screenSizeY * 0.5 );
     // Create Menu's Layout
     gameOverLayout = new QVBoxLayout(this);
     gameOverLayout->setAlignment(Qt::AlignHCenter);
@@ -596,7 +596,7 @@ void MainWindow::setupWindows(){
 
 
     /* * * * * * * * * * * * * * * * * * * *
-     *          Survival Mode Items        *
+     *     Mike's Survival Mode Items      *
      * * * * * * * * * * * * * * * * * * * */
     levelClear = new QGroupBox(this);
     levelClear->setAutoFillBackground(true);
@@ -624,7 +624,13 @@ void MainWindow::setupWindows(){
 
 
 /**
+ *  @author Shannon Harwick
+ *  @author Daniel Keasler
+ *  @author Devin Rusnak
+ *  @author Mikael Son
  *  @brief MainWindow::setupGameScreen
+ *
+ *  Sets up the game board onto the centralWidget and initalizes all necessary interface items.
  */
 void MainWindow::setupGameScreen(){
 
@@ -744,7 +750,7 @@ void MainWindow::setupGameScreen(){
  *
  */
 void MainWindow::setupBlocks(){
-	int temp;
+    int temp;
     for(int y = 0; y < boardSizeY; y++){
         for(int x = 0; x < boardSizeX; x++){
             //generate random color
@@ -840,11 +846,11 @@ void MainWindow::updateBomb(int nBlocks){
         }
     }
     else if ((bombFill->maximumWidth()+updateVal) >= bombLayer->maximumWidth()){
-             bombFill->setMaximumWidth(0);
-             //funciton call to make new image
-             generateGraphicObject(-1, -1);
-             btimeOver();
-             bcurrentTime=0;
+        bombFill->setMaximumWidth(0);
+        //funciton call to make new image
+        generateGraphicObject(-1, -1);
+        btimeOver();
+        bcurrentTime=0;
     }
 
 }
@@ -879,6 +885,10 @@ void MainWindow::updateProgress(int nBlocks){
 
 /**
  * @brief MainWindow::menuPressed
+ *
+ * When the user wants to leave the game and go back to the main menu, and has
+ * confirmed that they want to quit this slot is called. It hides the board items
+ * and shows the main menu.
  */
 void MainWindow::menuPressed(){
 
@@ -904,25 +914,25 @@ void MainWindow::menuPressed(){
 
 /**
  * @brief MainWindow::confirmQuit
+ *
+ * When the user has the game paused and wants to quit the game, this
+ * slot gets called and shows the confirm quit menu.
  */
 void MainWindow::confirmQuit(){
 
     if(gamedone!=true){
-    if(pauseMenu->isVisible())
-        pauseMenu->hide();
+        if(pauseMenu->isVisible())
+            pauseMenu->hide();
 
-    else if(gameOverMenu->isVisible()){
-        gameOverMenu->hide();
-        disconnect(confirmRejectButton, SIGNAL(clicked()), this, SLOT(quitRejected()) );
-        connect(confirmRejectButton, SIGNAL(clicked()), this, SLOT(quitRejectedGameOver()) );
-    }
-
-    confirmMenu->show();
+        confirmMenu->show();
     }
 }
 
 /**
  * @brief MainWindow::quitRejected
+ *
+ * User doesn't want to quit. This slot hides the confirm menu and
+ * goes back to the pause menu.
  */
 void MainWindow::quitRejected(){
     confirmMenu->hide();
@@ -930,17 +940,9 @@ void MainWindow::quitRejected(){
 }
 
 /**
- * @brief MainWindow::quitRejectedGameOver
- */
-void MainWindow::quitRejectedGameOver(){
-    confirmMenu->hide();
-    gameOverMenu->show();
-    disconnect(confirmRejectButton, SIGNAL(clicked()), this, SLOT(quitRejectedGameOver()) );
-    connect(confirmRejectButton, SIGNAL(clicked()), this, SLOT(quitRejected()) );
-}
-
-/**
  * @brief MainWindow::pauseBack
+ *
+ * The user has the pause menu up and goes back to the game.
  */
 void MainWindow::pauseBack(){
     pauseMenu->hide();
@@ -952,16 +954,21 @@ void MainWindow::pauseBack(){
 
 /**
  * @brief MainWindow::pausedPressed
+ *
+ * The user is playing the game and has pressed the pause menu button.
  */
 void MainWindow::pausedPressed(){
     if (!levelClear->isVisible()){
-    pauseMenu->show();
-    timeOver();
-    btimeOver();
+        pauseMenu->show();
+        timeOver();
+        btimeOver();
     }
 }
 /**
+ * @author Devin Rusnak
  * @brief MainWindow::pauseSettingsPressed
+ *
+ * The user is in the pause menu and selects to view the settings menu.
  */
 void MainWindow::pauseSettingsPressed(){
     pauseMenu->hide();
@@ -975,7 +982,11 @@ void MainWindow::pauseSettingsPressed(){
 }
 
 /**
+ * @author Devin Rusnak
  * @brief MainWindow::backToPause
+ *
+ * User has gone from the pause menu to another menu and has hit the back button to
+ * bring them back to the pause menu.
  */
 void MainWindow::backToPause(){
     highScoreMenu->hide();
@@ -994,6 +1005,7 @@ void MainWindow::backToPause(){
 }
 
 /**
+ * @author Devin Rusnak
  * @brief MainWindow::newGamePressed
  */
 void MainWindow::newGamePressed(){
@@ -1001,6 +1013,7 @@ void MainWindow::newGamePressed(){
     gameModeMenu->show();
 }
 /**
+ * @author Devin Rusnak
  * @brief MainWindow::settingsPressed
  */
 void MainWindow::settingsPressed(){
@@ -1009,6 +1022,7 @@ void MainWindow::settingsPressed(){
 }
 
 /**
+ * @author Devin Rusnak
  * @brief MainWindow::helpPressed
  */
 void MainWindow::helpPressed(){
@@ -1017,7 +1031,10 @@ void MainWindow::helpPressed(){
 }
 
 /**
+ * @author Devin Rusnak
  * @brief MainWindow::backToMain
+ *
+ * The user is in a sub menu and wants to go back to main menu.
  */
 void MainWindow::backToMain(){
 
@@ -1037,7 +1054,10 @@ void MainWindow::backToMain(){
 }
 
 /**
+ * @author Devin Rusnak
  * @brief MainWindow::gameOverMenuSlot
+ *
+ * The game is over and the user wants to go back to main menu.
  */
 void MainWindow::gameOverMenuSlot(){
     gameOverMenu->hide();
@@ -1049,7 +1069,10 @@ void MainWindow::gameOverMenuSlot(){
 }
 
 /**
+ * @author Devin Rusnak
  * @brief MainWindow::gameOverRestartSlot
+ *
+ * The game has ended and the user wants to play again.
  */
 void MainWindow::gameOverRestartSlot(){
     gameOverMenu->hide();
@@ -1148,7 +1171,11 @@ void MainWindow::highScoresShow(){
 }
 
 /**
+ * @author Devin Rusnak
  * @brief MainWindow::backToGameOver
+ *
+ * The game has ended and the user is in the high score menu and wants to go
+ * back to the game over menu.
  */
 void MainWindow::backToGameOver(){
     disconnect(backToMenu4, SIGNAL(clicked()), this, SLOT(backToGameOver()) );
@@ -1164,6 +1191,8 @@ void MainWindow::backToGameOver(){
 
 /**
  * @brief MainWindow::standardMode
+ *
+ * Starts standard mode
  */
 void MainWindow::standardMode(){
     newHighScore->hide();
@@ -1190,6 +1219,8 @@ void MainWindow::standardMode(){
 
 /**
  * @brief MainWindow::nextLevel
+ *
+ * The user is playing survival mode and has cleared a level.
  */
 void MainWindow::nextLevel(){
     startScreen->hide();
@@ -1211,6 +1242,8 @@ void MainWindow::nextLevel(){
 
 /**
  * @brief MainWindow::survivalMode
+ *
+ * Starts survival mode
  */
 void MainWindow::survivalMode(){
     newHighScore->hide();
@@ -1238,6 +1271,8 @@ void MainWindow::survivalMode(){
 
 /**
  * @brief MainWindow::endlessMode
+ *
+ * Starts endless mode
  */
 void MainWindow::endlessMode(){
     newHighScore->hide();
@@ -1262,7 +1297,10 @@ void MainWindow::endlessMode(){
 }
 
 /**
+ * @author Devin Rusnak
  * @brief MainWindow::addScore
+ *
+ * Takes the current score and adds it to the HighScores object to be sorted and stored.
  */
 void MainWindow::addScore(){
     menuButton->hide();
@@ -1468,14 +1506,15 @@ Start of Block game algorithm functions:
  * @author Shannon Harwick
  * @author Mike Son
  * @brief MainWindow::processMatch basic game flow from gathering matched blocks to processing scoring and new colors
- * @description gatherBlocks is called from the matchedBlock to collect all matching adjacent blocks.
- *      all gathered blocks are checked for stars, more could be added
- *      all blocks are sorted relative to column height and set to black
- *      .05 second timer to show noticeable transition
- *      score is updated
- *      bomb bar is incremented
- *      progress bar is incremented if in survival mode
- *      new colors are assigned
+ * @description ;
+ *gatherBlocks is called from the matchedBlock to collect all matching adjacent blocks.
+ *      all gathered blocks are checked for stars, more could be added.
+ *      all blocks are sorted relative to column height and set to black.
+ *      .05 second timer to show noticeable transition.
+ *      score is updated.
+ *      bomb bar is incremented.
+ *      progress bar is incremented if in survival mode.
+ *      new colors are assigned.
  * @param matchedBlock
  * @return void
  */
@@ -1522,31 +1561,31 @@ vector<Block*> MainWindow::checkSpecials(vector<Block*> blockVector)
         if(blockVector[i]->getGraphImage() == 2)
         {
             //NOTE: This part below was never completely implemented and currently a more direct approach is used
-         //           switch(blockVector[i]->getGraphImage()){
+            //           switch(blockVector[i]->getGraphImage()){
 
-         //           case 1 : //score case
-                        //score mult is updated first
-                        //vector swap and erase of this scoring object
-                        //changeIndex called for swapped graph objects
-          //              break;
-           //         case 2 : //bomb case
-           //             blockVector = bombCollector(blockVector, blockVector[i]->getCoordX(), blockVector[i]->getCoordY());
-           //             break;
-          //          case 3 : //vertical case
-          //              blockVector = blockVector[i]->upCollector(blockVector);
-          //              blockVector = blockVector[i]->downCollector(blockVector);
-          //              break;
-          //          case 4 : //horizontal case
-           //             blockVector = blockVector[i]->rightCollector(blockVector);
-           //             blockVector = blockVector[i]->leftCollector(blockVector);
-          //              break;
-          //          case 5 : //4 arrows case
-          //              blockVector = blockVector[i]->upCollector(blockVector);
-          //              blockVector = blockVector[i]->downCollector(blockVector);
-          //              blockVector = blockVector[i]->rightCollector(blockVector);
-         //               blockVector = blockVector[i]->leftCollector(blockVector);
-         //               break;
-         //           }
+            //           case 1 : //score case
+            //score mult is updated first
+            //vector swap and erase of this scoring object
+            //changeIndex called for swapped graph objects
+            //              break;
+            //         case 2 : //bomb case
+            //             blockVector = bombCollector(blockVector, blockVector[i]->getCoordX(), blockVector[i]->getCoordY());
+            //             break;
+            //          case 3 : //vertical case
+            //              blockVector = blockVector[i]->upCollector(blockVector);
+            //              blockVector = blockVector[i]->downCollector(blockVector);
+            //              break;
+            //          case 4 : //horizontal case
+            //             blockVector = blockVector[i]->rightCollector(blockVector);
+            //             blockVector = blockVector[i]->leftCollector(blockVector);
+            //              break;
+            //          case 5 : //4 arrows case
+            //              blockVector = blockVector[i]->upCollector(blockVector);
+            //              blockVector = blockVector[i]->downCollector(blockVector);
+            //              blockVector = blockVector[i]->rightCollector(blockVector);
+            //               blockVector = blockVector[i]->leftCollector(blockVector);
+            //               break;
+            //           }
             //increment score multiplier and update score label
             scorePtr->incrementMultiplier();
             QString m = QLocale(QLocale::English).toString((double) scorePtr->getMultiplier(), 'f', 0);
@@ -1600,7 +1639,7 @@ vector<Block*> MainWindow::bombCollector(vector<Block*> blockVector, int x, int 
 }
 /**
  * @author Daniel Keasler
- * @brief MainWindow::sortVector all blocks in blockVector are sorted in descending order with respect to y
+ * @brief MainWindow::sortVector all blocks in blockVector are sorted in descending order with respect to y (if blocks are in same column)
  * @param blockVector
  * @return vector<Block*>
  */
@@ -1634,7 +1673,8 @@ vector<Block*> MainWindow::sortVector(vector<Block*> blockVector)
 /**
  * @author Daniel Keasler
  * @brief MainWindow::determineColor swaps color of blocks upwards from the column of the ith block
- * @description checky is a walker variable upwards in the 2D array of blocks. while checky is still
+ * @description ;
+ *checky is a walker variable upwards in the 2D array of blocks. while checky is still
  *      in bounds of the array, the algorithm searches for a block that is not also needing a color change.
  *      The blocks are already sorted based on y so the algorithm will never replace the same blocks color more
  *      than once. If it steals a color from a block, that block that lost its color is put on the end of the vector.
@@ -1692,14 +1732,14 @@ void MainWindow::determineColor(vector<Block*> blockVector)
  * @description: a slot for automatic process to next level
  */
 void MainWindow::gtimeSlot(){
-k++;
-if(k%1==0){
-    gCount--;
-}
-if(gCount==-1){
-    nextLevel();
-    gtimer->stop();
-}
+    k++;
+    if(k%1==0){
+        gCount--;
+    }
+    if(gCount==-1){
+        nextLevel();
+        gtimer->stop();
+    }
 }
 
 
@@ -1709,15 +1749,15 @@ if(gCount==-1){
  * @description: a slot for bomb bar in any kind of mode of the game.
  */
 void MainWindow::bombtimeSlot(){
-y++;
-if(y%3==0){
-    bcurrentTime--;
-}
-if(bcurrentTime==-1){
-    btimeOver();
-    return;
-}
-bombFill->setMaximumWidth(bombFill->maximumWidth()-(bombLayer->width()/120));
+    y++;
+    if(y%3==0){
+        bcurrentTime--;
+    }
+    if(bcurrentTime==-1){
+        btimeOver();
+        return;
+    }
+    bombFill->setMaximumWidth(bombFill->maximumWidth()-(bombLayer->width()/120));
 }
 
 /**
@@ -1731,27 +1771,27 @@ void MainWindow::timeSlot(){
         currentTime--;
     }
     if(Timefill->maximumWidth() == 0){
-                gamedone = true;
+        gamedone = true;
 
 
-                //int n= scorePtr->getScore();
-                QString num = QLocale(QLocale::English).toString((double) scorePtr->getScore(), 'f', 0);
-                tempScore->setText(num);
+        //int n= scorePtr->getScore();
+        QString num = QLocale(QLocale::English).toString((double) scorePtr->getScore(), 'f', 0);
+        tempScore->setText(num);
 
-                if (survivalModeFlag==1) {
-                    tempLevel->setText(QString::number(level));
-                    finalLevelLabel->setText("Your Final Level:");
-                }
-                else {
-                    tempLevel->setText("");
-                    finalLevelLabel->setText("");
-                }
+        if (survivalModeFlag==1) {
+            tempLevel->setText(QString::number(level));
+            finalLevelLabel->setText("Your Final Level:");
+        }
+        else {
+            tempLevel->setText("");
+            finalLevelLabel->setText("");
+        }
 
-                gameOverMenu->show();
-                addScore();
-                theHighScores->writeHighScores();
-                timeOver();
-                btimeOver();
+        gameOverMenu->show();
+        addScore();
+        theHighScores->writeHighScores();
+        timeOver();
+        btimeOver();
     }
     Timefill->setMaximumWidth(Timefill->maximumWidth()-(Timeclock->width()/150));
 }
@@ -1798,30 +1838,31 @@ void MainWindow::timeBegin(){
  * @return void
  */
 void MainWindow::processProgress(){
-        //stop timers
-        timeOver();
-        btimeOver();
-        //show level clear window
-        levelClear->show();
+    //stop timers
+    timeOver();
+    btimeOver();
+    //show level clear window
+    levelClear->show();
 
-        n = QLocale(QLocale::English).toString((double) level, 'f', 0); //QString of an Level Number text
-        levelClearLabel->setText(" Level " + n + " Clear !");  //update Level Clear message with level
-        level++;//increment level counter
+    n = QLocale(QLocale::English).toString((double) level, 'f', 0); //QString of an Level Number text
+    levelClearLabel->setText(" Level " + n + " Clear !");  //update Level Clear message with level
+    level++;//increment level counter
 
 
-        timerCounter -= (7 * (level-1));//increment timer speed, maybe formula from level counter
-        if (timerCounter == 0 || timerCounter < 0)
-            timerCounter =1;
-        Timefill->setMaximumWidth(Timeclock->width() / 2);//set timer to 50%
-        currentTime = 30;
-        //start timer for level clear window
-        gtimer->start();
+    timerCounter -= (7 * (level-1));//increment timer speed, maybe formula from level counter
+    if (timerCounter == 0 || timerCounter < 0)
+        timerCounter =1;
+    Timefill->setMaximumWidth(Timeclock->width() / 2);//set timer to 50%
+    currentTime = 30;
+    //start timer for level clear window
+    gtimer->start();
 }
 
 /**
  * @author Daniel Keasler
  * @brief MainWindow::generateGraphicObject creates a Unicode star for either a random location or an assigned location
- * @description If CoordX is < 0, then I passed -1 to the function to generate a random set of coordinates
+ * @description ;
+ * If CoordX is < 0, then I passed -1 to the function to generate a random set of coordinates.
  *      There is also a check for generating a random coordinate pair that already contains a star.
  *      QGraphicsSimpleTextItem can be used to display unicode characters on a graphics scene.
  *      0x2605 is a unicode star.
