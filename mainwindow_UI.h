@@ -54,23 +54,24 @@ public:
 
 private:
     // Objects
-    Ui::MainWindow *ui;
     QGridLayout *grid, *modeMenuLayout, *settingsLayout, *confirmLayout, *highScoreLayout;
     QVBoxLayout *mainMenuLayout, *helpMenuLayout, *pauseMenuLayout, *gameOverLayout, *startLayout, *levelClearLayout;
     QGraphicsScene *theScene;
     QGraphicsView *blockView;
     QGraphicsRectItem *tempBlock;
+//    QProgressBar *bombBar, *timeBar;
     QPushButton *menuButton,*shuffleButton, *rotateButton, *horizontalFlipButton,  *newGameButton, *settingsButton,
     *helpButton, *backToMenu, *backToMenu2, *backToMenu3, *backToMenu4, *standardModeButton, *highScoreButton,
     *pauseAccept, *pauseRejected, *pauseSettings, *pauseHighScore, *endlessModeButton, *survivalModeButton, *gameOverToMenu, *gameOverRestart,
-    *quitButton, *confirmQuitAcceptButton, *confirmQuitRejectButton, *gameOverHighScore, *levelNext;
+    *quitButton, *confirmAcceptButton, *confirmRejectButton, *gameOverHighScore, *levelNext;
     QGroupBox *mainMenu, *settingsMenu, *helpMenu, *gameModeMenu, *pauseMenu, *confirmMenu, *gameOverMenu, *highScoreMenu, *startScreen, *levelClear;
     QLabel *titleLabel, *gameModeTitle, *settingsTitle, *timeLabel, *bombLayer, *bombFill, *Timeclock, *Timefill, *finalLevelLabel, *finalScoreLabel,
     *bombLabel, *scoreLabel, *pauseLabel, *quitLabel, *colorSchemeLabel, *pressScreenLabel, *highScoresLabel, *levelClearLabel, *progressLabel,
-    *standardLabel, *survivalLabel, *endlessLabel, *helpLabel;
+    *standardLabel, *survivalLabel, *endlessLabel, *aboutLabel;
     QTextBrowser *helpText, *highScoreText;
     QSlider *colorSlider;
     QLabel *tempScore, *tempLevel, *newHighScore;
+    //myRectItem* rectArray[8][9];
     QTimer *timer, *btimer, *gtimer;
     QString aboutText, n;
     QFont tempFont;
@@ -95,28 +96,26 @@ private:
     int stdModeFlag, endlessModeFlag, survivalModeFlag;
     int x, y, k;
     bool start, gamedone;
-	
-	//Dan Block Variables
-    Block *gameBoard[8][9];
-
-    // Methods
-    void setupBlocks();
-    void setupGameScreen();
-    void setupWindows();
-    void startGame();
-    void scoreLabelsUpdate();
-    void processProgress();
-    void generateGraphicObject(int, int);
-    void removeBlocks();
     void setUpClock();
     void timeOver();
     void btimeOver();
     void btimeBegin();
     void timeBegin();
-    void reset();
+    void reset();   
     void updateBomb(int nBlocks);
     void updateProgress(int);
     void graphSwap(int, int, int, int);
+	
+	//Dan Block Variables
+    Block *gameBoard[8][9];
+
+    // Methods
+    Ui::MainWindow *ui;
+    void setupBlocks();
+    void setupGameScreen();
+    void setupWindows();
+    void startGame();
+    void scoreLabelsUpdate();
 	
 	//Dan Block Functions
     void processMatch(Block*);
@@ -124,12 +123,21 @@ private:
 	void determineColor(vector<Block*>);
 	vector<Block*> checkSpecials(vector<Block*>);
     vector<Block*> bombCollector(vector<Block*>, int, int);
+
+    void processProgress();
+    void generateGraphicObject(int, int);
+    void removeBlocks();
+
+    //vector<GraphObject> scoringObjects; //NYI
+
+    //QTimer *blockTimer;
+    //int blockTimerCounter;
 	
 protected:
     void mousePressEvent(QMouseEvent *event);
 
 private slots:
-   void quitToMenuSlot();
+   void menuPressed();
    void timeSlot();
    void gtimeSlot();
    void bombtimeSlot();
@@ -137,16 +145,16 @@ private slots:
    void newGamePressed();
    void settingsPressed();
    void helpPressed();
-   void backToMainSlot();
-   void backToPauseSlot();
-   void backToGameOverSlot();
+   void backToMain();
+   void backToPause();
+   void backToGameOver();
    void pausedPressed();
    void pauseSettingsPressed();
-   void pauseBackSlot();
+   void pauseBack();
    void highScoresShow();
    void gameOverRestartSlot();
    void gameOverMenuSlot();
-   void addScoreSlot();
+   void addScore();
    void standardMode();
    void endlessMode();
    void survivalMode();
@@ -155,10 +163,14 @@ private slots:
    void verticalFlip();
    void horizontalFlip();
    void rotate();
-   void confirmQuitSlot();
-   void quitRejectedSlot();
-   void quitRejectedGameOverSlot();
-   void quitSlot();
+   void confirmQuit();
+   void quitRejected();
+   void quitRejectedGameOver();
+   void quit();
+
+   //void blockTimerSlot();
+
+
 };
 
 #endif // MAINWINDOW_H
