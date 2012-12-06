@@ -238,6 +238,40 @@ user interacts with, so they need to look nice. Both of these objectives are ach
 
 <h3>Timers</h3>
 <b>Primary author: Mikael Son</b>
+<p>Timers are built using 'QTimer' to update, and 'QLabel' show the actual figure of the timer. 
+Since timebar and bombbar need to be decreasing over time, timer is used for both and in every mode of 
+the game. In the beginning, we tried to create the timebar using a 'QProgressbar', but it hardly was functional. 
+so I came up with just simply using two QLabels, one for the layer and another for filling the timer. <p/>
+
+<p><i>TimeBar</i></p>
+<p>Using the time slots, timebar created with QLabels will be updated depending on the frequency of calling the time slot 
+, filling the bar or decreasing the bar. Frequency of calling time slot can be controlled using nanosecond unit, 
+and this frequency have effects on how smoothly the timebar works in terms of decrements. So if I was to have 
+60 seconds of the game time and I were to call the time slot once every second, I will call the time slot 60 times 
+until the game ends. But the decrement of the time bar would not look pretty since it is just chunk amount of time 
+bar just disappearing every second. So rather, I would set it to call the time slot four times every second, 
+I would decrease the time bar every 250 nano second which will have the time bar working more smoothly. int variable 'currentTime' 
+was used to keep track of the timebar more accurately. More specification provided below in BombBar.</p>
+<p><i>BombBar</i></p>
+<p>Functioning mostly the same as TimeBar. Using the bomb time slot, bombbar will be updated to decrease every second, 
+also getting filled up whenever the blocks are eliminated. Bombbar will be activated as soon as the game starts. 
+Whenever there is a mouse click event, the method 'updateBomb' with the parameter of 'nBlocks' will be used 
+to update the bombbar. Depending on how many blocks are removed at once, amount of the fill to the bombbar will 
+be calculated using the parameter 'nBlocks', and will update the bombbar. Whenever 'updateBomb' is called, it 
+will check the bombbar's status: if bombbar is empty or not, or if bombbar is filled all the way up. If the 
+bombbar is filled again out of emptiness, then it needs to be reactivated, and when the bombbar is filled all the 
+way up, then a bomb is to be generated. Bombbar also uses an int variable called 'bcurrentTime' to check the current 
+state of the bombbar more accurately. 'bcurrentTime' is basically a time counter for the bombbar, keeping track of 
+how many seconds are left for the bar to be empty. This int variable will be decreased in terms of seconds when 
+the bombbar itself is updated to decrease, and vice versa. This making changes to int variable required quite a precise calculation, 
+trying to make bombbar work more smoothly, at the same time, we needed this so that the function does not call 
+the method to decrease the bombbar and cause the error message of 'cannot go negative' when it is empty.</p>
+<p><i>ProgressBar</i></p>
+<p>Progressbar is just a different label for Timebar used in Survival Mode, with slightly added functionality. Progressbar uses same 
+technique as Bombbar to check if the bar is empty or filled up all the way. If the bar is filled up all the way, then 
+the game will proceed to next level; if the bar is empty, it will end the game.</p>
+<p>There were some issues concerning 'QTimer' and 'QLabel'. 
+
 
 
 <div>
