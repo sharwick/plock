@@ -459,7 +459,7 @@ void MainWindow::setupWindows(){
                         "is a sixty second game where you have to score as high as possible. "
                         "Next is Survival Mode where you have a certain amount of time to fill up "
                         "the progress bar, which restarts with each level. Last there is Endless Mode "
-                        " where you have an unlimited amount of time to play.");
+                        "where you have an unlimited amount of time to play.");
     helpText->setText(aboutText);
     helpMenuLayout->addWidget(helpText, Qt::AlignTop);
 
