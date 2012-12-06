@@ -558,7 +558,7 @@ void MainWindow::setupWindows(){
 
     // Initalize and add Items to the layout
     scorePtr = new Score(); // Moved
-    newHighScore = new QLabel("New High Score!");
+    newHighScore = new QLabel("New High Score!"); labelVector.push_back(newHighScore);
     tempFont.setPointSize(blockSize/8);
     newHighScore->setFont(tempFont);
     gameOverLayout->addWidget(newHighScore, Qt::AlignHCenter);
