@@ -2,7 +2,6 @@
  * @author Daniel Keasler
  * @author Devin Rusnak
  * @copyright Blockstar
- * @class block block.h "block.h"
  * @brief Underlying data structures and algorithms for game play.
  * @description The Block class contains integers and a series of "adjacent" pointers for easy comparisons used in the game play algorithms
  */
