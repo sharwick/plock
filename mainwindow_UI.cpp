@@ -737,15 +737,6 @@ void MainWindow::setupGameScreen(){
     grid->addWidget(bombFill,1,1);
     bombLayer->setMaximumWidth(bombLayer->width());
     connect(btimer, SIGNAL(timeout()), this, SLOT(bombtimeSlot()));
-
-    //connect(blockTimer, SIGNAL(timeout()), this, SLOT(blockTimerSlot()));
-
-    /* would ideally place an ellipse on the game board but doesn't work yet
-    QGraphicsEllipseItem *myEllipse = new QGraphicsEllipseItem();
-    myEllipse->setRect(3 * blockSize, 4 * blockSize, (blockSize - 1), (blockSize - 1));
-    myEllipse->setBrush(QBrush(Qt::yellow, Qt::SolidPattern));
-    theScene->addItem(myEllipse);
-    */
 } // End setupInterface()
 
 /**
@@ -756,14 +747,12 @@ void MainWindow::setupBlocks(){
 	int temp;
     for(int y = 0; y < boardSizeY; y++){
         for(int x = 0; x < boardSizeX; x++){
-			//Dan Block Updates:
+            //generate random color
             temp = (rand() % 6) + 1;
+            //create new block, and give it a boundar
             gameBoard[x][y] = new Block(x, y, temp, colorPtr->getQColor(temp));
-			//End of my loop stuff
-			//now would use temp as accessor in color class to send color to rectItem Bruch
-            //rectArray[x][y] = new myRectItem();
             gameBoard[x][y]->setRect(blockSize * x, blockSize * y, blockSize, blockSize);
-            //rectArray[x][y]->setBrush(QBrush(colorPtr->getQColor(temp), Qt::SolidPattern));
+            //add it to the scene
             theScene->addItem(gameBoard[x][y]);
         }
     }
@@ -1321,10 +1310,7 @@ void MainWindow::shufflePressed() {
             //now uses QColor with setColor function
             gameBoard[r1][c1]->setColor( gameBoard[r2][c2]->getColor(), colorPtr->getQColor(gameBoard[r2][c2]->getColor()) );
             gameBoard[r2][c2]->setColor(tempColor, colorPtr->getQColor(tempColor));
-
-            //rectArray[gameBoard[r1][c1]->getCoordX()][gameBoard[r1][c1]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[r1][c1]->getColor()), Qt::SolidPattern));
-            //rectArray[gameBoard[r2][c2]->getCoordX()][gameBoard[r2][c2]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[r2][c2]->getColor()), Qt::SolidPattern));
-
+            //if only one block has a star, swap the star
             if(gameBoard[r1][c1]->getGraphImage() != gameBoard[r2][c2]->getGraphImage())
                 graphSwap(r1, c1, r2, c2);
         }
@@ -1367,10 +1353,7 @@ void MainWindow::horizontalFlip() {
                 tempColor = gameBoard[x1][y1]->getColor();
                 gameBoard[x1][y1]->setColor( gameBoard[x2][y2]->getColor(), colorPtr->getQColor(gameBoard[x2][y2]->getColor()) );
                 gameBoard[x2][y2]->setColor(tempColor, colorPtr->getQColor(tempColor));
-
-                //rectArray[gameBoard[x1][y1]->getCoordX()][gameBoard[x1][y1]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x1][y1]->getColor()), Qt::SolidPattern));
-                //rectArray[gameBoard[x2][y2]->getCoordX()][gameBoard[x2][y2]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x2][y2]->getColor()), Qt::SolidPattern));
-
+                //if only one block has a star, swap the star
                 if(gameBoard[x1][y1]->getGraphImage() != gameBoard[x2][y2]->getGraphImage())
                     graphSwap(x1, y1, x2, y2);
             }
@@ -1406,9 +1389,7 @@ void MainWindow::rotate() {
                 tempColor = gameBoard[x1][y1]->getColor();
                 gameBoard[x1][y1]->setColor( gameBoard[x2][y2]->getColor(), colorPtr->getQColor(gameBoard[x2][y2]->getColor()) );
                 gameBoard[x2][y2]->setColor(tempColor, colorPtr->getQColor(tempColor));
-
-                //rectArray[gameBoard[x1][y1]->getCoordX()][gameBoard[x1][y1]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x1][y1]->getColor()), Qt::SolidPattern));
-                //rectArray[gameBoard[x2][y2]->getCoordX()][gameBoard[x2][y2]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x2][y2]->getColor()), Qt::SolidPattern));
+                //if only one block has a star, swap the star
                 if(gameBoard[x1][y1]->getGraphImage() != gameBoard[x2][y2]->getGraphImage())
                     graphSwap(x1, y1, x2, y2);
             }
@@ -1445,9 +1426,7 @@ void MainWindow::verticalFlip() {
                 tempColor = gameBoard[x1][y1]->getColor();
                 gameBoard[x1][y1]->setColor( gameBoard[x2][y2]->getColor(), colorPtr->getQColor(gameBoard[x2][y2]->getColor()) );
                 gameBoard[x2][y2]->setColor(tempColor, colorPtr->getQColor(tempColor));
-
-                //rectArray[gameBoard[x1][y1]->getCoordX()][gameBoard[x1][y1]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x1][y1]->getColor()), Qt::SolidPattern));
-                //rectArray[gameBoard[x2][y2]->getCoordX()][gameBoard[x2][y2]->getCoordY()]->setBrush(QBrush(colorPtr->getQColor(gameBoard[x2][y2]->getColor()), Qt::SolidPattern));
+                //if only one block has a star, swap the star
                 if(gameBoard[x1][y1]->getGraphImage() != gameBoard[x2][y2]->getGraphImage())
                     graphSwap(x1, y1, x2, y2);
             }
@@ -1777,10 +1756,6 @@ void MainWindow::timeSlot(){
     Timefill->setMaximumWidth(Timefill->maximumWidth()-(Timeclock->width()/150));
 }
 
-//void MainWindow::blockTimerSlot(){
-    //blockTimerCounter++;
-//}
-
 /**
  * @author Mike Son
  * @brief MainWindow::btimeOver
@@ -1810,29 +1785,6 @@ void MainWindow::timeOver(){
  */
 void MainWindow::timeBegin(){
     timer->start();
-}
-
-/**
- * @author Daniel Keasler
- * @author Mike Son
- * @author Shannon Harwick
- * @brief MainWindow::startGame destroys and creates a new board. Also restarts the timers.
- * @return void
- */
-void MainWindow::startGame(){
-    //delete and null all previous block pointers
-    removeBlocks();
-    //create new block pointers
-    setupBlocks();
-    //reset and start timers
-    bombFill->setMaximumWidth(0);
-    gamedone = false;
-    bcurrentTime=0;
-    btimer->start(333.333);
-    Timefill->setMaximumWidth(Timeclock->width());
-    currentTime = 60;
-    //reset score label
-    scoreLabel->setText("Score: x1");
 }
 
 /**
@@ -1948,10 +1900,10 @@ void MainWindow::removeBlocks(){
                 //if there is a star at this block, remove it from scene
                 if(gameBoard[i][j]->textPtr != 0)
                     theScene->removeItem(gameBoard[i][j]->textPtr);
-                //delete memory allocation of star
-                gameBoard[i][j]->removeGraphObject(true);
                 //remove block from the scene
                 theScene->removeItem(gameBoard[i][j]);
+                //delete memory allocation of star
+                gameBoard[i][j]->removeGraphObject(true);
                 //delete and null block
                 delete gameBoard[i][j];
                 gameBoard[i][j] = 0;
@@ -1961,6 +1913,29 @@ void MainWindow::removeBlocks(){
     else
         //start is true for each game after first
         start = true;
+}
+
+/**
+ * @author Daniel Keasler
+ * @author Mike Son
+ * @author Shannon Harwick
+ * @brief MainWindow::startGame destroys and creates a new board. Also restarts the timers.
+ * @return void
+ */
+void MainWindow::startGame(){
+    //delete and null all previous block pointers
+    removeBlocks();
+    //create new block pointers
+    setupBlocks();
+    //reset and start timers
+    bombFill->setMaximumWidth(0);
+    gamedone = false;
+    bcurrentTime=0;
+    btimer->start(333.333);
+    Timefill->setMaximumWidth(Timeclock->width());
+    currentTime = 60;
+    //reset score label
+    scoreLabel->setText("Score: x1");
 }
 
 // End mainwindow_UI.cpp

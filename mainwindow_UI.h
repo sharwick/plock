@@ -125,11 +125,6 @@ private:
     void processProgress();
     void generateGraphicObject(int, int);
     void removeBlocks();
-
-    //vector<GraphObject> scoringObjects; //NYI
-
-    //QTimer *blockTimer;
-    //int blockTimerCounter;
 	
 protected:
     void mousePressEvent(QMouseEvent *event);
@@ -165,10 +160,6 @@ private slots:
    void quitRejected();
    void quitRejectedGameOver();
    void quit();
-
-   //void blockTimerSlot();
-
-
 };
 
 #endif // MAINWINDOW_H
