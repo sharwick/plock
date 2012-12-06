@@ -832,7 +832,10 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
 
 
 /**
+ * @author Mike Son
  * @brief MainWindow::updateBomb
+ * @description : updating the bomb bar. whenever mouse is pressed, depending on how many blocks are eliminated, check,
+ *          calculate, and update the bomb bar
  * @param nBlocks
  */
 void MainWindow::updateBomb(int nBlocks){
@@ -858,7 +861,10 @@ void MainWindow::updateBomb(int nBlocks){
 }
 
 /**
+ * @author Mike Son
  * @brief MainWindow::updateProgress
+ * @description : update of the time bar for survival mode. when the blocks are eliminated, update the progress bar,
+ *                and check, calculate, update the progress, move on to next level.
  * @param nBlocks
  */
 void MainWindow::updateProgress(int nBlocks){
@@ -1702,7 +1708,9 @@ void MainWindow::determineColor(vector<Block*> blockVector)
 
 
 /**
+ * @author Mike Son
  * @brief MainWindow::gtimeSlot
+ * @description: a slot for automatic process to next level
  */
 void MainWindow::gtimeSlot(){
 k++;
@@ -1717,7 +1725,9 @@ if(gCount==-1){
 
 
 /**
+ * @author Mike Son
  * @brief MainWindow::bombtimeSlot
+ * @description: a slot for bomb bar in any kind of mode of the game.
  */
 void MainWindow::bombtimeSlot(){
 y++;
@@ -1732,7 +1742,9 @@ bombFill->setMaximumWidth(bombFill->maximumWidth()-(bombLayer->width()/120));
 }
 
 /**
+ * @author Mike Son
  * @brief MainWindow::timeSlot
+ * @description: a slot for timer and also used for a progress bar in survival mode
  */
 void MainWindow::timeSlot(){
     x++;
@@ -1770,6 +1782,7 @@ void MainWindow::timeSlot(){
 //}
 
 /**
+ * @author Mike Son
  * @brief MainWindow::btimeOver
  */
 void MainWindow::btimeOver(){
@@ -1777,6 +1790,7 @@ void MainWindow::btimeOver(){
 }
 
 /**
+ * @author Mike Son
  * @brief MainWindow::btimeBegin
  */
 void MainWindow::btimeBegin(){
@@ -1784,12 +1798,14 @@ void MainWindow::btimeBegin(){
 }
 
 /**
+ * @author Mike Son
  * @brief MainWindow::timeOver
  */
 void MainWindow::timeOver(){
     timer->stop();
 }
 /**
+ * @author Mike Son
  * @brief MainWindow::timeBegin
  */
 void MainWindow::timeBegin(){
