@@ -1,13 +1,13 @@
-/**@author Devin Rusnak
- * @copyright Blockstar 2012
- * @class HighScores highScores.h "highScores.h"
- * @brief This is a class used to read & write high scores from the game to a file for record.
- * @bug High Scores are not read from the file correctly.
+/** @author Devin Rusnak
+ *  @copyright Blockstar 2012
+ *  @class HighScores highScores.h "highScores.h"
+ *  @brief This is a class used to read & write high scores from the game to a file for record.
+ *  @bug High Scores are not read from the file correctly.
  *
- * The high scores from the game are stored in a .txt file that is read and wrote to.
+ * The high scores from the game are stored in a text file that is read and wrote to.
  * The top five scores from each mode is read & wrote to in a specific order to maintain simplicity
  * in the file format. The high scores from each game mode are held in seperate arrays of integers.
- * These scores are used by the score labels in mainwindow_UI to display the scores to the user.
+ * The QLabels that display the scores in mainwindow_UI.cpp are stored here to make updating them easy.
  */
 
 #include "highScores.h"
@@ -15,7 +15,8 @@
 /**
  * @brief HighScores::HighScores
  *
- * The default and only constructor. It initalizes the QLabels the scores are displayed with.
+ * The default and only constructor. It initalizes the QLabels the scores are displayed with
+ * then calls to read in the inital scores.
  */
 HighScores::HighScores()
 {
@@ -32,7 +33,7 @@ HighScores::HighScores()
 /**
  * @brief HighScores::~HighScores
  *
- * The Destructor
+ * The Destructor, deletes everything created with "new."
  */
 HighScores::~HighScores(){
     for(int index = 0; index < 5; index++){
@@ -49,9 +50,9 @@ HighScores::~HighScores(){
  *
  * Opens the file highscores.txt and reads in its contents. It is formated as a
  * fifteen line text file where each line is a numerical score. The first five lines are the
- * standard game mode scores. The next five lines are the survival mode high scores, and the
- * last five are the endless mode high scores. If the file doesn't have enough lines to fill
- * out the high scores then the rest of the scores are set to zero.
+ * standard game mode scores. The next five lines are the survival mode high scores with their
+ * level reached too, and the last five are the endless mode high scores. If the file doesn't
+ * have enough lines to fill out the high scores then the rest of the scores are set to zero.
  */
 void HighScores::readInHighScores(){
 
@@ -137,10 +138,14 @@ void HighScores::writeHighScores(){
 
 /**
  * @brief HighScores::addHighScore
- * @param score The score that is sorted into the proper array.
+ * @param type Game Mode
+ * @param score Player's score
+ * @param level Level reached for Survival
+ * @return If the score was a new high score or not (1 or 0)
  *
  * Given the string and the int sent to the method, it will sort
  * the score into the arrays of the top scores of the mode specified.
+ * For survival mode the level reached is also given.
  */
 int HighScores::addHighScore(QString type, int score, int level){
     int tempScore = 0, tempScore2 = 0, index = 0,
@@ -149,6 +154,7 @@ int HighScores::addHighScore(QString type, int score, int level){
     if(type == "standard"){
         while(index < 5){
             if(score >= standardInts[index]){
+                // New high score
                 tempScore = standardInts[index];
                 standardInts[index] = score;
                 rtn = 1;
@@ -168,9 +174,9 @@ int HighScores::addHighScore(QString type, int score, int level){
         }
     }
     else if(type == "survival"){
-       QString tempString("");
         while(index < 5){
             if(score >= survivalInts[index]){
+                // New high score
                 tempScore = survivalInts[index];
                 tempLevel = survivalLevels[index];
                 survivalInts[index] = score;
@@ -197,6 +203,7 @@ int HighScores::addHighScore(QString type, int score, int level){
     else if(type == "endless"){
         while(index < 5){
             if(score >= endlessInts[index]){
+                // New high score
                 tempScore = endlessInts[index];
                 endlessInts[index] = score;
                 rtn = 1;

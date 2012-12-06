@@ -2,6 +2,7 @@
  * @author Daniel Keasler
  * @author Devin Rusnak
  * @copyright Blockstar
+ * @class block block.h "block.h"
  * @brief Underlying data structures and algorithms for game play.
  * @description The Block class contains integers and a series of "adjacent" pointers for easy comparisons used in the game play algorithms
  */
@@ -10,12 +11,12 @@
 
 using namespace std;
 /**
- * @brief Block::Block
+ * @brief Block::Block Constructor assigns adjacent pointers to 0, bools to false, params to Coords,
+ *          graph image to 0, creates a new textPtr, and sends color to setColor
  * @param xSpot int X Coordinate on game board, also array index
  * @param ySpot int Y Coordinate on game board, also array index
  * @param colorChoice Array Index of QColor in Colors.cpp, also used for adjacent color comparisons
- * @brief Constructor assigns adjacent pointers to 0, bools to false, params to Coords,
- *          graph image to 0, creates a new textPtr, and sends color to setColor
+ * @param colorChosen QColor returned from getQColor
  */
 Block::Block(int xSpot, int ySpot, int colorChoice, QColor colorChosen){
     rightBlockPtr = 0;
@@ -144,9 +145,8 @@ bool Block::getColoredBool(){
 }
 /**
  * @author Daniel Keasler
- * @brief Block::setMarkedBool
- * @param val
- * @description set to true once particular block is collected for scoring, set to false after all proper blocks have been collected
+ * @brief Block::setMarkedBool set to true once particular block is collected for scoring, set to false after all proper blocks have been collected
+ * @param val bool
  * @return void
  */
 void Block::setMarkedBool(bool val){
@@ -154,9 +154,8 @@ void Block::setMarkedBool(bool val){
 }
 /**
  * @author Daniel Keasler
- * @brief Block::setColoredBool
- * @param val
- * @description set to true once particular block needs a color change, set to false after this block has been recolored
+ * @brief Block::setColoredBool set to true once particular block needs a color change, set to false after this block has been recolored
+ * @param val bool
  * @return void
  */
 void Block::setColoredBool(bool val){
@@ -184,7 +183,8 @@ int Block::getCoordY(){
  * @author Daniel Keasler
  * @brief Block::foundMatch - detects if adjacent block matches color
  * @return bool
- * @description Mouse event will call this function on clicked block, will return true if any adjacent pointer has an equivalent color value
+ * @description ;
+ *Mouse event will call this function on clicked block, will return true if any adjacent pointer has an equivalent color value
  */
 bool Block::foundMatch(){
     if(upBlockPtr != 0 && upBlockPtr->getColor() == getColor())
@@ -203,7 +203,8 @@ bool Block::foundMatch(){
  * @brief Block::gatherBlocks - recursive function collecting matching adjacent blocks
  * @param blockVector
  * @return vector<Block*>
- * @description First three lines for algorithm use (is marked, needs color change, block is added to vector),
+ * @description ;
+ *First three lines for algorithm use (is marked, needs color change, block is added to vector),
  *  then if neighbor exists, is not marked, and has same color, recursion expands to that block
  */
 vector<Block*> Block::gatherBlocks(vector<Block*> blockVector){
@@ -249,7 +250,8 @@ void Block::setGraphImage(int _graphImage){
  * @param blockVector
  * @return vector<Block*>
  * @note Not used in current game
- * @description would return collection of all down pointers from calling block in vector
+ * @description ;
+ *would return collection of all down pointers from calling block in vector
  */
 vector<Block*> Block::downCollector(vector<Block*> blockVector){
     if(!getMarkedBool())
@@ -268,7 +270,8 @@ vector<Block*> Block::downCollector(vector<Block*> blockVector){
  * @param blockVector
  * @return vector<Block*>
  * @note Not used in current game
- * @description would return collection of all right pointers from calling block in vector
+ * @description ;
+ *would return collection of all right pointers from calling block in vector
  */
 vector<Block*> Block::rightCollector(vector<Block*> blockVector){
     if(!getMarkedBool())
@@ -287,7 +290,8 @@ vector<Block*> Block::rightCollector(vector<Block*> blockVector){
  * @param blockVector
  * @return vector<Block*>
  * @note Not used in current game
- * @description would return collection of all up pointers from calling block in vector
+ * @description ;
+ *would return collection of all up pointers from calling block in vector
  */
 vector<Block*> Block::upCollector(vector<Block*> blockVector){
     if(!getMarkedBool())
@@ -306,7 +310,8 @@ vector<Block*> Block::upCollector(vector<Block*> blockVector){
  * @param blockVector
  * @return vector<Block*>
  * @note Not used in current game
- * @description would return collection of all left pointers from calling block in vector
+ * @description ;
+ *would return collection of all left pointers from calling block in vector
  */
 vector<Block*> Block::leftCollector(vector<Block*> blockVector){
     if(!getMarkedBool())
