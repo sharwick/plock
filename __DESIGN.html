@@ -253,24 +253,45 @@ bar just disappearing every second. So rather, I would set it to call the time s
 I would decrease the time bar every 250 nano second which will have the time bar working more smoothly. int variable 'currentTime' 
 was used to keep track of the timebar more accurately. More specification provided below in BombBar.</p>
 <p><i>BombBar</i></p>
-<p>Functioning mostly the same as TimeBar. Using the bomb time slot, bombbar will be updated to decrease every second, 
+<p>Functioning mostly the same as TimeBar. Using the bomb time slot, Bombbar will be updated to decrease every second, 
 also getting filled up whenever the blocks are eliminated. Bombbar will be activated as soon as the game starts. 
 Whenever there is a mouse click event, the method 'updateBomb' with the parameter of 'nBlocks' will be used 
-to update the bombbar. Depending on how many blocks are removed at once, amount of the fill to the bombbar will 
-be calculated using the parameter 'nBlocks', and will update the bombbar. Whenever 'updateBomb' is called, it 
-will check the bombbar's status: if bombbar is empty or not, or if bombbar is filled all the way up. If the 
-bombbar is filled again out of emptiness, then it needs to be reactivated, and when the bombbar is filled all the 
+to update the Bombbar. Depending on how many blocks are removed at once, amount of the fill to the Bombbar will 
+be calculated using the parameter 'nBlocks', and will update the Bombbar. Whenever 'updateBomb' is called, it 
+will check the Bombbar's status: if Bombbar is empty or not, or if Bombbar is filled all the way up. If the 
+Bombbar is filled again out of emptiness, then it needs to be reactivated, and when the Bombbar is filled all the 
 way up, then a bomb is to be generated. Bombbar also uses an int variable called 'bcurrentTime' to check the current 
-state of the bombbar more accurately. 'bcurrentTime' is basically a time counter for the bombbar, keeping track of 
+state of the Bombbar more accurately. 'bcurrentTime' is basically a time counter for the Bombbar, keeping track of 
 how many seconds are left for the bar to be empty. This int variable will be decreased in terms of seconds when 
-the bombbar itself is updated to decrease, and vice versa. This making changes to int variable required quite a precise calculation, 
-trying to make bombbar work more smoothly, at the same time, we needed this so that the function does not call 
-the method to decrease the bombbar and cause the error message of 'cannot go negative' when it is empty.</p>
+the Bombbar itself is updated to decrease, and vice versa. This making changes to int variable required quite a precise calculation, 
+trying to make Bombbar work more smoothly, at the same time, we needed this so that the function does not call 
+the method to decrease the Bombbar and cause the error message of 'cannot go negative' when it is empty.</p>
 <p><i>ProgressBar</i></p>
 <p>Progressbar is just a different label for Timebar used in Survival Mode, with slightly added functionality. Progressbar uses same 
 technique as Bombbar to check if the bar is empty or filled up all the way. If the bar is filled up all the way, then 
 the game will proceed to next level; if the bar is empty, it will end the game.</p>
-<p>There were some issues concerning 'QTimer' and 'QLabel'. 
+
+<p><i>Issues</i></p>
+<p>There were some issues concerning 'QTimer' and 'QLabel'. </p>
+<p>For leveling feature for the Survival Mode, I needed 
+to implement the Progressbar to work faster as the player surpass each level. Problem came from this. Our goal was 
+to have the Progressbar working properly in high level with appropriate difficulty, at the same time, smoothly. This 
+was a little hard to manage in the beginning because I got into problem with QLabel at first. How QLabels are used 
+to work as a Timebar was that each QLabels were given initially the width and its maximum width. To fit the Timebar 
+inside the smartphone screen, there first came the limit of how big of a width the QLabel could have. I am decreasing 
+the maximum width of the QLabel used for filling of the Timebar to show the timer progress. First of all, I can only 
+decrease the width only by whole number, which means that the smallest value of decrement of width is 1. This became an 
+issue when it came to implementing a Progressbar for higher level in Survival Mode. The Progress Bar needs to be 
+decreasing faster with smoothness in higher level. If I only tried to increase the decrement of the width to make it decrease 
+faster, it does not look as smooth as it used to be, and this is where the QTimer implementation comes in.</p>
+<p>I started implementing QTimer to help QLabel issue, and my solution was to call the time slot more frequently rather 
+than increasing the amount of decrement of the width. This solved the problem until when the player reaches the level higher 
+than 8 in the Survival Mode. I was to use nanosecond unit to set the frequency of calling the time slot, and this also had 
+a limit of not being able to use integers but whole numbers. When the player reaches high level and the int variable used for 
+applying nanoseconds to the timer reaches 1, there was no progress in terms of the Progressbar decreasing faster. So I had no 
+choice but to increase the decrement of the width, even if the smoothness could not be perfect. But to take care of this, I 
+just increase the level of the Survival Mode, and so far it is pretty hard to beat level 10 of the Survival Mode, so it is 
+working pretty fine for now. </p>
 
 
 
