@@ -1759,6 +1759,7 @@ void MainWindow::timeSlot(){
 /**
  * @author Mike Son
  * @brief MainWindow::btimeOver
+ * @description : Bome timer Stops
  */
 void MainWindow::btimeOver(){
     btimer->stop();
@@ -1767,6 +1768,7 @@ void MainWindow::btimeOver(){
 /**
  * @author Mike Son
  * @brief MainWindow::btimeBegin
+ * @description : Bomb Timer Starts
  */
 void MainWindow::btimeBegin(){
     btimer->start();
@@ -1775,6 +1777,7 @@ void MainWindow::btimeBegin(){
 /**
  * @author Mike Son
  * @brief MainWindow::timeOver
+ * @description : Timer Stops
  */
 void MainWindow::timeOver(){
     timer->stop();
@@ -1782,6 +1785,7 @@ void MainWindow::timeOver(){
 /**
  * @author Mike Son
  * @brief MainWindow::timeBegin
+ * @description : Timer Starts
  */
 void MainWindow::timeBegin(){
     timer->start();
