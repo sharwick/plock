@@ -55,9 +55,10 @@ void Block::setTextItem(QGraphicsSimpleTextItem *paramBomb){
 /**
  * @author Daniel Keasler
  * @brief Block::removeGraphObject sets graph image and nulls / deletes pointer
+ * @param endGame
  * @return void
  */
-void Block::removeGraphObject(){
+void Block::removeGraphObject(bool endGame){
     setGraphImage(0);
     //if not null, null and delete it
     if(textPtr != 0){

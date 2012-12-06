@@ -39,7 +39,7 @@ public:
 
     QGraphicsSimpleTextItem* textPtr;
     void setTextItem(QGraphicsSimpleTextItem*);
-    void removeGraphObject();
+    void removeGraphObject(bool);
 
 private:
     bool markedBool;
