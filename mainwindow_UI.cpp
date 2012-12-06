@@ -36,6 +36,98 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+
+    // Delete Game Board Objects
+    delete colorPtr;
+    delete btimer;
+    delete timer;
+    delete bombLabel;
+    delete scoreLabel;
+    delete timeLabel;
+    delete progressLabel;
+    delete sframe;
+    delete menuButton;
+    delete shuffleButton;
+    delete rotateButton;
+    delete horizontalFlipButton;
+    delete theScene;
+    delete blockView;
+    delete Timeclock;
+    delete Timefill;
+    delete bombLayer;
+    delete bombFill;
+
+    // Delete Menu Objects
+    delete gtimer;
+    delete grid;
+    delete mainMenu;
+    delete mainMenuLayout;
+    delete titleLabel;
+    delete newGameButton;
+    delete highScoreButton;
+    delete settingsButton;
+    delete helpButton;
+    delete quitButton;
+    delete gameModeMenu;
+    delete modeMenuLayout;
+    delete gameModeTitle;
+    delete standardModeButton;
+    delete survivalModeButton;
+    delete endlessModeButton;
+    delete backToMenu;
+    delete startScreen;
+    delete startLayout;
+    delete pressScreenLabel;
+    delete highScoreMenu;
+    delete highScoreLayout;
+    delete highScoresLabel;
+    delete standardLabel;
+    delete survivalLabel;
+    delete endlessLabel;
+    delete backToMenu4;
+    delete settingsMenu;
+    delete settingsLayout;
+    delete settingsTitle;
+    delete backToMenu2;
+    delete colorSlider;
+    delete colorSchemeLabel;
+    delete helpMenu;
+    delete helpMenuLayout;
+    delete aboutLabel;
+    delete helpText;
+    delete backToMenu3;
+    delete pauseMenu;
+    delete pauseMenuLayout;
+    delete pauseLabel;
+    delete pauseRejected;
+    delete pauseHighScore;
+    delete pauseSettings;
+    delete pauseAccept;
+    delete confirmMenu;
+    delete confirmLayout;
+    delete quitLabel;
+    delete confirmAcceptButton;
+    delete confirmRejectButton;
+    delete gameOverMenu;
+    delete gameOverLayout;
+    delete scorePtr;
+    delete newHighScore;
+    delete theHighScores;
+    delete finalScoreLabel;
+    delete tempScore;
+    delete finalLevelLabel;
+    delete tempLevel;
+    delete gameOverHighScore;
+    delete gameOverRestart;
+    delete gameOverToMenu;
+    delete levelClear;
+    delete levelClearLayout;
+    delete levelClearLabel;
+    delete levelNext;
+
+    // Delete Blocks
+    removeBlocks();
+
 }
 
 /**********************

@@ -6,10 +6,9 @@
  *
  * The high scores from the game are stored in a .txt file that is read and wrote to.
  * The top five scores from each mode is read & wrote to in a specific order to maintain simplicity
- * in the file format.
- * The high scores from each game mode are held in seperate arrays of integers.
- * These scores are used by the score# labels in mainwindow_UI to display the scores to the user.
-*/
+ * in the file format. The high scores from each game mode are held in seperate arrays of integers.
+ * These scores are used by the score labels in mainwindow_UI to display the scores to the user.
+ */
 
 #include "highScores.h"
 
@@ -182,6 +181,7 @@ int HighScores::addHighScore(QString type, int score, int level){
             }
             index++;
         }
+        // Move other scores down
         while(index < 5){
             if(tempScore >= survivalInts[index]){
                 tempScore2 = survivalInts[index];
@@ -205,6 +205,7 @@ int HighScores::addHighScore(QString type, int score, int level){
             }
             index++;
         }
+        // Move other scores down
         while(index < 5){
             if(tempScore >= endlessInts[index]){
                 tempScore2 = endlessInts[index];
@@ -214,6 +215,7 @@ int HighScores::addHighScore(QString type, int score, int level){
             index++;
         }
     }
+    // Return 1 if new high score, else 0.
     return rtn;
 }
 
@@ -248,8 +250,8 @@ void HighScores::loadHighScores(){
 /**
  * @brief HighScores::getLabel
  * @param type Game Mode
- * @param index Score Index
- * @return Label for the score of the Game Mode given at the index given.
+ * @param index Score Array Index
+ * @return Label for the score of the Game Mode given, at the index given.
  *
  * Returns a pointer to the QLabel that displays the score of the game mode
  * given at the index given.

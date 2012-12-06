@@ -186,16 +186,31 @@ if the menu had to be, say 80% of the horizontal and 60% of the vertical.
 </p>
 
 <i>The Game Board</i>
-<p>The game board is the main feature of the user interface. It is essentially the entire game, everything else just allows the user to get the game board setup or has some other axillary function. The game board itself is a QGraphicsView with a QGraphicsScene, which allows the blocks (QGrapicsRectItem) to be displayed. The original idea was to have the blocks "fall" down as the ones below are cleared and this implementation would support that. We also wanted to have the ability to rotate the phone and have the blocks dropping down from the new "top" of the board. These two features didn't end up getting implemented due to time constraints, but the structure is there to support them. Another reason for using QGraphicsItems was so that we could display our different bombs on them. This proved to be much more difficult than orginally thought and used up a fair amount of time. Thus we only have one bomb that is a unicode star. The score frame is a custom object that both updates and displays the score nicely. The bomb and time bars are stacked colored QLabels that are updated to reflect the time remaining or bomb amount gained. The buttons at the bottom of the screen rotates, flips, or shuffles the board, or brings up the pause menu. Due to issues with the QGridLayout it was difficult to get the game board in the layout and have the buttons positioned nicely below it. Thus they are not placed in the layout but are placed based on the know sizes of the items above them and the screen size.
+<ul> <i><a href="../code/mainwindow_UI.cpp">Click here for code.</a></i>
+<br>Search for the following terms to find relevant section of code:
+<li>"MainWindow::setupWindows"</li>
+<li>"MainWindow::mousePressEvent"</li>
+</ul>
+<p>The game board is the main feature of the user interface. It is essentially the entire game, everything else just allows the user to get the game board setup or has some other axillary function. The game board itself is a QGraphicsView with a QGraphicsScene, which allows the blocks (QGrapicsRectItem) to be displayed. The original idea was to have the blocks "fall" down as the ones below are cleared and this implementation would support that. We also wanted to have the ability to rotate the phone and have the blocks dropping down from the new "top" of the board. These two features didn't end up getting implemented due to time constraints, but the structure is there to support them. Another reason for using QGraphicsItems was so that we could display our different bombs on them. This proved to be much more difficult than orginally thought and used up a fair amount of time. Thus we only have one bomb that is a unicode star. The score frame is a custom object that both updates and displays the score nicely. The bomb and time bars are stacked colored QLabels that are updated to reflect the time remaining or bomb amount gained. Both of these items will be discussed later by their authors. The buttons at the bottom of the screen rotates, flips, or shuffles the board, or brings up the pause menu. Due to issues with the QGridLayout it was difficult to get the game board in the layout and have the buttons positioned nicely below it. Thus they are not placed in the layout but are placed based on the know sizes of the items above them and the screen size.
 <br></br>
-When the user clicks on a block the mousePressEvent is triggered and propagated. When the first click occurs they block that is clicked calls grabMouse() which allows the event to be propagated to its parent, which is the centralWidget. The centralWidget's parent is the mainwindow class and the event gets past to it. In the mainwindow_UI the mousePressEvent is overwritten and get the (x,y) position of the mouse event. All it takes is some simple math to figure out the array coordinates for the block pressed. That block's function to check for matches is called and if it finds one, processMatch is called with the block clicked as a parameter.
+When the user clicks on a block the mousePressEvent is triggered and propagated. When the first click occurs they block that is clicked calls grabMouse() which allows the event to be propagated to its parent, which is the centralWidget. The centralWidget's parent is the mainwindow class and the event gets past to it. After the first click each new click causes the new block to be the mouse grabber and the last one automatically calls ungrabMouse(). In mainwindow_UI the mousePressEvent(event) is overwritten. It recieves the (x,y) coordinates of the last widget to recieve the event, which is the centralWidget. Then to find the X coordinate for the blockArray, all that needs to be done is to divide the xPos from the event by the blockSize. For the Y coordinate it takes a little more calculation. First a QPoint is created and set to the position of the QGraphicsView. By calling point.y(), the origin Y coordinate is obtained. Then this value is subtracted from the yPos obtained from the mouse event. This gives the Y coordinate relative to the QGraphicsView, once divided by the blockSize, the Y coordinate for the block array is known. Then the obtained coordinates get a block from the array and it's function to check for matches is called. If it finds one processMatch is called with the block clicked as a parameter.
 </p>
 
 <i>Game Modes</i> 
+<ul> <i><a href="../code/mainwindow_UI.cpp">Click here for code.</a></i>
+<br>Search for the following slots to find relevant section of code:
+<li>"MainWindow::standardMode"</li>
+<li>"MainWindow::survivalMode"</li>
+<li>"MainWindow::endlessMode"</li>
+</ul>
 <p>For the different game modes certain interface features need to be changed. Standard Mode is the base mode and has all the items visible. When in Survival Mode the timer bar becomes the progress bar and its label is changed accordingly. It starts with it displaying the bar half full and the user loses once it gets to zero. When the user fills the progress bar completely the level complete menu is displayed which informs the user which level they have completed. For Endless Mode the progress bar and label are simply hidden and the user gets to play forever, which is not possible so we capped the score at one hundred million points. A kill screen was thought of to go here in true arcade fashion, but as it is <i>Endless Mode</i> the user can still play past this point, the score is just no longer updated. This score cap also applies to Survival Mode but would be very difficult to achieve, and is simply impossible to achieve in sixty seconds for Standard Mode.
 </p>
 
 <i>The Menus</i>
+<ul> <i><a href="../code/mainwindow_UI.cpp">Click here for code.</a></i>
+<br>Search for the following terms to find relevant section of code:
+<li>"MainWindow::setupGameScreen"</li>
+</ul>
 <p>The menus act as the main state control mechanism when the user is not currently playing a game. The menus can be thought of as existing on 
 two different layers. The bottom layer is the defualt centralWidget which the game board is placed. The rest of the menus can be thought to exist on a top layer over the game board. The menus are QGroupBoxes which fill the screen and are displayed over the base layer. The menus are:
 <ul> 
@@ -384,6 +399,10 @@ score board back to 0.
 
 <h3>High Scores</h3>
 <b>Primary author: Devin Rusnak</b>
+<br></br>
+<img src="./UML Diagrams/highScores.jpg" alt="High Score Object">
+<br></br>
+<i><a href="../code/highScores.cpp">Click here for code.</a></i>
 <br></br>
 <i>Implementation</i>
 <p>As this is an arcade game a high score list is a must have feature. The HighScores object does four things:

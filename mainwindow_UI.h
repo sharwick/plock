@@ -59,7 +59,6 @@ private:
     QGraphicsScene *theScene;
     QGraphicsView *blockView;
     QGraphicsRectItem *tempBlock;
-//    QProgressBar *bombBar, *timeBar;
     QPushButton *menuButton,*shuffleButton, *rotateButton, *horizontalFlipButton,  *newGameButton, *settingsButton,
     *helpButton, *backToMenu, *backToMenu2, *backToMenu3, *backToMenu4, *standardModeButton, *highScoreButton,
     *pauseAccept, *pauseRejected, *pauseSettings, *pauseHighScore, *endlessModeButton, *survivalModeButton, *gameOverToMenu, *gameOverRestart,
@@ -71,7 +70,6 @@ private:
     QTextBrowser *helpText, *highScoreText;
     QSlider *colorSlider;
     QLabel *tempScore, *tempLevel, *newHighScore;
-    //myRectItem* rectArray[8][9];
     QTimer *timer, *btimer, *gtimer;
     QString aboutText, n;
     QFont tempFont;
