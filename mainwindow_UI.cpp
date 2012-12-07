@@ -190,13 +190,13 @@ void MainWindow::showExpanded()
  *  is also the parent of the menu Widgets so they simply appear over
  *  the game board which is always there but not always visable or
  *  interactable. The other windows for the menus and their items
- *  and initialized here.
+ *  ares initialized here.
  *
  */
 void MainWindow::setupWindows(){
 
     start = false;//necessary to avoid segfault in startGame function
-    gamedone = false; ///necessary to avoid asking to quit again when the game is done.
+    gamedone = false; //necessary to avoid asking to quit again when the game is done.
     timerCounter = 200; //timer for survival and hot potato
     gCount=4;
     gtimer = new QTimer(this);
@@ -829,7 +829,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
 /**
  * @author Mike Son
  * @brief MainWindow::updateBomb
- * @description : updating the bomb bar. whenever mouse is pressed, depending on how many blocks are eliminated, check,
+ * @description : updating the bomb bar. whenever blocks are collected, depending on how many blocks are eliminated, check,
  *          calculate, and update the bomb bar
  * @param nBlocks
  */
@@ -1507,7 +1507,7 @@ Start of Block game algorithm functions:
  * @author Mike Son
  * @brief MainWindow::processMatch basic game flow from gathering matched blocks to processing scoring and new colors
  * @description ;
- *gatherBlocks is called from the matchedBlock to collect all matching adjacent blocks.
+ * gatherBlocks is called from the matchedBlock to collect all matching adjacent blocks.
  *      all gathered blocks are checked for stars, more could be added.
  *      all blocks are sorted relative to column height and set to black.
  *      .05 second timer to show noticeable transition.
@@ -1674,7 +1674,7 @@ vector<Block*> MainWindow::sortVector(vector<Block*> blockVector)
  * @author Daniel Keasler
  * @brief MainWindow::determineColor swaps color of blocks upwards from the column of the ith block
  * @description ;
- *checky is a walker variable upwards in the 2D array of blocks. while checky is still
+ * checkY is a walker variable upwards in the 2D array of blocks. while checkY is still
  *      in bounds of the array, the algorithm searches for a block that is not also needing a color change.
  *      The blocks are already sorted based on y so the algorithm will never replace the same blocks color more
  *      than once. If it steals a color from a block, that block that lost its color is put on the end of the vector.
@@ -1933,7 +1933,7 @@ void MainWindow::graphSwap(int firstX, int firstY, int secondX, int secondY){
 
 /**
  * @author Daniel Keasler
- * @brief MainWindow::removeBlocks deletes and nulls everything from the previous game board. start decision to avoid segfaults for the first game.
+ * @brief MainWindow::removeBlocks deletes and nulls everything from the previous game board. first time it is called, no board to null, won't do anything
  * @return void
  */
 void MainWindow::removeBlocks(){

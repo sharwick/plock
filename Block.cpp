@@ -183,7 +183,7 @@ int Block::getCoordY(){
  * @brief Block::foundMatch - detects if adjacent block matches color
  * @return bool
  * @description ;
- *Mouse event will call this function on clicked block, will return true if any adjacent pointer has an equivalent color value
+ * Mouse event will call this function on clicked block, will return true if any adjacent pointer has an equivalent color value
  */
 bool Block::foundMatch(){
     if(upBlockPtr != 0 && upBlockPtr->getColor() == getColor())
