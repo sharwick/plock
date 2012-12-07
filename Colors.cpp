@@ -1,10 +1,8 @@
-/** @author     Shannon Harwick
-  * @brief      A single color class is called which contains a set of color schemes.
+/*  @author     Shannon Harwick
+  * @description A single color class is called which contains a set of color schemes.
   *             Color scheme 0 is the default, but the user is free to change to one of
   *             the other color schemes from within the Settings menu.
-  *
   *             For every color scheme, color 0 is black.  This is the background color for every scheme.
-  *
   *             The currently chosen scheme is the basis for the palette used by the text (in QLabels)
   *             and the QPushButtons.
   */
@@ -13,9 +11,15 @@
 
 #include "Colors.h"
 
-/** @author     Shannon Harwick
+/** @author Shannon Harwick
   * @brief    Creates an instance of the Color class and sets the color scheme to the requested scheme.
-  * @param          The single input parameter is an integer from 0 to 4,
+  * @description A single color class is called which contains a set of color schemes.
+  *             Color scheme 0 is the default, but the user is free to change to one of
+  *             the other color schemes from within the Settings menu.
+  *             For every color scheme, color 0 is black.  This is the background color for every scheme.
+  *             The currently chosen scheme is the basis for the palette used by the text (in QLabels)
+  *             and the QPushButtons.
+  * @param    scheme The single input parameter is an integer from 0 to 4,
   *                 allowing user to choose a different scheme.
   *                 Color scheme 0 (default is not color-blind safe but shows the most variation in block colors)
   *                 All other schemes are color-blind safe and cover a range of different colors.
@@ -28,7 +32,7 @@ Colors::Colors(int scheme) {
 /** @author     Shannon Harwick
   * @brief  This method is called by the constructor.  Each scheme is represented by an integer (ranging from 0 to 4).
   *         The colors are stored in a single colorArray.  Each call to the setScheme() method updates this array.
-  * @param  Input parameter n is an integer from 0 to 4, representing a unique color palette.
+  * @param  n Input parameter n is an integer from 0 to 4, representing a unique color palette.
   * @return Void
   */
 void Colors::setScheme(int n) {
@@ -96,9 +100,8 @@ void Colors::setScheme(int n) {
 }
 
 
-/** @author     Shannon Harwick
+/** @author Shannon Harwick
   * @brief  Determines the current color scheme being used.
-  * @param  No input variable required.
   * @return An integer from 0 to 4, identifying the current color scheme being used.
   */
 int Colors::getScheme() {
@@ -107,9 +110,9 @@ int Colors::getScheme() {
 
 
 
-/** @author     Shannon Harwick
-  * @brief  This method takes an integer from 0 to 6 and obtains the relevant QColor of that index in the array of QColors defined by setScheme().
-  * @param  Input parameter index is an integer from 0 to 6.  It identifies an index of the colorArray.
+/** @author Shannon Harwick
+  * @brief This method takes an integer from 0 to 6 and obtains the relevant QColor of that index in the array of QColors defined by setScheme().
+  * @param index Input parameter index is an integer from 0 to 6.  It identifies an index of the colorArray.
   * @return QColor
   */
 QColor Colors::getQColor(int index){
