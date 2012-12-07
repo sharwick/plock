@@ -44,8 +44,8 @@ void Block::mouseMoveEvent(QGraphicsSceneMouseEvent *){
 }
 /**
  * @author Daniel Keasler
- * @brief Block::setTextItem sets graph image and assigns pointer reference to textPtr
- * @param paramBomb
+ * @brief Block::setTextItem sets graph image to 2 and assigns pointer reference to textPtr
+ * @param paramBomb star object generated from mainwindow
  * @return void
  */
 void Block::setTextItem(QGraphicsSimpleTextItem* paramBomb){
@@ -54,7 +54,7 @@ void Block::setTextItem(QGraphicsSimpleTextItem* paramBomb){
 }
 /**
  * @author Daniel Keasler
- * @brief Block::removeGraphObject sets graph image and nulls / deletes pointer
+ * @brief Block::removeGraphObject sets graph image to 0 and nulls / deletes pointer
  * @param endGame
  * @return void
  */
@@ -200,10 +200,10 @@ bool Block::foundMatch(){
 /**
  * @author Daniel Keasler
  * @brief Block::gatherBlocks - recursive function collecting matching adjacent blocks
- * @param blockVector
+ * @param blockVector vector<Block*> that will contain all matching and adjacent blocks after recursion unwinds
  * @return vector<Block*>
  * @description ;
- *First three lines for algorithm use (is marked, needs color change, block is added to vector),
+ * First three lines for algorithm use (is marked, needs color change, block is added to vector),
  *  then if neighbor exists, is not marked, and has same color, recursion expands to that block
  */
 vector<Block*> Block::gatherBlocks(vector<Block*> blockVector){

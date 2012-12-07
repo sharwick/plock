@@ -1,7 +1,4 @@
 /** @author     Shannon Harwick
-  * @note       Note that this class is not operational yet because
-  *             it can't be instantiated in the mainWindow and called
-  *             in the Block class without restructuring the data.
   */
 
 
