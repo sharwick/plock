@@ -81,6 +81,9 @@ dynamically allocates and randomly generates a new board. </p>
 properly register graphics scene mouse events. This also officially starts the game timer and enables
 interaction with Blocks. All game play events are executed from MainWindow_UI.cpp unless stated otherwise. </p>
 
+<br>
+<img src="./UML Diagrams/processMatch.jpg" alt="processMatch">
+<br>
 <p>Every mouse event after the first has the same process. The game 
 board mouse events are temporarily frozen to process 1 match at a time. The x and y of the event 
 are obtained, which is then used to obtain a Block in the two dimensional array of objects. The code to then check for an initial match was placed in the Block class because the 
@@ -89,25 +92,31 @@ long MainWindow class. FoundMatch checks that Block objects neighboring Blocks f
 value and returns true if it finds one. If it returns true, then processMatch is called and the obtained block is sent as a parameter. 
 The next mouse event still cannot start until after the mouse press event function returns to its caller, so if processMatch is called, 
 mouse press events in the graphics scene will be disabled while processMatch is being executed.</p>
-
+<br>
+<img src="./UML Diagrams/gatherBlocks.jpg" alt="gatherBlocks">
+<br>
 <p>The first thing that happens in processMatch is all of the adjacent and matching blocks are gathered. 
 gatherBlocks takes in a vector<Block*> and continuously expands through recursion as long as the pointer
 reference exists and the color integer value matches. This is a recursive function in the Block Class because the array 
 index access function would have been messier and it allows for more code to be placed outside the 
 applications long main window. markedBool is necessary to avoid endless recursion amongst different directional
 accesses of the same Block object. </p>
-
+<br>
+<img src="./UML Diagrams/checkSpecial.jpg" alt="checkSpecial">
+<br>
 <p>Each of the current matching and adjacent blocks are now checked for a star in the checkSpecial function.
 Using the gathered blocks from the previous step, if any Block objects graph image is not 0, a number of
 bookkeeping statements are executed in addition to calling bombCollector to gather blocks from a bomb
 explosion. Because the explosion (collection) is a 3x3 subset of the two dimensional array of blocks centered at the 
 star block, array accesses were the cleanest choice. </p>
-
+<br>
+<img src="./UML Diagrams/sortVector.jpg" alt="sortVector">
+<br>
 <p>Now the blocks are sorted relatively in each column. Assuming similar x values, no 
 Block further down the vector will have a lower y value. Sorting was not optimal
 and very likely not necessary, but the implementation of sorting worked properly with
-the rest of the algorithms. With more time, a better implementation between what sorting was intended to do
-(assure proper re-coloring order) and how determing new colors was implemented (assuming the blocks were sorted).</p>
+the rest of the algorithms. determineColor could have been implemented better without the
+need of sorting but that loss of performance was never a priority over other features.</p>
 
 <p>The conclusion of sorting leaves every single collected block as 
 Black. A timer is placed here to force the game to show the blacking transition. This is discussed more
@@ -116,7 +125,9 @@ in the Timers section.</p>
 <p>The score and bomb bar are updated. Scoring is described in the Score Class and the ScoreFrame Class, 
 and the bomb bar (which is similar to the time bar) is described in the Timers section. The progress bar
 is updated if you are playing in survival mode. </p>
-
+<br>
+<img src="./UML Diagrams/determineColor.jpg" alt="determinColor">
+<br>
 <p>Finally the new colors are determined. The algorithm will search upwards in a column for 
 a color that a particular Block can steal. Stars also have to properly be stolen as well. coloredBool is used to determine if a Block needs a 
 color change. We could have also used the black color to check for necessary color changes, but while
@@ -169,17 +180,17 @@ have been implemented had there been more time. </p>
 
 <p>Most of the Block functions are simple accessor or mutator functions. The only functions needing 
 a more detailed explanation are foundMatch and gatherBlocks, and they will be explained in Game Play.
-markedBool and coloredBool are used in many of these algorithms and will be detailed there as well.
+markedBool and coloredBool are used in many of these algorithms and are detailed there as well.
 </p>
 
 <h3>User Interface</h3>
 <b>Primary author: Devin Rusnak</b>
 
-<p>The user interface is all custom written, we made no use of the aweful mainwindow.ui form. Aside from letting it create the centralWidget which we use as the base layer widget.
+<p>The user interface is all custom written, we made no use of the awful mainwindow.ui form. Aside from letting it create the centralWidget which we use as the base layer widget.
 </p>
 
 <i>Scalability</i>
-<p>First and foremost this game is ment to be played on a phone, which come in endless varieties these days. So scalability of the 
+<p>First and foremost this game is meant to be played on a phone, which come in endless varieties these days. So scalability of the 
 user interface was paramount when it was designed. The idea for the implementation came from focusing on the game board. Since it is the main
 piece of the interface it's crucial that it gets displayed correctly. One of the first things done when the user interface is being setup, is that the phone screen size is examined. Besides being used to make sure all the widgets take up the entire screen, the size is used to determine the best square size to make the game blocks so that the game board doesn't extend beyond the phone screen. This determined size is stored as 
 the blockSize, and each piece of the interface is sized based on it. There are no fixed sizes for any of the interface items, they all are 
@@ -193,9 +204,9 @@ if the menu had to be, say 80% of the horizontal and 60% of the vertical.
 <li>"MainWindow::setupWindows"</li>
 <li>"MainWindow::mousePressEvent"</li>
 </ul>
-<p>The game board is the main feature of the user interface. It is essentially the entire game, everything else just allows the user to get the game board setup or has some other axillary function. The game board itself is a QGraphicsView with a QGraphicsScene, which allows the blocks (QGrapicsRectItem) to be displayed. The original idea was to have the blocks "fall" down as the ones below are cleared and this implementation would support that. We also wanted to have the ability to rotate the phone and have the blocks dropping down from the new "top" of the board. These two features didn't end up getting implemented due to time constraints, but the structure is there to support them. Another reason for using QGraphicsItems was so that we could display our different bombs on them. This proved to be much more difficult than orginally thought and used up a fair amount of time. Thus we only have one bomb that is a unicode star. The score frame is a custom object that both updates and displays the score nicely. The bomb and time bars are stacked colored QLabels that are updated to reflect the time remaining or bomb amount gained. Both of these items will be discussed later by their authors. The buttons at the bottom of the screen rotates, flips, or shuffles the board, or brings up the pause menu. Due to issues with the QGridLayout it was difficult to get the game board in the layout and have the buttons positioned nicely below it. Thus they are not placed in the layout but are placed based on the know sizes of the items above them and the screen size.
+<p>The game board is the main feature of the user interface. It is essentially the entire game, everything else just allows the user to get the game board setup or has some other auxiliary function. The game board itself is a QGraphicsView with a QGraphicsScene, which allows the blocks (QGrapicsRectItem) to be displayed. The original idea was to have the blocks "fall" down as the ones below are cleared and this implementation would support that. We also wanted to have the ability to rotate the phone and have the blocks dropping down from the new "top" of the board. These two features didn't end up getting implemented due to time constraints, but the structure is there to support them. Another reason for using QGraphicsItems was so that we could display our different bombs on them. This proved to be much more difficult than originally thought and used up a fair amount of time. Thus we only have one bomb that is a unicode star. The score frame is a custom object that both updates and displays the score nicely. The bomb and time bars are stacked colored QLabels that are updated to reflect the time remaining or bomb amount gained. Both of these items will be discussed later by their authors. The buttons at the bottom of the screen rotates, flips, or shuffles the board, or brings up the pause menu. Due to issues with the QGridLayout it was difficult to get the game board in the layout and have the buttons positioned nicely below it. Thus they are not placed in the layout but are placed based on the known sizes of the items above them and the screen size.
 <br></br>
-When the user clicks on a block the mousePressEvent is triggered and propagated. When the first click occurs they block that is clicked calls grabMouse() which allows the event to be propagated to its parent, which is the centralWidget. The centralWidget's parent is the mainwindow class and the event gets past to it. After the first click each new click causes the new block to be the mouse grabber and the last one automatically calls ungrabMouse(). In mainwindow_UI the mousePressEvent(event) is overwritten. It recieves the (x,y) coordinates of the last widget to recieve the event, which is the centralWidget. Then to find the X coordinate for the blockArray, all that needs to be done is to divide the xPos from the event by the blockSize. For the Y coordinate it takes a little more calculation. First a QPoint is created and set to the position of the QGraphicsView. By calling point.y(), the origin Y coordinate is obtained. Then this value is subtracted from the yPos obtained from the mouse event. This gives the Y coordinate relative to the QGraphicsView, once divided by the blockSize, the Y coordinate for the block array is known. Then the obtained coordinates get a block from the array and it's function to check for matches is called. If it finds one processMatch is called with the block clicked as a parameter.
+When the user clicks on a block the mousePressEvent is triggered and propagated. When the first click occurs the block that is clicked calls grabMouse() which allows the event to be propagated to its parent, which is the centralWidget. The centralWidget's parent is the mainwindow class and the event gets past to it. After the first click each new click causes the new block to be the mouse grabber and the last one automatically calls ungrabMouse(). In mainwindow_UI the mousePressEvent(event) is overwritten. It receives the (x,y) coordinates of the last widget to receive the event, which is the centralWidget. Then to find the X coordinate for the blockArray, all that needs to be done is to divide the xPos from the event by the blockSize. For the Y coordinate it takes a little more calculation. First a QPoint is created and set to the position of the QGraphicsView. By calling point.y(), the origin Y coordinate is obtained. Then this value is subtracted from the yPos obtained from the mouse event. This gives the Y coordinate relative to the QGraphicsView, once divided by the blockSize, the Y coordinate for the block array is known. Then the obtained coordinates get a block from the array and its function to check for matches is called. If it finds one processMatch is called with the block clicked as a parameter.
 </p>
 
 <i>Game Modes</i> 
@@ -214,12 +225,12 @@ When the user clicks on a block the mousePressEvent is triggered and propagated.
 <li>"MainWindow::setupGameScreen"</li>
 </ul>
 <p>The menus act as the main state control mechanism when the user is not currently playing a game. The menus can be thought of as existing on 
-two different layers. The bottom layer is the defualt centralWidget which the game board is placed. The rest of the menus can be thought to exist on a top layer over the game board. The menus are QGroupBoxes which fill the screen and are displayed over the base layer. The menus are:
+two different layers. The bottom layer is the default centralWidget on which the game board is placed. The rest of the menus can be thought to exist on a top layer over the game board. The menus are QGroupBoxes which fill the screen and are displayed over the base layer. The menus are:
 <ul> 
-<li><b>Main</b> - Inital menu from which rest of game is accessed.</li>
+<li><b>Main</b> - Initial menu from which rest of game is accessed.</li>
 <li><b>Game Mode Selection</b> - Allows user to select a game mode.</li>
 <li><b>High Scores</b> - Displays the top 5 scores for each game mode.</li>
-<li><b>Settings</b> - Allows user to select from preset color palletes.</li>
+<li><b>Settings</b> - Allows user to select from preset color palettes.</li>
 <li><b>About</b> - Authors info and how-to play the game.</li>
 </ul>
 Once the user has selected a game mode and starts playing the game there are three menus that the user can interact with. They are:
@@ -229,6 +240,8 @@ Once the user has selected a game mode and starts playing the game there are thr
 <li><b>Game Over</b> - Displays the final score and allows user to restart game, access high scores, or quit the game.</li>
 <li><b>Confirm Quit</b> - When the user wants to quit the game this menu confirms that choice.</li>
 </ul>
+When the game is over and the game over menu is displayed the pause menu is hidden. It is hidden so that the user can not open the pause menu, which would cause two menus to be displayed.
+This situation would go against the design of the interface and would break the two layer implementation.
 </p>
 
 <i>Performance</i>
@@ -238,59 +251,59 @@ user interacts with, so they need to look nice. Both of these objectives are ach
 
 <h3>Timers</h3>
 <b>Primary author: Mikael Son</b>
-<p>Timers are built using 'QTimer' to update, and 'QLabel' show the actual figure of the timer. 
-Since timebar and bombbar need to be decreasing over time, timer is used for both and in every mode of 
+<p>Timers are built using 'QTimer' to update, and 'QLabel' show the actual value of the timer. 
+Since timebar and bombbar need to be decreasing over time, the timer is used for both in every mode of 
 the game. In the beginning, we tried to create the timebar using a 'QProgressbar', but it hardly was functional. 
-so I came up with just simply using two QLabels, one for the layer and another for filling the timer. <p/>
+So I came up with just simply using two QLabels, one for the layer and another for filling the timer. <p/>
 
 <p><i>TimeBar</i></p>
-<p>Using the time slots, timebar created with QLabels will be updated depending on the frequency of calling the time slot 
+<p>Using the time slots, the timebar created with QLabels will be updated depending on the frequency of calling the time slot 
 , filling the bar or decreasing the bar. Frequency of calling time slot can be controlled using nanosecond unit, 
-and this frequency have effects on how smoothly the timebar works in terms of decrements. So if I was to have 
-60 seconds of the game time and I were to call the time slot once every second, I will call the time slot 60 times 
-until the game ends. But the decrement of the time bar would not look pretty since it is just chunk amount of time 
-bar just disappearing every second. So rather, I would set it to call the time slot four times every second, 
-I would decrease the time bar every 250 nano second which will have the time bar working more smoothly. int variable 'currentTime' 
+and this frequency effects how smoothly the timebar works in terms of decrements. So if I were to have 
+60 seconds of the game time and I were to call the time slot once every second, I call the time slot 60 times 
+until the game ends. But the decrement of the time bar did not look pretty since it is just chunk amount of time 
+bar just disappearing every second. So rather, I set it to call the time slot four times every second, 
+I decrease the time bar every 250 nano second which has the time bar working more smoothly. The int variable 'currentTime' 
 was used to keep track of the timebar more accurately. More specification provided below in BombBar.</p>
 <p><i>BombBar</i></p>
-<p>Functioning mostly the same as TimeBar. Using the bomb time slot, Bombbar will be updated to decrease every second, 
-also getting filled up whenever the blocks are eliminated. Bombbar will be activated as soon as the game starts. 
-Whenever there is a mouse click event, the method 'updateBomb' with the parameter of 'nBlocks' will be used 
-to update the Bombbar. Depending on how many blocks are removed at once, amount of the fill to the Bombbar will 
-be calculated using the parameter 'nBlocks', and will update the Bombbar. Whenever 'updateBomb' is called, it 
-will check the Bombbar's status: if Bombbar is empty or not, or if Bombbar is filled all the way up. If the 
+<p>BombBar functions the same as TimeBar. Using the bomb time slot, Bombbar is updated to decrease every second, 
+also getting filled up whenever the blocks are eliminated. Bombbar is activated as soon as the game starts. 
+Whenever there is a mouse click event, the method 'updateBomb' with the parameter of 'nBlocks' is used 
+to update the Bombbar. Depending on how many blocks are removed at once, the amount of the fill for Bombbar is 
+calculated using the parameter 'nBlocks', and updates the Bombbar. Whenever 'updateBomb' is called, it 
+checks the Bombbar's status: if Bombbar is empty, or if Bombbar is filled all the way up. If the 
 Bombbar is filled again out of emptiness, then it needs to be reactivated, and when the Bombbar is filled all the 
 way up, then a bomb is to be generated. Bombbar also uses an int variable called 'bcurrentTime' to check the current 
 state of the Bombbar more accurately. 'bcurrentTime' is basically a time counter for the Bombbar, keeping track of 
-how many seconds are left for the bar to be empty. This int variable will be decreased in terms of seconds when 
-the Bombbar itself is updated to decrease, and vice versa. This making changes to int variable required quite a precise calculation, 
-trying to make Bombbar work more smoothly, at the same time, we needed this so that the function does not call 
+how many seconds are left for the bar to empty. This int variable is decreased in terms of seconds when 
+the Bombbar itself is updated to decrease, and vice versa. These changes to the int variable required a precise calculation, 
+to make Bombbar work more smoothly. At the same time, we needed this int so that the function does not call 
 the method to decrease the Bombbar and cause the error message of 'cannot go negative' when it is empty.</p>
 <p><i>ProgressBar</i></p>
-<p>Progressbar is just a different label for Timebar used in Survival Mode, with slightly added functionality. Progressbar uses same 
+<p>Progressbar is just a different label for Timebar used in Survival Mode, with slightly added functionality. Progressbar uses the same 
 technique as Bombbar to check if the bar is empty or filled up all the way. If the bar is filled up all the way, then 
-the game will proceed to next level; if the bar is empty, it will end the game.</p>
+the game will proceed to the next level; if the bar is empty, it will end the game.</p>
 
 <p><i>Issues</i></p>
 <p>There were some issues concerning 'QTimer' and 'QLabel'. </p>
-<p>For leveling feature for the Survival Mode, I needed 
-to implement the Progressbar to work faster as the player surpass each level. Problem came from this. Our goal was 
-to have the Progressbar working properly in high level with appropriate difficulty, at the same time, smoothly. This 
-was a little hard to manage in the beginning because I got into problem with QLabel at first. How QLabels are used 
-to work as a Timebar was that each QLabels were given initially the width and its maximum width. To fit the Timebar 
+<p>For leveling in Survival Mode, I needed 
+to implement the Progressbar to work faster as the player surpass each level. Problems came from this idea. Our goal was 
+to have the Progressbar working properly in the higher levels with appropriate difficulty, at the same time, smoothly. This 
+was a little hard to manage in the beginning because I got into problems with QLabel at first. How QLabels are used 
+to function as a Timebar was that each QLabels were given initially the width and its maximum width. To fit the Timebar 
 inside the smartphone screen, there first came the limit of how big of a width the QLabel could have. I am decreasing 
 the maximum width of the QLabel used for filling of the Timebar to show the timer progress. First of all, I can only 
 decrease the width only by whole number, which means that the smallest value of decrement of width is 1. This became an 
 issue when it came to implementing a Progressbar for higher level in Survival Mode. The Progress Bar needs to be 
-decreasing faster with smoothness in higher level. If I only tried to increase the decrement of the width to make it decrease 
-faster, it does not look as smooth as it used to be, and this is where the QTimer implementation comes in.</p>
-<p>I started implementing QTimer to help QLabel issue, and my solution was to call the time slot more frequently rather 
-than increasing the amount of decrement of the width. This solved the problem until when the player reaches the level higher 
-than 8 in the Survival Mode. I was to use nanosecond unit to set the frequency of calling the time slot, and this also had 
-a limit of not being able to use integers but whole numbers. When the player reaches high level and the int variable used for 
+decreasing faster and smoothly in higher level. If I only tried to increase the decrement of the width to make it decrease 
+faster, it did not look as smooth as it used to be. This is where the QTimer implementation comes in.</p>
+<p>I started implementing QTimer to help with the QLabel issue. My solution was to call the time slot more frequently rather 
+than increasing the amount of decrement. This solved the problem until the player reaches a level higher 
+than 8 in the Survival Mode. I used nanosecond unit to set the frequency of calling the time slot, and this also had 
+a problem of not being able to use integers, but only whole numbers. When the player reaches high level and the int variable used for 
 applying nanoseconds to the timer reaches 1, there was no progress in terms of the Progressbar decreasing faster. So I had no 
-choice but to increase the decrement of the width, even if the smoothness could not be perfect. But to take care of this, I 
-just increase the level of the Survival Mode, and so far it is pretty hard to beat level 10 of the Survival Mode, so it is 
+choice but to increase the decrement of the width, even though the smoothness is not perfect. But to take care of that, I 
+just increased the level of the Survival Mode, so far as it is pretty hard to beat level 10 of the Survival Mode, so it is 
 working pretty fine for now. </p>
 
 
@@ -304,7 +317,7 @@ working pretty fine for now. </p>
 
 <p>
 A key fault with the original Plock game is that its only shuffling mechanism (Random Shuffle)
-did not provide much reward for those players who attempted to eliminate blockS strategically
+did not provide much reward for those players who attempted to eliminate blocks strategically
 rather than by spam-clicking.
 
 The penalty to shuffling is the time it requires to analyze a new board.  This penalty is not 
@@ -504,9 +517,15 @@ contrast.
 
 <p>
 All 5 color schemes were placed into a single Color object.  Each color scheme is 
-represented by an integer value from 0 to 4 (int colorScheme).  The active color scheme 
+represented by an integer value from 0 to 6 (int colorScheme).  The active color scheme 
 is contained in an array (QColor colorArray[7]) and is used to create 
-a QPalette that is used to paint all objects.  
+a QPalette that is used to paint all objects.  The 0 color in every color scheme is 
+black.  This is the only color that is consistent throughout all color schemes.  It would
+have slightly improved performance to exclude black from the color scheme and refer 
+to it directly, but we decided that sacrificing this small performance improvement
+was worthwhile given the additional versatility it gave us in coloring the background.  
+We did not decide to alter the background in our final game mode, but the functionality
+remains for future improvements.  
 </p>
 <p>
 When the user changes the Color Scheme 
@@ -529,7 +548,18 @@ The other objects change color as expected.
 
 <h3>Game Modes</h3>
 <b>Primary author: Daniel/Mike/Devin</b>
-[[TO BE COMPLETED]]
+
+<p>We implemented three game modes which are very similar to Plock's game modes:</p>
+<ul>
+	<li>Standard Mode</li>
+	<li>Endless Mode</li>
+	<li>Survival Mode</li>
+</ul>
+<p>Standard Mode was intentionally the same as Plock's classic mode because we thought it was ideal for basic game play. 
+We thought having Endless Mode the same as Plock's endless mode would fit what we wanted, although we had to limit the scoring.
+Survival Mode has the same format of Plock, but we wanted there to be more variety in the game play. If only your level mattered
+then having score would be irrelevant, and the same can be said about scoring with no level. This allows users to feel like they
+can track their achievements in two ways. </p>
 
 <h3>User Feedback</h3>
 <b>Primary author: Daniel Keasler</b>
